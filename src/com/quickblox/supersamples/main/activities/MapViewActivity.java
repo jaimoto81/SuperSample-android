@@ -60,6 +60,7 @@ public class MapViewActivity extends MapActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.mapview);
 
+		
 		initMapView();
 		initMyLocation();
 
@@ -79,7 +80,6 @@ public class MapViewActivity extends MapActivity {
 													// highest rating
 		mapController.setCenter(pt);
 		mapController.setZoom(8);
-
 	}
 
 	private void initMapView() {

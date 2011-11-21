@@ -3,7 +3,9 @@ package com.quickblox.supersamples.main.activities;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -11,6 +13,10 @@ import javax.xml.parsers.SAXParserFactory;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.message.BasicNameValuePair;
+import org.jivesoftware.smack.AccountManager;
+import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.XMPPException;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
@@ -156,11 +162,13 @@ public class RegistrationActivity extends Activity implements ActionResultDelega
 					Toast.makeText(this, "On your email was send letter for the confirmation of the registration!",
 							Toast.LENGTH_LONG).show();
 					
-					// create GeoUser
+					String userLogin = response.getBody().findChild("login").getText();
 					
+					// create GeoUser
+					//
 					// create entity for geoUser
 					List<NameValuePair> formparamsGeoUser = new ArrayList<NameValuePair>();
-					formparamsGeoUser.add(new BasicNameValuePair("user[name]", response.getBody().findChild("login").getText().toString()));
+					formparamsGeoUser.add(new BasicNameValuePair("user[name]", userLogin));
 					formparamsGeoUser.add(new BasicNameValuePair("user[app_id]", QBQueries.APPLICATION_ID));
 					UrlEncodedFormEntity postEntityGeoUser = null;
 					try {
@@ -168,11 +176,36 @@ public class RegistrationActivity extends Activity implements ActionResultDelega
 					} catch (UnsupportedEncodingException e1) {
 						e1.printStackTrace();
 					}
-					
+					//
 					// make query
 					Query.makeQueryAsync(QueryMethod.Post, QBQueries.CREATE_GEOUSER_QUERY, postEntityGeoUser, null, 
 							this, QBQueryType.QBQueryTypeCreateGeoUser);
 					
+					
+					/*
+					// create ChatUser
+					//
+			        ConnectionConfiguration connConfig = new ConnectionConfiguration(QBQueries.CHAT_SERVICE_HOST_NAME);
+			        XMPPConnection connection = new XMPPConnection(connConfig);
+			        try {
+						connection.connect();
+					} catch (XMPPException e) {
+						e.printStackTrace();
+						return;
+					}
+			        //
+			        AccountManager am = new AccountManager(connection);
+			        Map<String, String> attributes = new HashMap<String, String>();
+			        attributes.put("name", userLogin);
+			        try {
+						am.createAccount(userLogin+response.getBody().findChild("id").getText(), 
+								((EditText) findViewById(R.id.edit_password)).getText().toString(), attributes);
+					} catch (XMPPException e) {
+						Log.e("XMPP Error", e.getMessage());
+						e.printStackTrace();
+						return;
+					}*/
+
 				} else
 					Toast.makeText(this, "User created unsuccessful",
 							Toast.LENGTH_LONG).show();		
