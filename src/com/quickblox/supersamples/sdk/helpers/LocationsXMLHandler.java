@@ -40,12 +40,8 @@ public class LocationsXMLHandler extends DefaultHandler {
 
 		currentElement = false;
 
-		Log.i("localName", localName);
-
 		/** set value */
 		if (localName.equalsIgnoreCase("user-id")) {
-
-			Log.i("currentValue", currentValue);
 
 			locList.setUserID(currentValue);
 		} else if (localName.equalsIgnoreCase("latitude"))

@@ -6,6 +6,7 @@ public class QBQueries {
 	//
 	public static final String APPLICATION_ID = "38";
 	public static final String OWNER_ID = "831";
+	public static final String STATUS = "I am";
 	
 	public static final String USERS_SERVICE_HOST_NAME = "users.quickblox.com";
 	public static final String GEOPOS_SERVICE_HOST_NAME = "geopos.quickblox.com";

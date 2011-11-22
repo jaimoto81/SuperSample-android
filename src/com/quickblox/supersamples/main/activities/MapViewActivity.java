@@ -1,6 +1,7 @@
 package com.quickblox.supersamples.main.activities;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +9,9 @@ import java.util.List;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.message.BasicNameValuePair;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
@@ -19,9 +23,15 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.OverlayItem;
 import com.quickblox.supersamples.R;
+import com.quickblox.supersamples.sdk.definitions.ActionResultDelegate;
 import com.quickblox.supersamples.sdk.definitions.QBQueries;
+import com.quickblox.supersamples.sdk.definitions.QueryMethod;
+import com.quickblox.supersamples.sdk.definitions.QBQueries.QBQueryType;
+import com.quickblox.supersamples.sdk.definitions.ResponseHttpStatus;
 import com.quickblox.supersamples.sdk.helpers.LocationsXMLHandler;
+import com.quickblox.supersamples.sdk.helpers.Query;
 import com.quickblox.supersamples.sdk.objects.LocationsList;
+import com.quickblox.supersamples.sdk.objects.RestResponse;
 
 import android.R.integer;
 import android.app.AlertDialog;
@@ -47,7 +57,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MapViewActivity extends MapActivity {
+public class MapViewActivity extends MapActivity implements
+		ActionResultDelegate {
 
 	private MapView mapView;
 	private Button back;
@@ -62,7 +73,6 @@ public class MapViewActivity extends MapActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.mapview);
 
-		
 		initMapView();
 		initMyLocation();
 
@@ -80,13 +90,77 @@ public class MapViewActivity extends MapActivity {
 
 		GeoPoint pt = whereAreUsers.getCenter(); // get of a point with the
 													// highest rating
-		
-		Log.i("whereAreUsers", whereAreUsers.toString());
-		Log.i("pt", pt.toString());
-		
-		
 		mapController.setCenter(pt);
 		mapController.setZoom(8);
+
+		// get a latitude and a longitude of the current user
+		LocationManager locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		LocationListener locListener = new LocationListener() {
+
+			@Override
+			public void onStatusChanged(String provider, int status,
+					Bundle extras) {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void onProviderEnabled(String provider) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onProviderDisabled(String provider) {
+				// TODO Auto-generated method stub
+
+			}
+
+			// if a location of the device will be changed,
+			// send the data on the server
+			@Override
+			public void onLocationChanged(Location location) {
+				if (location != null) {
+					Toast.makeText(
+							getBaseContext(),
+							"New location latitude [" + location.getLatitude()
+									+ "] longitude [" + location.getLongitude()
+									+ "]", Toast.LENGTH_LONG).show();
+
+					String lat = Double.toString(location.getLatitude());
+					String lng = Double.toString(location.getLongitude());
+
+					// create entity for current user
+					List<NameValuePair> formparamsGeoUser = new ArrayList<NameValuePair>();
+					formparamsGeoUser.add(new BasicNameValuePair(
+							"geo_data[user_id]", "245"));
+					formparamsGeoUser.add(new BasicNameValuePair(
+							"geo_data[status]", QBQueries.STATUS));
+					formparamsGeoUser.add(new BasicNameValuePair(
+							"geo_data[latitude]", lat));
+					formparamsGeoUser.add(new BasicNameValuePair(
+							"geo_data[longitude]", lng));
+
+					UrlEncodedFormEntity postEntityGeoDataUser = null;
+					try {
+						postEntityGeoDataUser = new UrlEncodedFormEntity(
+								formparamsGeoUser, "UTF-8");
+					} catch (UnsupportedEncodingException e1) {
+						e1.printStackTrace();
+					}
+					//
+					// make query
+					Query.makeQueryAsync(QueryMethod.Put,
+							QBQueries.SEND_GPS_DATA_QUERY,
+							postEntityGeoDataUser, null, MapViewActivity.this,
+							QBQueries.QBQueryType.QBQueryTypeSendGPSData);
+				}
+			}
+		};
+
+		// registration of the LocationListener
+		locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 300000, // update the geodata after 5 minutes (300 000 ms)
+				0, locListener);
+
 	}
 
 	private void initMapView() {
@@ -200,9 +274,7 @@ public class MapViewActivity extends MapActivity {
 
 		public ShowAllUsers(Drawable marker) {
 			super(marker);
-			
-			Log.i("ShowAllUsers", "ShowAllUsers");
-			
+
 			this.marker = marker;
 
 			try {
@@ -213,9 +285,7 @@ public class MapViewActivity extends MapActivity {
 				XMLReader xr = sp.getXMLReader();
 
 				/** Send URL to parse XML Tags */
-				/*URL sourceUrl = new URL(
-						"http://geopos.aws02.mob1serv.com/geodata/find.xml?app.id=38&page_size=100");*/
-				URL sourceUrl = new URL (QBQueries.GET_ALL_LOCATIONS_QUERY);
+				URL sourceUrl = new URL(QBQueries.GET_ALL_LOCATIONS_QUERY);
 
 				/** Create handler to handle XML Tags ( extends DefaultHandler ) */
 				LocationsXMLHandler locXMLHandler = new LocationsXMLHandler();
@@ -228,26 +298,23 @@ public class MapViewActivity extends MapActivity {
 
 			/** Get result from LocationsXMLHandler locationsList Object */
 			locList = LocationsXMLHandler.locList;
-			
-			Log.i("locList", String.valueOf(locList.getUserID().size()));
 
 			for (int i = 0; i < locList.getUserID().size(); i++) {
 
-				Log.i("for i", String.valueOf(i));
-				
 				try {
-			
-					int lat = (int)(Double.parseDouble(locList.getLat().get(i))*1000000);
-					int lng = (int)(Double.parseDouble(locList.getLng().get(i))*1000000);
-					
-					GeoPoint p = new GeoPoint(lat, lng);			
+					int lat = (int) (Double
+							.parseDouble(locList.getLat().get(i)) * 1000000);
+					int lng = (int) (Double
+							.parseDouble(locList.getLng().get(i)) * 1000000);
+
+					GeoPoint p = new GeoPoint(lat, lng);
 					locations.add(new OverlayItem(p, "", ""));
 
 				} catch (NumberFormatException e) {
 					e.printStackTrace();
 				}
 			}
-			
+
 			populate();
 		}
 
@@ -261,8 +328,6 @@ public class MapViewActivity extends MapActivity {
 
 		@Override
 		protected OverlayItem createItem(int i) {
-			Log.i("i", String.valueOf(i));
-			Log.i("locations", String.valueOf(locations.size()));
 			return locations.get(i);
 		}
 
@@ -270,6 +335,22 @@ public class MapViewActivity extends MapActivity {
 		public int size() {
 			// TODO Auto-generated method stub
 			return locations.size();
+		}
+
+	}
+
+	@Override
+	public void completedWithResult(QBQueryType queryType, RestResponse response) {
+		if (queryType == QBQueries.QBQueryType.QBQueryTypeSendGPSData) {
+			if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus201) {
+				Toast.makeText(this,
+						"The current location has been added to the database",
+						Toast.LENGTH_LONG).show();
+			} else
+				Toast.makeText(
+						this,
+						"The current location HAS NOT BEEN ADDED to the database!",
+						Toast.LENGTH_LONG).show();
 		}
 
 	}
