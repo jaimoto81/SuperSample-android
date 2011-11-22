@@ -123,7 +123,7 @@ public class LoginActivity extends Activity implements ActionResultDelegate{
 						Toast.LENGTH_LONG).show();
 				
 				// store current user
-				Store.getInstance().setCurrentUser(response.getBody());
+				//Store.getInstance().setCurrentUser(response.getBody());
 				
 				// show main activity
 				Intent intent = new Intent();			

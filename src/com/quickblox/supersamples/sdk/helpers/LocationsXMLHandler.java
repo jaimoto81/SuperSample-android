@@ -4,6 +4,8 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import android.util.Log;
+
 import com.quickblox.supersamples.sdk.objects.LocationsList;
 
 public class LocationsXMLHandler extends DefaultHandler {
@@ -19,16 +21,17 @@ public class LocationsXMLHandler extends DefaultHandler {
 	public static void setLocationsList(LocationsList locList) {
 		LocationsXMLHandler.locList = locList;
 	}
+	
+	@Override
+	public void startDocument() throws SAXException {
+		locList = new LocationsList();
+	}
 
 	/** Called when tag starts */
 	public void startElement(String uri, String localName, String qName,
 			Attributes attributes) throws SAXException {
 
 		currentElement = true;
-
-		/** Start */
-		locList = new LocationsList();
-
 	}
 
 	/** Called when tag closing */
@@ -37,10 +40,15 @@ public class LocationsXMLHandler extends DefaultHandler {
 
 		currentElement = false;
 
+		Log.i("localName", localName);
+
 		/** set value */
-		if (localName.equalsIgnoreCase("user-id"))
+		if (localName.equalsIgnoreCase("user-id")) {
+
+			Log.i("currentValue", currentValue);
+
 			locList.setUserID(currentValue);
-		else if (localName.equalsIgnoreCase("latitude"))
+		} else if (localName.equalsIgnoreCase("latitude"))
 			locList.setLat(currentValue);
 		else if (localName.equalsIgnoreCase("longitude"))
 			locList.setLng(currentValue);

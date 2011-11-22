@@ -89,6 +89,7 @@ public class Query {
 			Log.e("makeQuery, ClientProtocolException:", e.toString());
 			e.printStackTrace();
 		} catch (IOException e) {
+			Log.i("responseStatus", String.valueOf(response.getStatusLine().getStatusCode()));
 			Log.e("makeQuery, IOException:", e.toString());
 			e.printStackTrace();
 		}

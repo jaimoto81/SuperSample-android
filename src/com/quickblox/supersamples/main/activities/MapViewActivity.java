@@ -19,6 +19,7 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.OverlayItem;
 import com.quickblox.supersamples.R;
+import com.quickblox.supersamples.sdk.definitions.QBQueries;
 import com.quickblox.supersamples.sdk.helpers.LocationsXMLHandler;
 import com.quickblox.supersamples.sdk.objects.LocationsList;
 
@@ -38,6 +39,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -78,6 +80,11 @@ public class MapViewActivity extends MapActivity {
 
 		GeoPoint pt = whereAreUsers.getCenter(); // get of a point with the
 													// highest rating
+		
+		Log.i("whereAreUsers", whereAreUsers.toString());
+		Log.i("pt", pt.toString());
+		
+		
 		mapController.setCenter(pt);
 		mapController.setZoom(8);
 	}
@@ -193,6 +200,9 @@ public class MapViewActivity extends MapActivity {
 
 		public ShowAllUsers(Drawable marker) {
 			super(marker);
+			
+			Log.i("ShowAllUsers", "ShowAllUsers");
+			
 			this.marker = marker;
 
 			try {
@@ -203,8 +213,9 @@ public class MapViewActivity extends MapActivity {
 				XMLReader xr = sp.getXMLReader();
 
 				/** Send URL to parse XML Tags */
-				URL sourceUrl = new URL(
-						"http://geopos.aws02.mob1serv.com/geodata/find.xml?app.id=38&page_size=100");
+				/*URL sourceUrl = new URL(
+						"http://geopos.aws02.mob1serv.com/geodata/find.xml?app.id=38&page_size=100");*/
+				URL sourceUrl = new URL (QBQueries.GET_ALL_LOCATIONS_QUERY);
 
 				/** Create handler to handle XML Tags ( extends DefaultHandler ) */
 				LocationsXMLHandler locXMLHandler = new LocationsXMLHandler();
@@ -212,14 +223,18 @@ public class MapViewActivity extends MapActivity {
 				xr.parse(new InputSource(sourceUrl.openStream()));
 
 			} catch (Exception e) {
-				System.out.println("XML Parsing Exception = " + e);
+				Log.e("XML Parsing Exception = ", e.getMessage());
 			}
 
 			/** Get result from LocationsXMLHandler locationsList Object */
 			locList = LocationsXMLHandler.locList;
+			
+			Log.i("locList", String.valueOf(locList.getUserID().size()));
 
 			for (int i = 0; i < locList.getUserID().size(); i++) {
 
+				Log.i("for i", String.valueOf(i));
+				
 				try {
 			
 					int lat = (int)(Double.parseDouble(locList.getLat().get(i))*1000000);
@@ -246,6 +261,8 @@ public class MapViewActivity extends MapActivity {
 
 		@Override
 		protected OverlayItem createItem(int i) {
+			Log.i("i", String.valueOf(i));
+			Log.i("locations", String.valueOf(locations.size()));
 			return locations.get(i);
 		}
 
