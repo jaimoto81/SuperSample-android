@@ -182,29 +182,10 @@ public class RegistrationActivity extends Activity implements ActionResultDelega
 							this, QBQueryType.QBQueryTypeCreateGeoUser);
 					
 					
-					/*
+					
 					// create ChatUser
 					//
-			        ConnectionConfiguration connConfig = new ConnectionConfiguration(QBQueries.CHAT_SERVICE_HOST_NAME);
-			        XMPPConnection connection = new XMPPConnection(connConfig);
-			        try {
-						connection.connect();
-					} catch (XMPPException e) {
-						e.printStackTrace();
-						return;
-					}
-			        //
-			        AccountManager am = new AccountManager(connection);
-			        Map<String, String> attributes = new HashMap<String, String>();
-			        attributes.put("name", userLogin);
-			        try {
-						am.createAccount(userLogin+response.getBody().findChild("id").getText(), 
-								((EditText) findViewById(R.id.edit_password)).getText().toString(), attributes);
-					} catch (XMPPException e) {
-						Log.e("XMPP Error", e.getMessage());
-						e.printStackTrace();
-						return;
-					}*/
+					// ...
 
 				} else
 					Toast.makeText(this, "User created unsuccessful",

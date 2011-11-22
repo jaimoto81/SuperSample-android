@@ -30,34 +30,6 @@ public class QuizActivity extends Activity {
         
         messageTextEdit = (EditText)findViewById(R.id.message_editText);
         chatListView = (ListView)findViewById(R.id.chat_listView);
-        
-        ConnectionConfiguration connConfig = new ConnectionConfiguration(QBQueries.CHAT_SERVICE_HOST_NAME);
-        XMPPConnection connection = new XMPPConnection(connConfig);
-        try {
-			connection.connect();
-		} catch (XMPPException e) {
-			e.printStackTrace();
-			return;
-		}
-        
-        AccountManager am = new AccountManager(connection);
-        Map<String, String> attributes = new HashMap<String, String>();
-        attributes.put("email", "foo@foo.com");
-        try {
-			am.createAccount("my_user_name", "my_password", attributes);
-		} catch (XMPPException e) {
-			e.printStackTrace();
-		}
-        
-        try {
-			connection.login("my_user_name", "my_password");
-		} catch (XMPPException e) {
-			e.printStackTrace();
-			return;
-		}
-        
-        Log.i("connection", String.valueOf(connection.isConnected()));
-        Log.i("connection", String.valueOf(connection.isAuthenticated()));
     }
 	
 	public void onClickButtons(View v) {
