@@ -73,10 +73,6 @@ public class MapViewActivity extends MapActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.mapview);
 
-<<<<<<< HEAD
-		/*
-=======
->>>>>>> 24b8d9fe9ab1ae5daf67c33f31c07c41cc7afa48
 		initMapView();
 		initMyLocation();
 
@@ -95,9 +91,6 @@ public class MapViewActivity extends MapActivity implements
 		GeoPoint pt = whereAreUsers.getCenter(); // get of a point with the
 													// highest rating
 		mapController.setCenter(pt);
-<<<<<<< HEAD
-		mapController.setZoom(8);*/
-=======
 		mapController.setZoom(8);
 
 		// get a latitude and a longitude of the current user
@@ -167,8 +160,6 @@ public class MapViewActivity extends MapActivity implements
 		// registration of the LocationListener
 		locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 300000, // update the geodata after 5 minutes (300 000 ms)
 				0, locListener);
-
->>>>>>> 24b8d9fe9ab1ae5daf67c33f31c07c41cc7afa48
 	}
 
 	private void initMapView() {
