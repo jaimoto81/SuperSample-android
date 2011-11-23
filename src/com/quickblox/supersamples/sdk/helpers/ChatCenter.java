@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jivesoftware.smack.AccountManager;
-import org.jivesoftware.smack.ChatManager;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
@@ -106,8 +105,6 @@ public class ChatCenter {
 		if(getConnection().isAuthenticated()){
 			return true;
 		}
-		
-		ChatManager chatmanager = connection.getChatManager();
 		
 		return false;
 	}

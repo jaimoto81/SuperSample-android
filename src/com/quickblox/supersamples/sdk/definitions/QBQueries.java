@@ -45,6 +45,14 @@ public class QBQueries {
 	// send the location's data of the current user
 	public static final String SEND_GPS_DATA_QUERY = String.format("http://%s/geodata", GEOPOS_SERVICE_HOST_NAME);
 	
+	
+	
+	// get all geodata
+	public static final String GET_GEODATA_QUERY = String.format("http://%s/geodata/find.xml?app.id=%s", GEOPOS_SERVICE_HOST_NAME, APPLICATION_ID);
+	
+	// create geodata
+	public static final String CREATE_GEODATA_QUERY = String.format("http://%s/geodata", GEOPOS_SERVICE_HOST_NAME);
+	
 
 	// Types of queries. They must match queries above 
 	public static enum QBQueryType{
@@ -57,6 +65,8 @@ public class QBQueries {
 		
 		QBQueryTypeCreateGeoUser,
 		QBQueryTypeGetAllLocationsGeoUser,
-		QBQueryTypeSendGPSData
+		QBQueryTypeSendGPSData,
+		QBQueryTypeGetGeodata,
+		QBQueryTypeCreateGeodata,
 	}
 }
