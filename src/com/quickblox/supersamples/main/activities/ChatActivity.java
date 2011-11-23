@@ -9,6 +9,7 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
+import com.quickblox.supersamples.sdk.definitions.QBQueries;
 import com.quickblox.supersamples.sdk.helpers.LocationsXMLHandler;
 import com.quickblox.supersamples.sdk.objects.LocationsList;
 
@@ -44,8 +45,7 @@ public class ChatActivity extends Activity {
 			XMLReader xr = sp.getXMLReader();
 
 			/** Send URL to parse XML Tags */
-			URL sourceUrl = new URL(
-					"http://geopos.aws02.mob1serv.com/geodata/find.xml?app.id=38&page_size=100");
+			URL sourceUrl = new URL(QBQueries.GET_ALL_LOCATIONS_QUERY);
 
 			/** Create handler to handle XML Tags ( extends DefaultHandler ) */
 			LocationsXMLHandler locXMLHandler = new LocationsXMLHandler();

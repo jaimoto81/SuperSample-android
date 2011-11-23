@@ -67,6 +67,8 @@ public class MapViewActivity extends MapActivity implements
 	ProgressDialog progDialog;
 	List<Address> addressList;
 	MapController mapController;
+	
+	public static final String EXT_ID_GEOUSER = "ID_GEOUSER";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -79,6 +81,14 @@ public class MapViewActivity extends MapActivity implements
 		back = (Button) findViewById(R.id.back);
 		findLocBtn = (Button) findViewById(R.id.findLocBtn);
 
+		//--------------------------------------------
+		Bundle extras = getIntent().getExtras();
+	    final int id = extras.getInt(EXT_ID_GEOUSER);
+	    //--------------------------------------------
+
+	    Log.i("from LoginActivity", String.valueOf(id));
+		
+	    
 		geocoder = new Geocoder(this);
 
 		Drawable marker = getResources().getDrawable(R.drawable.marker);
@@ -129,10 +139,12 @@ public class MapViewActivity extends MapActivity implements
 					String lat = Double.toString(location.getLatitude());
 					String lng = Double.toString(location.getLongitude());
 
+
+					
 					// create entity for current user
 					List<NameValuePair> formparamsGeoUser = new ArrayList<NameValuePair>();
 					formparamsGeoUser.add(new BasicNameValuePair(
-							"geo_data[user_id]", "245"));
+							"geo_data[user_id]", "251"));
 					formparamsGeoUser.add(new BasicNameValuePair(
 							"geo_data[status]", QBQueries.STATUS));
 					formparamsGeoUser.add(new BasicNameValuePair(
@@ -149,7 +161,7 @@ public class MapViewActivity extends MapActivity implements
 					}
 					//
 					// make query
-					Query.makeQueryAsync(QueryMethod.Put,
+					Query.makeQueryAsync(QueryMethod.Post,
 							QBQueries.SEND_GPS_DATA_QUERY,
 							postEntityGeoDataUser, null, MapViewActivity.this,
 							QBQueries.QBQueryType.QBQueryTypeSendGPSData);
