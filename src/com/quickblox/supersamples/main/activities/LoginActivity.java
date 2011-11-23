@@ -26,6 +26,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -37,21 +38,21 @@ public class LoginActivity extends Activity implements ActionResultDelegate{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login_view);
 	}
-	
+
 	public void onClickButtons(View v) {
 		switch (v.getId()) {
 			case R.id.butNext:
-	
+
 				EditText editLogin = (EditText) findViewById(R.id.edit_login);
 				EditText editPassword = (EditText) findViewById(R.id.edit_password);
-				
+
 				// validate fields
 				int validationResult = ValidateFieldsForm.checkInputParameters(editLogin, editPassword);
 				if(validationResult != ValidateFieldsForm.ALERT_OK){
 					showDialog(validationResult);
 					return;
 				}
-				
+
 
 				// create entity
 				List<NameValuePair> formparams = new ArrayList<NameValuePair>();
@@ -64,27 +65,27 @@ public class LoginActivity extends Activity implements ActionResultDelegate{
 				} catch (UnsupportedEncodingException e1) {
 					e1.printStackTrace();
 				}
-				
+
 				// make query
 				Query.makeQueryAsync(QueryMethod.Post, QBQueries.LOGIN_USER_QUERY, postEntity, null, 
 						this, QBQueries.QBQueryType.QBQueryTypeLoginUser);
-	
+
 				break;
 			case R.id.butBack:
-	
+
 				Intent intent = new Intent();
 				intent.setClass(this, StartActivity.class);
-	
+
 				startActivity(intent);
 				finish();
-	
+
 				break;
 		}
 	}
 
 	@Override
 	protected Dialog onCreateDialog(int id) {
-		
+
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		int alertMessage;
 
@@ -92,11 +93,11 @@ public class LoginActivity extends Activity implements ActionResultDelegate{
 			case ValidateFieldsForm.ALERT_LOGIN:
 				alertMessage = R.string.alert_login_blank;
 				break;
-	
+
 			case ValidateFieldsForm.ALERT_PASSWORD:
 				alertMessage = R.string.alert_password_blank;
 				break;
-			
+
 			default:
 				return null;
 		}
@@ -119,16 +120,24 @@ public class LoginActivity extends Activity implements ActionResultDelegate{
 	public void completedWithResult(QBQueryType queryType, RestResponse response) {
 		if(queryType == QBQueries.QBQueryType.QBQueryTypeLoginUser){
 			if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus202) {
+				int extUserId = Integer.parseInt((response.getBody().findChild("external-user-id").getText()));
+				Log.i("EXTERNAL USER ID =", String.valueOf(extUserId));
+				
 				Toast.makeText(this, "Login was successful!",
 						Toast.LENGTH_LONG).show();
-				
+
 				// store current user
 				Store.getInstance().setCurrentUser(response.getBody());
+
+
+			    Intent intent = new Intent();
+			    intent.putExtra(MapViewActivity.EXT_ID_GEOUSER, extUserId);
+
 				
 				// show main activity
-				Intent intent = new Intent();			
-				intent.setClass(this, TabsActivity.class);
-				startActivity(intent);
+				Intent intent1 = new Intent();			
+				intent1.setClass(this, TabsActivity.class);
+				startActivity(intent1);
 				finish();
 			} else
 				Toast.makeText(this, "Login was unsuccessful",

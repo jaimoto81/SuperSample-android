@@ -38,10 +38,13 @@ public class QBQueries {
 	// create a geouser
 	public static final String CREATE_GEOUSER_QUERY = String.format("http://%s/users", GEOPOS_SERVICE_HOST_NAME);
 	
-	// get the location's data all users
-	public static final String GET_ALL_LOCATIONS_QUERY = String.format("http://%s/geodata/find.xml?app.id=%s", 
-			GEOPOS_SERVICE_HOST_NAME, APPLICATION_ID);
+	// remove a geouser by id
+	public static final String REMOVE_GEOUSER_QUERY_FORMAT = String.format("http://%s/users/", GEOPOS_SERVICE_HOST_NAME) + "%s";
 	
+	// get the location's data all users
+	public static final String GET_ALL_LOCATIONS_QUERY = String.format("http://%s/geodata/find.xml?app.id=%s&last_only=1", 
+			GEOPOS_SERVICE_HOST_NAME, APPLICATION_ID);
+		
 	// send the location's data of the current user
 	public static final String SEND_GPS_DATA_QUERY = String.format("http://%s/geodata", GEOPOS_SERVICE_HOST_NAME);
 	
@@ -64,6 +67,7 @@ public class QBQueries {
 		QBQueryTypeLogoutUser,
 		
 		QBQueryTypeCreateGeoUser,
+		QBQueryTypeRemoveGeoUser,
 		QBQueryTypeGetAllLocationsGeoUser,
 		QBQueryTypeSendGPSData,
 		QBQueryTypeGetGeodata,
