@@ -60,7 +60,7 @@ public class MapViewActivity extends MapActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.mapview);
 
-		
+		/*
 		initMapView();
 		initMyLocation();
 
@@ -79,7 +79,7 @@ public class MapViewActivity extends MapActivity {
 		GeoPoint pt = whereAreUsers.getCenter(); // get of a point with the
 													// highest rating
 		mapController.setCenter(pt);
-		mapController.setZoom(8);
+		mapController.setZoom(8);*/
 	}
 
 	private void initMapView() {

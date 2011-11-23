@@ -9,7 +9,7 @@ public class QBQueries {
 	
 	public static final String USERS_SERVICE_HOST_NAME = "users.quickblox.com";
 	public static final String GEOPOS_SERVICE_HOST_NAME = "geopos.quickblox.com";
-	public static final String CHAT_SERVICE_HOST_NAME = "jabber.qb03.quickblox.com";
+	public static final String CHAT_SERVICE_HOST_NAME = "jabber.quickblox.com";
 	
 	// Queries
 	//

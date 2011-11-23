@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jivesoftware.smack.AccountManager;
+import org.jivesoftware.smack.ChatManager;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
@@ -12,17 +13,17 @@ import android.util.Log;
 
 import com.quickblox.supersamples.sdk.definitions.QBQueries;
 
-public class ChatManager {
+public class ChatCenter {
 	/*
 	 * Singleton
 	 */
-	private static ChatManager instance;
+	private static ChatCenter instance;
 	
-	private  ChatManager(){};
+	private  ChatCenter(){};
 	
-	public static synchronized  ChatManager getInstance(){
+	public static synchronized  ChatCenter getInstance(){
 		if(instance == null){
-			instance = new ChatManager();
+			instance = new ChatCenter();
 		}
 		
 		return instance;
@@ -71,6 +72,11 @@ public class ChatManager {
 	    return false;
 	}
 	
+	// close connection
+	public void disconnect(){
+		getConnection().disconnect();
+	}
+	
 	// register new user
 	public boolean registerAccount(String login, String password, String name){
 		AccountManager am = new AccountManager(getConnection());
@@ -84,11 +90,25 @@ public class ChatManager {
 			Log.e("ChatManager, registerAccount Error", e.getMessage());
 			return false;
 		}
-	    
-	    if(getConnection().isAuthenticated()){
-	    	return true;
-	    }
-	    
-	    return false;
+
+	    return true;
+	}
+	
+	// login
+	public boolean login(String username, String password){
+		try {
+			getConnection().login(username, password);
+		} catch (XMPPException e) {
+			Log.e("ChatManager, login Error", e.getMessage());
+			return false;
+		}
+		
+		if(getConnection().isAuthenticated()){
+			return true;
+		}
+		
+		ChatManager chatmanager = connection.getChatManager();
+		
+		return false;
 	}
 }

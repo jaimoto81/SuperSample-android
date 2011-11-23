@@ -10,6 +10,7 @@ import org.jivesoftware.smack.XMPPException;
 
 import com.quickblox.supersamples.R;
 import com.quickblox.supersamples.sdk.definitions.QBQueries;
+import com.quickblox.supersamples.sdk.helpers.ChatManager;
 import com.quickblox.supersamples.sdk.helpers.Store;
 
 import android.app.Activity;
@@ -30,6 +31,15 @@ public class QuizActivity extends Activity {
         
         messageTextEdit = (EditText)findViewById(R.id.message_editText);
         chatListView = (ListView)findViewById(R.id.chat_listView);
+        
+        boolean isConnected = ChatManager.getInstance().connect();
+        Log.i("Chat isConnected=", String.valueOf(isConnected));
+        
+        boolean isRegistered = ChatManager.getInstance().registerAccount("test1", "test1", "test1");
+        Log.i("Chat isRegistered=", String.valueOf(isRegistered));
+        
+        boolean isAuthenticated = ChatManager.getInstance().login("test1", "test1");
+        Log.i("Chat isAuthenticated=", String.valueOf(isAuthenticated));
     }
 	
 	public void onClickButtons(View v) {
@@ -45,8 +55,7 @@ public class QuizActivity extends Activity {
 				if(message.length() == 0){
 					return;
 				}
-				
-	
+
 				break;
 		}
 	}
