@@ -30,6 +30,7 @@ import com.quickblox.supersamples.sdk.definitions.QBQueries.QBQueryType;
 import com.quickblox.supersamples.sdk.definitions.ResponseHttpStatus;
 import com.quickblox.supersamples.sdk.helpers.LocationsXMLHandler;
 import com.quickblox.supersamples.sdk.helpers.Query;
+import com.quickblox.supersamples.sdk.helpers.Store;
 import com.quickblox.supersamples.sdk.objects.LocationsList;
 import com.quickblox.supersamples.sdk.objects.RestResponse;
 
@@ -82,12 +83,10 @@ public class MapViewActivity extends MapActivity implements
 		findLocBtn = (Button) findViewById(R.id.findLocBtn);
 
 		//--------------------------------------------
-		Bundle extras = getIntent().getExtras();
-	    final int id = extras.getInt(EXT_ID_GEOUSER);
-	    //--------------------------------------------
-
-	    Log.i("from LoginActivity", String.valueOf(id));
-		
+		 
+	    
+	    //Log.i("from LoginActivity", String.valueOf(id));
+	    //--------------------------------------------		
 	    
 		geocoder = new Geocoder(this);
 
@@ -144,7 +143,7 @@ public class MapViewActivity extends MapActivity implements
 					// create entity for current user
 					List<NameValuePair> formparamsGeoUser = new ArrayList<NameValuePair>();
 					formparamsGeoUser.add(new BasicNameValuePair(
-							"geo_data[user_id]", "251"));
+							"geo_data[user_id]", String.valueOf(Store.getInstance().getCurrentUser().findChild("external-user-id").getText();)));
 					formparamsGeoUser.add(new BasicNameValuePair(
 							"geo_data[status]", QBQueries.STATUS));
 					formparamsGeoUser.add(new BasicNameValuePair(

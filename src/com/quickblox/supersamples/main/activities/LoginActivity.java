@@ -120,25 +120,21 @@ public class LoginActivity extends Activity implements ActionResultDelegate{
 	public void completedWithResult(QBQueryType queryType, RestResponse response) {
 		if(queryType == QBQueries.QBQueryType.QBQueryTypeLoginUser){
 			if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus202) {
-				int extUserId = Integer.parseInt((response.getBody().findChild("external-user-id").getText()));
-				Log.i("EXTERNAL USER ID =", String.valueOf(extUserId));
+				//int extUserId = Integer.parseInt((response.getBody().findChild("external-user-id").getText()));
+				//Log.i("EXTERNAL USER ID =", String.valueOf(extUserId));
 				
 				Toast.makeText(this, "Login was successful!",
 						Toast.LENGTH_LONG).show();
 
 				// store current user
-				Store.getInstance().setCurrentUser(response.getBody());
-
-
-			    Intent intent = new Intent();
-			    intent.putExtra(MapViewActivity.EXT_ID_GEOUSER, extUserId);
-
+				Store.getInstance().setCurrentUser(response.getBody().findChild("external-user-id").getText());
 				
 				// show main activity
-				Intent intent1 = new Intent();			
-				intent1.setClass(this, TabsActivity.class);
-				startActivity(intent1);
+			    Intent intent = new Intent();
+				intent.setClass(this, TabsActivity.class);
+				startActivity(intent);
 				finish();
+				
 			} else
 				Toast.makeText(this, "Login was unsuccessful",
 						Toast.LENGTH_LONG).show();
