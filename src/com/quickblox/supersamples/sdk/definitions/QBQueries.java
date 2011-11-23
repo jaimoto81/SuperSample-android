@@ -6,6 +6,7 @@ public class QBQueries {
 	//
 	public static final String APPLICATION_ID = "38";
 	public static final String OWNER_ID = "831";
+	public static final String STATUS = "I am";
 	
 	public static final String USERS_SERVICE_HOST_NAME = "users.quickblox.com";
 	public static final String GEOPOS_SERVICE_HOST_NAME = "geopos.quickblox.com";
@@ -38,7 +39,7 @@ public class QBQueries {
 	public static final String CREATE_GEOUSER_QUERY = String.format("http://%s/users", GEOPOS_SERVICE_HOST_NAME);
 	
 	// get the location's data all users
-	public static final String GET_ALL_LOCATIONS_QUERY = String.format("http://%s/geodata/find.xml/%s", 
+	public static final String GET_ALL_LOCATIONS_QUERY = String.format("http://%s/geodata/find.xml?app.id=%s", 
 			GEOPOS_SERVICE_HOST_NAME, APPLICATION_ID);
 	
 	// send the location's data of the current user
