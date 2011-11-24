@@ -65,9 +65,7 @@ public class MapViewActivity extends MapActivity implements
 
 	private MapView mapView;
 	private Button back;
-	private Button findLocBtn;
 	Geocoder geocoder;
-	ProgressDialog progDialog;
 	List<Address> addressList;
 	MapController mapController;
 	
@@ -87,7 +85,6 @@ public class MapViewActivity extends MapActivity implements
 		initMyLocation();
 
 		back = (Button) findViewById(R.id.back);
-		findLocBtn = (Button) findViewById(R.id.findLocBtn);
 	    
 		geocoder = new Geocoder(this);
 
