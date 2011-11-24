@@ -143,7 +143,7 @@ public class MapViewActivity extends MapActivity implements
 					// create entity for current user
 					List<NameValuePair> formparamsGeoUser = new ArrayList<NameValuePair>();
 					formparamsGeoUser.add(new BasicNameValuePair(
-							"geo_data[user_id]", String.valueOf(Store.getInstance().getCurrentUser().findChild("external-user-id").getText();)));
+							"geo_data[user_id]", String.valueOf(Store.getInstance().getCurrentUser().findChild("external-user-id").getText())));
 					formparamsGeoUser.add(new BasicNameValuePair(
 							"geo_data[status]", QBQueries.STATUS));
 					formparamsGeoUser.add(new BasicNameValuePair(

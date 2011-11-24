@@ -1,5 +1,7 @@
 package com.quickblox.supersamples.sdk.helpers;
 
+import com.quickblox.supersamples.sdk.objects.XMLNode;
+
 public class Store {
 	
 	/*
@@ -17,15 +19,15 @@ public class Store {
 	 /*
 	  * Fields
 	  */
-	 private Object currentUser;
+	 private XMLNode currentUser;
 	 
 	 /*
 	  * Properties
 	  */
-	 public Object getCurrentUser() {
+	 public XMLNode getCurrentUser() {
 		 return currentUser;
 	 }
-	 public void setCurrentUser(Object currentUser) {
+	 public void setCurrentUser(XMLNode currentUser) {
 		 this.currentUser = currentUser;
 	 }
 }
