@@ -5,6 +5,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -69,7 +71,12 @@ public class MapViewActivity extends MapActivity implements
 	List<Address> addressList;
 	MapController mapController;
 	
-	public static final String EXT_ID_GEOUSER = "ID_GEOUSER";
+	private TimerTask task;
+	private Timer timer;
+	// thread callback handler
+	private Handler mHandler = new Handler();
+	
+	public static final String EXT_ID_GEOUSER = String.valueOf(Store.getInstance().getCurrentUser().findChild("external-user-id").getText());
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -81,27 +88,39 @@ public class MapViewActivity extends MapActivity implements
 
 		back = (Button) findViewById(R.id.back);
 		findLocBtn = (Button) findViewById(R.id.findLocBtn);
-
-		//--------------------------------------------
-		 
-	    
-	    //Log.i("from LoginActivity", String.valueOf(id));
-	    //--------------------------------------------		
 	    
 		geocoder = new Geocoder(this);
 
-		Drawable marker = getResources().getDrawable(R.drawable.marker);
+		final Drawable marker = getResources().getDrawable(R.drawable.marker);
 		marker.setBounds(0, 0, marker.getIntrinsicWidth(),
 				marker.getIntrinsicHeight());
 
-		ShowAllUsers whereAreUsers = new ShowAllUsers(marker);
-		mapView.getOverlays().add(whereAreUsers);
+		//======== A run of a timer for update of the geopoints for each user ===========
+		timer = new Timer();
+		task = new TimerTask() {
 
-		GeoPoint pt = whereAreUsers.getCenter(); // get of a point with the
-													// highest rating
-		mapController.setCenter(pt);
-		mapController.setZoom(8);
+			@Override
+			public void run() {
+				mHandler.post(new Runnable() {
+					@Override
+					public void run() {
 
+						ShowAllUsers whereAreUsers = new ShowAllUsers(marker);
+						mapView.getOverlays().add(whereAreUsers);
+
+						Toast.makeText(getBaseContext(),
+								"The geopoints was changed!",
+								Toast.LENGTH_SHORT).show();
+					}
+				});
+			}
+		};
+
+		// each 10 seconds to do 
+		timer.schedule(task, 0, 10000);
+
+		//================================================
+		
 		// get a latitude and a longitude of the current user
 		LocationManager locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		LocationListener locListener = new LocationListener() {
@@ -115,13 +134,11 @@ public class MapViewActivity extends MapActivity implements
 			@Override
 			public void onProviderEnabled(String provider) {
 				// TODO Auto-generated method stub
-
 			}
 
 			@Override
 			public void onProviderDisabled(String provider) {
 				// TODO Auto-generated method stub
-
 			}
 
 			// if a location of the device will be changed,
@@ -137,13 +154,11 @@ public class MapViewActivity extends MapActivity implements
 
 					String lat = Double.toString(location.getLatitude());
 					String lng = Double.toString(location.getLongitude());
-
-
 					
 					// create entity for current user
 					List<NameValuePair> formparamsGeoUser = new ArrayList<NameValuePair>();
 					formparamsGeoUser.add(new BasicNameValuePair(
-							"geo_data[user_id]", String.valueOf(Store.getInstance().getCurrentUser().findChild("external-user-id").getText())));
+							"geo_data[user_id]", EXT_ID_GEOUSER));
 					formparamsGeoUser.add(new BasicNameValuePair(
 							"geo_data[status]", QBQueries.STATUS));
 					formparamsGeoUser.add(new BasicNameValuePair(
@@ -151,6 +166,8 @@ public class MapViewActivity extends MapActivity implements
 					formparamsGeoUser.add(new BasicNameValuePair(
 							"geo_data[longitude]", lng));
 
+					Log.i("EXTERNAL USER ID = ", EXT_ID_GEOUSER);
+					
 					UrlEncodedFormEntity postEntityGeoDataUser = null;
 					try {
 						postEntityGeoDataUser = new UrlEncodedFormEntity(
@@ -163,7 +180,7 @@ public class MapViewActivity extends MapActivity implements
 					Query.makeQueryAsync(QueryMethod.Post,
 							QBQueries.SEND_GPS_DATA_QUERY,
 							postEntityGeoDataUser, null, MapViewActivity.this,
-							QBQueries.QBQueryType.QBQueryTypeSendGPSData);
+							QBQueries.QBQueryType.QBQueryTypeSendGPSData);			
 				}
 			}
 		};
@@ -190,68 +207,12 @@ public class MapViewActivity extends MapActivity implements
 			@Override
 			public void run() {
 				// Show current location and change a zoom
-				mapController.setZoom(15);
+				mapController.setZoom(3);
 				mapController.animateTo(whereAmI.getMyLocation());
 			}
 		});
 		mapView.getOverlays().add(whereAmI);
 	}
-
-	public void doClick(View v) {
-		EditText loc = (EditText) findViewById(R.id.editLocation);
-		String locationName = loc.getText().toString();
-
-		progDialog = ProgressDialog.show(MapViewActivity.this, "Processing",
-				"Finding location", true, false);
-
-		findLocation(locationName);
-
-	}
-
-	public void findLocation(final String locationName) {
-
-		Thread thrd = new Thread() {
-			public void run() {
-				try {
-					// do background work
-					addressList = geocoder.getFromLocationName(locationName, 5);
-					// send message to handler to process results
-					uiCallback.sendEmptyMessage(0);
-
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		};
-		thrd.start();
-
-	}
-
-	// ui thread callback handler
-	private Handler uiCallback = new Handler() {
-		@Override
-		public void handleMessage(Message msg) {
-			// tear down dialog
-			progDialog.dismiss();
-
-			if (addressList != null && addressList.size() > 0) {
-				int lat = (int) (addressList.get(0).getLatitude() * 1000000);
-				int lng = (int) (addressList.get(0).getLongitude() * 1000000);
-				GeoPoint pt = new GeoPoint(lat, lng);
-				mapView.setSatellite(false);
-				mapView.getController().setZoom(19);
-				mapView.getController().animateTo(pt);
-
-			} else {
-				Dialog foundNothingDlg = new AlertDialog.Builder(
-						MapViewActivity.this).setIcon(0)
-						.setTitle("Failed to Find Location")
-						.setPositiveButton("Ok", null)
-						.setMessage("Location Not Found...").create();
-				foundNothingDlg.show();
-			}
-		}
-	};
 
 	@Override
 	protected boolean isLocationDisplayed() {
@@ -310,22 +271,25 @@ public class MapViewActivity extends MapActivity implements
 			locList = LocationsXMLHandler.locList;
 
 			for (int i = 0; i < locList.getUserID().size(); i++) {
+				if (locList.getUserID().get(i).equals(EXT_ID_GEOUSER) == false) {
+					try {
+						int lat = (int) (Double.parseDouble(locList.getLat()
+								.get(i)) * 1000000);
+						int lng = (int) (Double.parseDouble(locList.getLng()
+								.get(i)) * 1000000);
 
-				try {
-					int lat = (int) (Double
-							.parseDouble(locList.getLat().get(i)) * 1000000);
-					int lng = (int) (Double
-							.parseDouble(locList.getLng().get(i)) * 1000000);
+						// the geodata adding in to list of the locations
+						GeoPoint p = new GeoPoint(lat, lng);
+						locations.add(new OverlayItem(p, "", ""));
 
-					GeoPoint p = new GeoPoint(lat, lng);
-					locations.add(new OverlayItem(p, "", ""));
+					} catch (NumberFormatException e) {
+						e.printStackTrace();
+					}
+				} else
+					continue;
 
-				} catch (NumberFormatException e) {
-					e.printStackTrace();
-				}
+				populate();
 			}
-
-			populate();
 		}
 
 		// a shadow of the marker
