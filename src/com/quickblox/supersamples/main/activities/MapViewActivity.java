@@ -337,9 +337,4 @@ public class MapViewActivity extends MapActivity implements
 		}
 
 	}
-
-	
 }
-
-
-

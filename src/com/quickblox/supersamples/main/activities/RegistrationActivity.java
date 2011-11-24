@@ -1,24 +1,12 @@
 package com.quickblox.supersamples.main.activities;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.message.BasicNameValuePair;
-import org.jivesoftware.smack.AccountManager;
-import org.jivesoftware.smack.ConnectionConfiguration;
-import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.XMPPException;
-import org.xml.sax.InputSource;
-import org.xml.sax.XMLReader;
 
 import com.quickblox.supersamples.R;
 import com.quickblox.supersamples.main.helpers.ValidateFieldsForm;
@@ -27,11 +15,8 @@ import com.quickblox.supersamples.sdk.definitions.QBQueries;
 import com.quickblox.supersamples.sdk.definitions.QueryMethod;
 import com.quickblox.supersamples.sdk.definitions.ResponseHttpStatus;
 import com.quickblox.supersamples.sdk.definitions.QBQueries.QBQueryType;
-import com.quickblox.supersamples.sdk.helpers.LocationsXMLHandler;
 import com.quickblox.supersamples.sdk.helpers.Query;
-import com.quickblox.supersamples.sdk.objects.LocationsList;
 import com.quickblox.supersamples.sdk.objects.RestResponse;
-import com.quickblox.supersamples.sdk.objects.XMLNode;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -57,7 +42,6 @@ public class RegistrationActivity extends Activity implements ActionResultDelega
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.registration_view);
-			
 	}
 
 	public void onClickButtons(View v) {
@@ -101,15 +85,16 @@ public class RegistrationActivity extends Activity implements ActionResultDelega
 
 			// exit to the Main Activity
 			case R.id.butBack:
-
-				Intent intent = new Intent();
-				intent.setClass(this, StartActivity.class);
-
-				startActivity(intent);
-				finish();
-
+				backToPreviousActivity();
 				break;
 		}
+	}
+	
+	private void backToPreviousActivity(){
+		Intent intent = new Intent();
+		intent.setClass(this, StartActivity.class);
+		startActivity(intent);
+		finish();
 	}
 
 	@Override
@@ -162,23 +147,34 @@ public class RegistrationActivity extends Activity implements ActionResultDelega
 
 		switch(queryType){
 			case QBQueryTypeCreateUser:
+				// OK
 				if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus201) {
 					Toast.makeText(this, "On your email was send letter for the confirmation of the registration!",
 							Toast.LENGTH_LONG).show();
+					
+					backToPreviousActivity();
+					
+				// Validation error
+				} else if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus422) {
+					
+					String error = response.getBody().getChildren().get(0).getText();
 
-					// create ChatUser
-					//
-					// ...
-
-				} else
-					Toast.makeText(this, "User created unsuccessful",
-							Toast.LENGTH_LONG).show();		
+					AlertDialog.Builder builder = new AlertDialog.Builder(this);
+					builder.setMessage(error)
+					       .setCancelable(false)
+					       .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+					           public void onClick(DialogInterface dialog, int id) {
+					           }
+					       });
+					AlertDialog alert = builder.create();
+					alert.show();
+				}
+						
 				break;
 
 			case QBQueryTypeCreateGeoUser:
 				if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus201){ 		
-					Log.i("ID=", response.getBody().findChild("id").getText());
-
+					
 					// create entity
 					List<NameValuePair> formparamsUser = new ArrayList<NameValuePair>();
 					formparamsUser.add(new BasicNameValuePair("user[full_name]", editFullName.getText().toString()));
@@ -198,7 +194,21 @@ public class RegistrationActivity extends Activity implements ActionResultDelega
 					// make query
 					Query.makeQueryAsync(QueryMethod.Post, QBQueries.CREATE_USER_QUERY, postEntityUser, null, 
 							this, QBQueries.QBQueryType.QBQueryTypeCreateUser);
-			
+				
+				// Validation error
+				}else if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus422) {
+					String error = response.getBody().getChildren().get(0).getText();
+
+					AlertDialog.Builder builder = new AlertDialog.Builder(this);
+					builder.setMessage(error)
+					       .setCancelable(false)
+					       .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+					           public void onClick(DialogInterface dialog, int id) {
+					           }
+					       });
+					
+					AlertDialog alert = builder.create();
+					alert.show();
 				}
 				break;
 		}
