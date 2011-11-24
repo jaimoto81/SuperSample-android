@@ -43,6 +43,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -237,7 +238,6 @@ public class MapViewActivity extends MapActivity implements
 
 		private List<OverlayItem> locations = new ArrayList<OverlayItem>();
 		private Drawable marker;
-		/** Create Object For LocationsList Class */
 		LocationsList locList = null;
 
 		public ShowAllUsers(Drawable marker) {
@@ -294,9 +294,8 @@ public class MapViewActivity extends MapActivity implements
 		public void draw(Canvas canvas, MapView mapView, boolean shadow) {
 			super.draw(canvas, mapView, shadow);
 			boundCenterBottom(marker);
-
 		}
-
+		
 		@Override
 		protected OverlayItem createItem(int i) {
 			return locations.get(i);
@@ -307,6 +306,20 @@ public class MapViewActivity extends MapActivity implements
 			// TODO Auto-generated method stub
 			return locations.size();
 		}
+		
+		@Override
+		protected boolean onTap(int i) {
+			OverlayItem item = getItem(i);
+			GeoPoint geo = item.getPoint();
+
+			Toast.makeText(
+					getBaseContext(),
+					"New location latitude [" + geo.getLatitudeE6()
+							+ "] longitude [" + geo.getLongitudeE6() + "]",
+					Toast.LENGTH_LONG).show();
+
+			return true;
+		}		
 	}
 
 	@Override
@@ -324,6 +337,9 @@ public class MapViewActivity extends MapActivity implements
 		}
 
 	}
-	
+
 	
 }
+
+
+

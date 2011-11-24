@@ -20,68 +20,12 @@ import android.widget.TextView;
 
 public class ChatActivity extends Activity {
 
-	/** Create Object For LocationsList Class */
-	LocationsList locList = null;
-
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
 
-		/*
-		 *  Create a new layout to display the view
-		 */
-		LinearLayout layout = new LinearLayout(this);
-		layout.setOrientation(1);
-
-		/** Create a new textview array to display the results */
-		TextView userID[];
-		TextView latitude[];
-		TextView longitude[];
-
-		try {
-
-			/** Handling XML */
-			SAXParserFactory spf = SAXParserFactory.newInstance();
-			SAXParser sp = spf.newSAXParser();
-			XMLReader xr = sp.getXMLReader();
-
-			/** Send URL to parse XML Tags */
-			URL sourceUrl = new URL(QBQueries.GET_ALL_LOCATIONS_QUERY);
-
-			/** Create handler to handle XML Tags ( extends DefaultHandler ) */
-			LocationsXMLHandler locXMLHandler = new LocationsXMLHandler();
-			xr.setContentHandler(locXMLHandler);
-			xr.parse(new InputSource(sourceUrl.openStream()));
-
-		} catch (Exception e) {
-			System.out.println("XML Parsing Exception = " + e);
-		}
-
-		/** Get result from LocationsXMLHandler locationsList Object */
-		locList = LocationsXMLHandler.locList;
-
-		/** Assign textview array length by arraylist size */
-		userID = new TextView[locList.getUserID().size()];
-		latitude = new TextView[locList.getUserID().size()];
-		longitude = new TextView[locList.getUserID().size()];
-
-		/** Set the result text in textview and add it to layout */
-		for (int i = 0; i < locList.getUserID().size(); i++) {
-			userID[i] = new TextView(this);
-			userID[i].setText("userID = " + locList.getUserID().get(i));
-			latitude[i] = new TextView(this);
-			latitude[i].setText("Latitude = " + locList.getLat().get(i));
-			longitude[i] = new TextView(this);
-			longitude[i]
-					.setText("Longitude = " + locList.getLng().get(i));
-
-			layout.addView(userID[i]);
-			layout.addView(latitude[i]);
-			layout.addView(longitude[i]);
-		}
-
-		/** Set the layout view to display */
-		setContentView(layout);
-
-	}
+        TextView textview = new TextView(this);
+        textview.setText("This is the Chat's tab");
+        setContentView(textview);
+    }
 
 }
