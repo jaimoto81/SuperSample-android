@@ -310,7 +310,6 @@ public class MapViewActivity extends MapActivity implements
 			// TODO Auto-generated method stub
 			return locations.size();
 		}
-
 	}
 
 	@Override
@@ -328,4 +327,6 @@ public class MapViewActivity extends MapActivity implements
 		}
 
 	}
+	
+	
 }

@@ -33,14 +33,11 @@ public final class R {
         public static final int chat_message=0x7f060002;
         public static final int chat_message_header=0x7f060001;
         public static final int chat_user_avatar=0x7f060000;
-        public static final int editLocation=0x7f060016;
-        public static final int edit_email=0x7f060019;
-        public static final int edit_full_name=0x7f060018;
+        public static final int edit_email=0x7f060016;
+        public static final int edit_full_name=0x7f060015;
         public static final int edit_login=0x7f060007;
         public static final int edit_password=0x7f060008;
-        public static final int edit_retype_pass=0x7f06001a;
-        public static final int findLocBtn=0x7f060017;
-        public static final int linearLayout1=0x7f060015;
+        public static final int edit_retype_pass=0x7f060017;
         public static final int logo=0x7f06000b;
         public static final int mapview=0x7f060013;
         public static final int message_editText=0x7f060003;
