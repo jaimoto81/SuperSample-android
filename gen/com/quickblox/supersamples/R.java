@@ -20,9 +20,8 @@ public final class R {
         public static final int listview_selector=0x7f020001;
         public static final int logo=0x7f020002;
         public static final int marker=0x7f020003;
-        public static final int popup=0x7f020004;
-        public static final int popup_frame=0x7f020005;
-        public static final int user_icon=0x7f020006;
+        public static final int popup_frame=0x7f020004;
+        public static final int user_icon=0x7f020005;
     }
     public static final class id {
         public static final int back=0x7f060014;
