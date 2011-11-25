@@ -20,7 +20,9 @@ public final class R {
         public static final int listview_selector=0x7f020001;
         public static final int logo=0x7f020002;
         public static final int marker=0x7f020003;
-        public static final int user_icon=0x7f020004;
+        public static final int popup=0x7f020004;
+        public static final int popup_frame=0x7f020005;
+        public static final int user_icon=0x7f020006;
     }
     public static final class id {
         public static final int back=0x7f060014;
@@ -33,12 +35,14 @@ public final class R {
         public static final int chat_message=0x7f060002;
         public static final int chat_message_header=0x7f060001;
         public static final int chat_user_avatar=0x7f060000;
-        public static final int edit_email=0x7f060016;
-        public static final int edit_full_name=0x7f060015;
+        public static final int edit_email=0x7f060018;
+        public static final int edit_full_name=0x7f060017;
         public static final int edit_login=0x7f060007;
         public static final int edit_password=0x7f060008;
-        public static final int edit_retype_pass=0x7f060017;
+        public static final int edit_retype_pass=0x7f060019;
+        public static final int latitude=0x7f060015;
         public static final int logo=0x7f06000b;
+        public static final int longitude=0x7f060016;
         public static final int mapview=0x7f060013;
         public static final int message_editText=0x7f060003;
         public static final int quickblox=0x7f06000c;
@@ -54,8 +58,9 @@ public final class R {
         public static final int login_view=0x7f030002;
         public static final int main=0x7f030003;
         public static final int mapview=0x7f030004;
-        public static final int registration_view=0x7f030005;
-        public static final int tabs_view=0x7f030006;
+        public static final int pop_up=0x7f030005;
+        public static final int registration_view=0x7f030006;
+        public static final int tabs_view=0x7f030007;
     }
     public static final class string {
         public static final int alert_email_blank=0x7f040014;

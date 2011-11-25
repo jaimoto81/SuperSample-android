@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -42,6 +43,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
@@ -50,14 +52,21 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Layout;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -66,14 +75,16 @@ public class MapViewActivity extends MapActivity implements
 
 	private MapView mapView;
 	private Button back;
-	Geocoder geocoder;
 	List<Address> addressList;
 	MapController mapController;
+	private Drawable marker;
 	
 	private TimerTask task;
 	private Timer timer;
 	// thread callback handler
 	private Handler mHandler = new Handler();
+	
+	private static boolean TIMER_STARTED = false;
 	
 	public static final String EXT_ID_GEOUSER = String.valueOf(Store.getInstance().getCurrentUser().findChild("external-user-id").getText());
 
@@ -86,15 +97,15 @@ public class MapViewActivity extends MapActivity implements
 		initMyLocation();
 
 		back = (Button) findViewById(R.id.back);
-	    
-		geocoder = new Geocoder(this);
 
-		final Drawable marker = getResources().getDrawable(R.drawable.marker);
+		marker = getResources().getDrawable(R.drawable.marker);
 		marker.setBounds(0, 0, marker.getIntrinsicWidth(),
 				marker.getIntrinsicHeight());
 
-		//======== A run of a timer for update of the geopoints for each user ===========
-		timer = new Timer();
+		startTimer();
+		// A run of a timer for update of the geopoints for each user 
+		//============================================================
+		/*timer = new Timer();
 		task = new TimerTask() {
 
 			@Override
@@ -102,10 +113,8 @@ public class MapViewActivity extends MapActivity implements
 				mHandler.post(new Runnable() {
 					@Override
 					public void run() {
-
 						ShowAllUsers whereAreUsers = new ShowAllUsers(marker);
 						mapView.getOverlays().add(whereAreUsers);
-
 						Toast.makeText(getBaseContext(),
 								"The geopoints was changed!",
 								Toast.LENGTH_SHORT).show();
@@ -113,11 +122,9 @@ public class MapViewActivity extends MapActivity implements
 				});
 			}
 		};
-
-		// each 10 seconds to do 
-		timer.schedule(task, 0, 10000);
-
-		//================================================
+		// each 10 seconds to do
+		timer.schedule(task, 0, 10000);*/
+		//=============================================================
 		
 		// get a latitude and a longitude of the current user
 		LocationManager locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -233,12 +240,13 @@ public class MapViewActivity extends MapActivity implements
 		finish();
 
 	}
-
+	
 	class ShowAllUsers extends ItemizedOverlay<OverlayItem> {
 
 		private List<OverlayItem> locations = new ArrayList<OverlayItem>();
 		private Drawable marker;
 		LocationsList locList = null;
+		private PopupPanel panel=new PopupPanel(R.layout.pop_up);
 
 		public ShowAllUsers(Drawable marker) {
 			super(marker);
@@ -308,18 +316,22 @@ public class MapViewActivity extends MapActivity implements
 		}
 		
 		@Override
-		protected boolean onTap(int i) {
+		protected boolean onTap(int i) {		
 			OverlayItem item = getItem(i);
 			GeoPoint geo = item.getPoint();
+			Point pt = mapView.getProjection().toPixels(geo, null);
 
-			Toast.makeText(
-					getBaseContext(),
-					"New location latitude [" + geo.getLatitudeE6()
-							+ "] longitude [" + geo.getLongitudeE6() + "]",
-					Toast.LENGTH_LONG).show();
+			View view = panel.getView();
 
+			((TextView) view.findViewById(R.id.latitude)).setText(String
+					.valueOf(geo.getLatitudeE6() / 1000000.0));
+			((TextView) view.findViewById(R.id.longitude)).setText(String
+					.valueOf(geo.getLongitudeE6() / 1000000.0));
+
+			panel.show(pt.y*2>mapView.getHeight());
+		
 			return true;
-		}		
+		}
 	}
 
 	@Override
@@ -338,7 +350,103 @@ public class MapViewActivity extends MapActivity implements
 
 	}
 
+	public void startTimer() {
+		if (!TIMER_STARTED)
+		{
+			TIMER_STARTED = true;
+			Log.i("TIMER", "timer is run");
+			timer = new Timer();
+			task = new TimerTask() {
+
+				@Override
+				public void run() {
+					mHandler.post(new Runnable() {
+						@Override
+						public void run() {
+							ShowAllUsers whereAreUsers = new ShowAllUsers(
+									marker);
+							mapView.getOverlays().add(whereAreUsers);
+							Toast.makeText(getBaseContext(),
+									"The geopoints was changed!",
+									Toast.LENGTH_SHORT).show();
+						}
+					});
+				}
+			};
+			// each 30 seconds to do
+			timer.schedule(task, 0, 30000);
+		}
+	}
+		
+	@Override
+	protected void onStop() {
+		timer.cancel();
+		super.onStop();
+		Log.i("TIMER", "timer is stop");
+	}
 	
+	@Override
+	protected void onPause() {
+		timer.cancel();
+		TIMER_STARTED = false;
+		super.onPause();
+		Log.i("TIMER", "timer is on pause");
+	}
+	
+	@Override
+	protected void onResume() {
+		startTimer();	
+		super.onResume();
+	}
+		
+	class PopupPanel {
+	    View popup;
+	    boolean isVisible=false;
+	    
+	    PopupPanel(int layout) {
+	      ViewGroup parent=(ViewGroup)mapView.getParent();
+
+	      popup=getLayoutInflater().inflate(layout, parent, false);
+	                  
+	      popup.setOnClickListener(new View.OnClickListener() {
+	        public void onClick(View v) {
+	          hide();
+	        }
+	      });
+	    }
+	    
+	    View getView() {
+	      return(popup);
+	    }
+	    
+	    void show(boolean alignTop) {
+	    	
+			RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
+					RelativeLayout.LayoutParams.WRAP_CONTENT,
+					RelativeLayout.LayoutParams.WRAP_CONTENT);
+	      
+			if (alignTop) {
+				lp.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+				lp.setMargins(0, 20, 0, 0);
+			} else {
+				lp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+				lp.setMargins(0, 0, 0, 60);
+			}
+
+			hide();
+	      
+	      ((ViewGroup)mapView.getParent()).addView(popup, lp);
+	      isVisible=true;
+	    }
+	    
+	    void hide() {
+	      if (isVisible) {
+	        isVisible=false;
+	        ((ViewGroup)popup.getParent()).removeView(popup);
+	      }
+	    }
+	  }
+
 }
 
 
