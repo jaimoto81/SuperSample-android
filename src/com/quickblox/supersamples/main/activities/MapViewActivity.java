@@ -349,6 +349,7 @@ public class MapViewActivity extends MapActivity implements
 		}
 
 	}
+<<<<<<< HEAD
 
 	public void startTimer() {
 		if (!TIMER_STARTED)
@@ -448,6 +449,4 @@ public class MapViewActivity extends MapActivity implements
 	  }
 
 }
-
-
 

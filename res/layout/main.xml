@@ -20,7 +20,7 @@
         android:layout_centerHorizontal="true"
         android:text="@string/url_quickblox"
         android:textColor="@color/black"
-        android:textStyle="bold" />
+        android:textStyle="bold" android:autoLink="web"/>
 
     <TextView
         android:id="@+id/textTitle1"
@@ -43,20 +43,7 @@
         android:layout_marginTop="5dp"
         android:text="@string/url_samples"
         android:textColor="@color/black"
-        android:textStyle="bold" />
-
-    <Button
-        android:id="@+id/butProcede"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/butRegistration"
-        android:layout_alignRight="@+id/butRegistration"
-        android:layout_below="@+id/url_samples"
-        android:layout_marginTop="10dp"
-        android:onClick="buttonOnClick"
-        android:padding="15dp"
-        android:text="@string/procede"
-        android:textStyle="bold" />
+        android:textStyle="bold" android:autoLink="web"/>
 
     <Button
         android:id="@+id/butLogin"
@@ -64,11 +51,11 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/butRegistration"
         android:layout_alignRight="@+id/butRegistration"
-        android:layout_below="@+id/butProcede"
+        android:layout_below="@+id/url_samples"
         android:onClick="buttonOnClick"
         android:padding="15dp"
         android:text="@string/login"
-        android:textStyle="bold" />
+        android:textStyle="bold" android:layout_marginTop="15dp"/>
 
     <Button
         android:id="@+id/butRegistration"

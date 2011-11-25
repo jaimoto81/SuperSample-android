@@ -38,14 +38,6 @@ public class StartActivity extends Activity {
 			finish();
 
 			break;
-		case R.id.butProcede:
-
-			intent.setClass(this, TabsActivity.class);
-
-			startActivity(intent);
-			finish();
-
-			break;
 		}
 	}
 }

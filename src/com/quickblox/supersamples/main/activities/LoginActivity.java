@@ -120,10 +120,6 @@ public class LoginActivity extends Activity implements ActionResultDelegate{
 	public void completedWithResult(QBQueryType queryType, RestResponse response) {
 		if(queryType == QBQueries.QBQueryType.QBQueryTypeLoginUser){
 			if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus202) {
-				
-				Toast.makeText(this, "Login was successful!",
-						Toast.LENGTH_LONG).show();
-
 				// store current user
 				Store.getInstance().setCurrentUser(response.getBody());
 				
@@ -133,9 +129,30 @@ public class LoginActivity extends Activity implements ActionResultDelegate{
 				startActivity(intent);
 				finish();
 				
-			} else
-				Toast.makeText(this, "Login was unsuccessful",
-						Toast.LENGTH_LONG).show();
+			} else if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus401) {
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				builder.setMessage("Validation error")
+				       .setCancelable(false)
+				       .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+				           public void onClick(DialogInterface dialog, int id) {
+				           }
+				       });
+				AlertDialog alert = builder.create();
+				alert.show();
+			
+			} else if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus422) {
+				String error = response.getBody().getChildren().get(0).getText();
+
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				builder.setMessage(error)
+				       .setCancelable(false)
+				       .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+				           public void onClick(DialogInterface dialog, int id) {
+				           }
+				       });
+				AlertDialog alert = builder.create();
+				alert.show();
+			}
 		}
 	}
 }
