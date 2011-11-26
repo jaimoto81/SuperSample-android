@@ -21,6 +21,9 @@ public class QBQueries {
 	// add user
 	public static final String CREATE_USER_QUERY = String.format("http://%s/users", USERS_SERVICE_HOST_NAME);
 	
+	// edit user
+	public static final String EDIT_USER_QUERY = String.format("http://%s/users", USERS_SERVICE_HOST_NAME);
+	
 	// remove user by id
 	public static final String REMOVE_USER_QUERY_FORMAT = String.format("http://%s/users/", USERS_SERVICE_HOST_NAME) + "%s";
 	
@@ -61,6 +64,7 @@ public class QBQueries {
 	public static enum QBQueryType{
 		QBQueryTypeGetAllUsers,
 		QBQueryTypeCreateUser,
+		QBQueryTypeEditUser,
 		QBQueryTypeRemoveUser,
 		QBQueryTypeLoginUser,
 		QBQueryTypeIdentifyUser,

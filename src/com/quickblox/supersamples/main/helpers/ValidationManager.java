@@ -3,7 +3,7 @@ package com.quickblox.supersamples.main.helpers;
 import java.util.regex.Pattern;
 import android.widget.EditText;
 
-public class ValidateFieldsForm {
+public class ValidationManager {
 
 	// a result of the validation of the fields from the form
 	public static final int ALERT_OK = 0; // parameters is entered correctly

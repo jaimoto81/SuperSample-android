@@ -9,7 +9,8 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.message.BasicNameValuePair;
 
 import com.quickblox.supersamples.R;
-import com.quickblox.supersamples.main.helpers.ValidateFieldsForm;
+import com.quickblox.supersamples.main.helpers.AlertManager;
+import com.quickblox.supersamples.main.helpers.ValidationManager;
 import com.quickblox.supersamples.sdk.definitions.ActionResultDelegate;
 import com.quickblox.supersamples.sdk.definitions.QBQueries;
 import com.quickblox.supersamples.sdk.definitions.QueryMethod;
@@ -26,16 +27,20 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 public class LoginActivity extends Activity implements ActionResultDelegate{
 
+	private ProgressBar queryProgressBar;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login_view);
+		
+		queryProgressBar = (ProgressBar)findViewById(R.id.queryLogin_progressBar);
 	}
 
 	public void onClickButtons(View v) {
@@ -46,13 +51,14 @@ public class LoginActivity extends Activity implements ActionResultDelegate{
 				EditText editPassword = (EditText) findViewById(R.id.edit_password);
 
 				// validate fields
-				int validationResult = ValidateFieldsForm.checkInputParameters(editLogin, editPassword);
-				if(validationResult != ValidateFieldsForm.ALERT_OK){
+				int validationResult = ValidationManager.checkInputParameters(editLogin, editPassword);
+				if(validationResult != ValidationManager.ALERT_OK){
 					showDialog(validationResult);
 					return;
 				}
 
-
+				queryProgressBar.setVisibility(View.VISIBLE);
+				
 				// create entity
 				List<NameValuePair> formparams = new ArrayList<NameValuePair>();
 				formparams.add(new BasicNameValuePair("owner_id", QBQueries.OWNER_ID));
@@ -74,7 +80,6 @@ public class LoginActivity extends Activity implements ActionResultDelegate{
 
 				Intent intent = new Intent();
 				intent.setClass(this, StartActivity.class);
-
 				startActivity(intent);
 				finish();
 
@@ -89,11 +94,11 @@ public class LoginActivity extends Activity implements ActionResultDelegate{
 		int alertMessage;
 
 		switch (id) {
-			case ValidateFieldsForm.ALERT_LOGIN:
+			case ValidationManager.ALERT_LOGIN:
 				alertMessage = R.string.alert_login_blank;
 				break;
 
-			case ValidateFieldsForm.ALERT_PASSWORD:
+			case ValidationManager.ALERT_PASSWORD:
 				alertMessage = R.string.alert_password_blank;
 				break;
 
@@ -120,6 +125,7 @@ public class LoginActivity extends Activity implements ActionResultDelegate{
 		
 		if(queryType == QBQueries.QBQueryType.QBQueryTypeLoginUser){
 			if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus202) {
+				
 				// store current user
 				Store.getInstance().setCurrentUser(response.getBody());
 				
@@ -130,28 +136,15 @@ public class LoginActivity extends Activity implements ActionResultDelegate{
 				finish();
 				
 			} else if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus401) {
-				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				builder.setMessage("Unauthorized. Please check you login and password")
-				       .setCancelable(false)
-				       .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-				           public void onClick(DialogInterface dialog, int id) {
-				           }
-				       });
-				AlertDialog alert = builder.create();
-				alert.show();
+				queryProgressBar.setVisibility(View.GONE);
+			
+				AlertManager.showServerError(this, "Unauthorized. Please check you login and password");
 			
 			} else if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus422) {
+				queryProgressBar.setVisibility(View.GONE);
+				
 				String error = response.getBody().getChildren().get(0).getText();
-
-				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				builder.setMessage(error)
-				       .setCancelable(false)
-				       .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-				           public void onClick(DialogInterface dialog, int id) {
-				           }
-				       });
-				AlertDialog alert = builder.create();
-				alert.show();
+				AlertManager.showServerError(this, error);
 			}
 		}
 	}

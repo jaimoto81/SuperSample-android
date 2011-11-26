@@ -16,19 +16,27 @@ public class Store {
 	     return instance;
 	 }
 	 
-	 /*
-	  * Fields
-	  */
-	 private XMLNode currentUser;
+	/*
+	 * Fields
+	 */
+	private XMLNode currentUser;
+	private XMLNode currentGeoUser;
 	 
-	 /*
-	  * Properties
-	  */
-	 public XMLNode getCurrentUser() {
-		 return currentUser;
-	 }
-	 public void setCurrentUser(XMLNode currentUser) {
-		 this.currentUser = currentUser;
-	 }
+	/*
+     * Properties
+     */
+	public XMLNode getCurrentUser() {
+		return currentUser;
+	}
+	public void setCurrentUser(XMLNode currentUser) {
+		this.currentUser = currentUser;
+	}
+	 
+	public XMLNode getCurrentGeoUser() {
+		return currentGeoUser;
+	}
+	public void setCurrentGeoUser(XMLNode currentGeoUser) {
+		this.currentGeoUser = currentGeoUser;
+	}
 }
 

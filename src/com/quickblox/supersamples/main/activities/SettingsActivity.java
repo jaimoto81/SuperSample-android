@@ -9,7 +9,7 @@ public class SettingsActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         TextView textview = new TextView(this);
-        textview.setText("This is the Setting's tab");
+        textview.setText("Coming soon...");
         setContentView(textview);
     }
 }
