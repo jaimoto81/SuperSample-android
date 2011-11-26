@@ -4,8 +4,8 @@ public class QBQueries {
 
 	// Constants
 	//
-	public static final String APPLICATION_ID = "38";
-	public static final String OWNER_ID = "831";
+	public static final String APPLICATION_ID = "20";
+	public static final String OWNER_ID = "35";
 	public static final String STATUS = "I am";
 	
 	public static final String USERS_SERVICE_HOST_NAME = "users.quickblox.com";

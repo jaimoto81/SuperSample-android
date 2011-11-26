@@ -29,7 +29,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 public class LoginActivity extends Activity implements ActionResultDelegate{
 
@@ -118,6 +117,7 @@ public class LoginActivity extends Activity implements ActionResultDelegate{
 
 	@Override
 	public void completedWithResult(QBQueryType queryType, RestResponse response) {
+		
 		if(queryType == QBQueries.QBQueryType.QBQueryTypeLoginUser){
 			if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus202) {
 				// store current user
@@ -131,7 +131,7 @@ public class LoginActivity extends Activity implements ActionResultDelegate{
 				
 			} else if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus401) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				builder.setMessage("Validation error")
+				builder.setMessage("Unauthorized. Please check you login and password")
 				       .setCancelable(false)
 				       .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 				           public void onClick(DialogInterface dialog, int id) {

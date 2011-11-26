@@ -69,9 +69,10 @@ public class QuizActivity extends Activity implements ActionResultDelegate{
 				}
 				
 				// create entity for current user
+				String geoUserId = Store.getInstance().getCurrentUser().findChild("external-user-id").getText();
 				List<NameValuePair> formparamsGeoData = new ArrayList<NameValuePair>();
 				formparamsGeoData.add(new BasicNameValuePair(
-						"geo_data[user_id]", "244"));
+						"geo_data[user_id]", geoUserId));
 				formparamsGeoData.add(new BasicNameValuePair(
 						"geo_data[status]", message));
 				formparamsGeoData.add(new BasicNameValuePair(

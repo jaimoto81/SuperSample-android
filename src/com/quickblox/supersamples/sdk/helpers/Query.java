@@ -37,7 +37,7 @@ public class Query {
 	// sync query
 	public static RestResponse makeQuery(QueryMethod queryMethod, String query, HttpEntity queryEntity, Header []headers){
 		HttpClient httpclient = new DefaultHttpClient();
-		
+
 		try {
 			Log.i("Input entity=", EntityUtils.toString(queryEntity));
 		} catch (Exception e) {
@@ -115,6 +115,9 @@ public class Query {
 				case 404:
 					status = ResponseHttpStatus.ResponseHttpStatus404;
 				break;
+				case 401:
+					status = ResponseHttpStatus.ResponseHttpStatus401;
+				break;
 			}
 			restResponse.setResponseStatus(status);
 			
@@ -133,14 +136,16 @@ public class Query {
 			
 			Log.i("responseStatus", String.valueOf(response.getStatusLine().getStatusCode()));
 			Log.i("responseEntity", responseEntity);
-
-			// parse entity
-			XMLParser parser = new XMLParser();
-            Object [] parsedBody = parser.parseXmlString(responseEntity);
-            parser = null;
-             
-            restResponse.setResponseBodyType(parsedBody[0]);
- 			restResponse.setBody((XMLNode)parsedBody[1]);
+			
+			if(responseEntity != null && responseEntity.length() > 1){
+				// parse entity
+				XMLParser parser = new XMLParser();
+	            Object [] parsedBody = parser.parseXmlString(responseEntity);
+	            parser = null;
+	             
+	            restResponse.setResponseBodyType(parsedBody[0]);
+	 			restResponse.setBody((XMLNode)parsedBody[1]);
+			}
 
 			return restResponse;
 		}
