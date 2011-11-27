@@ -3,24 +3,12 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
-
+    
     <com.google.android.maps.MapView
         android:id="@+id/mapview"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:apiKey="0mv9IyEyYVzRfHbsWHTeG9N0SpwWaMS5yvaAqsQ"
         android:clickable="true" />
-
-    <Button
-        android:id="@+id/back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginRight="18dp"
-        android:layout_marginTop="17dp"
-        android:onClick="exit"
-        android:text="@string/back" >
-    </Button>
-
+    
 </RelativeLayout>

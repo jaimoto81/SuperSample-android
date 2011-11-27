@@ -6,5 +6,6 @@ public enum ResponseHttpStatus {
 	ResponseHttpStatus202, // ACCEPTED
 	ResponseHttpStatus422, // validation error
 	ResponseHttpStatus401, // authentication error
+	ResponseHttpStatus403, // access denied
 	ResponseHttpStatus404, // not found
 }

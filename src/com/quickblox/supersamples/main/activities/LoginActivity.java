@@ -122,12 +122,35 @@ public class LoginActivity extends Activity implements ActionResultDelegate{
 
 	@Override
 	public void completedWithResult(QBQueryType queryType, RestResponse response) {
-		
-		if(queryType == QBQueries.QBQueryType.QBQueryTypeLoginUser){
-			if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus202) {
+		switch(queryType){
+			case QBQueryTypeLoginUser:
+				if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus202) {
+					
+					// store current user
+					Store.getInstance().setCurrentUser(response.getBody());
+	
+					// get GeoUser
+					// make query
+					String geouserId = response.getBody().findChild("external-user-id").getText();
+					Query.makeQueryAsync(QueryMethod.Get, String.format(QBQueries.GET_GEOUSER_QUERY_FORMAT, geouserId), null, null, 
+							this, QBQueries.QBQueryType.QBQueryTypeGetGeoUser);
+	
+				} else if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus401) {
+					queryProgressBar.setVisibility(View.GONE);
 				
-				// store current user
-				Store.getInstance().setCurrentUser(response.getBody());
+					AlertManager.showServerError(this, "Unauthorized. Please check you login and password");
+				
+				} else if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus422) {
+					queryProgressBar.setVisibility(View.GONE);
+					
+					String error = response.getBody().getChildren().get(0).getText();
+					AlertManager.showServerError(this, error);
+				}
+			break;
+			
+			case QBQueryTypeGetGeoUser:
+				// store current geo user
+				Store.getInstance().setCurrentGeoUser(response.getBody());
 				
 				// show main activity
 			    Intent intent = new Intent();
@@ -135,17 +158,7 @@ public class LoginActivity extends Activity implements ActionResultDelegate{
 				startActivity(intent);
 				finish();
 				
-			} else if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus401) {
-				queryProgressBar.setVisibility(View.GONE);
-			
-				AlertManager.showServerError(this, "Unauthorized. Please check you login and password");
-			
-			} else if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus422) {
-				queryProgressBar.setVisibility(View.GONE);
-				
-				String error = response.getBody().getChildren().get(0).getText();
-				AlertManager.showServerError(this, error);
-			}
+				break;
 		}
 	}
 }

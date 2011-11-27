@@ -39,10 +39,13 @@ public class Query {
 		HttpClient httpclient = new DefaultHttpClient();
 
 		try {
-			Log.i("Input entity=", EntityUtils.toString(queryEntity));
+			if(queryEntity != null){
+				Log.i("Input entity=", EntityUtils.toString(queryEntity));
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 		Log.i("Input Query=", query);
 		
 		// set method
@@ -118,6 +121,9 @@ public class Query {
 				case 401:
 					status = ResponseHttpStatus.ResponseHttpStatus401;
 				break;
+				case 403:
+					status = ResponseHttpStatus.ResponseHttpStatus403;
+					break;
 			}
 			restResponse.setResponseStatus(status);
 			
@@ -135,7 +141,7 @@ public class Query {
 			}
 			
 			Log.i("responseStatus", String.valueOf(response.getStatusLine().getStatusCode()));
-			Log.i("responseEntity", responseEntity);
+			//Log.i("responseEntity", responseEntity);
 			
 			if(responseEntity != null && responseEntity.length() > 1){
 				// parse entity

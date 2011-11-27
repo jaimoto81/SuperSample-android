@@ -6,7 +6,7 @@ public class QBQueries {
 	//
 	public static final String APPLICATION_ID = "20";
 	public static final String OWNER_ID = "35";
-	public static final String STATUS = "I am";
+	public static final String GEO_STATUS = "I am";
 	
 	public static final String USERS_SERVICE_HOST_NAME = "users.quickblox.com";
 	public static final String GEOPOS_SERVICE_HOST_NAME = "geopos.quickblox.com";
@@ -38,6 +38,9 @@ public class QBQueries {
 	
 	
 	
+	// get a geouser
+	public static final String GET_GEOUSER_QUERY_FORMAT = String.format("http://%s/users/", GEOPOS_SERVICE_HOST_NAME) + "%s.xml";
+		
 	// create a geouser
 	public static final String CREATE_GEOUSER_QUERY = String.format("http://%s/users", GEOPOS_SERVICE_HOST_NAME);
 	
@@ -48,13 +51,9 @@ public class QBQueries {
 	public static final String GET_ALL_LOCATIONS_QUERY = String.format("http://%s/geodata/find.xml?app.id=%s&last_only=1", 
 			GEOPOS_SERVICE_HOST_NAME, APPLICATION_ID);
 		
-	// send the location's data of the current user
-	public static final String SEND_GPS_DATA_QUERY = String.format("http://%s/geodata", GEOPOS_SERVICE_HOST_NAME);
-	
-	
 	
 	// get all geodata
-	public static final String GET_GEODATA_QUERY = String.format("http://%s/geodata/find.xml?app.id=%s", GEOPOS_SERVICE_HOST_NAME, APPLICATION_ID);
+	public static final String GET_GEODATA_QUERY = String.format("http://%s/geodata/find.xml?app.id=%s&page_size=20&sort_by=created_at", GEOPOS_SERVICE_HOST_NAME, APPLICATION_ID);
 	
 	// create geodata
 	public static final String CREATE_GEODATA_QUERY = String.format("http://%s/geodata", GEOPOS_SERVICE_HOST_NAME);
@@ -70,10 +69,10 @@ public class QBQueries {
 		QBQueryTypeIdentifyUser,
 		QBQueryTypeLogoutUser,
 		
+		QBQueryTypeGetGeoUser,
 		QBQueryTypeCreateGeoUser,
 		QBQueryTypeRemoveGeoUser,
 		QBQueryTypeGetAllLocationsGeoUser,
-		QBQueryTypeSendGPSData,
 		QBQueryTypeGetGeodata,
 		QBQueryTypeCreateGeodata,
 	}

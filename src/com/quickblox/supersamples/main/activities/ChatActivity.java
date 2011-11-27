@@ -1,7 +1,9 @@
 package com.quickblox.supersamples.main.activities;
 
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -11,8 +13,11 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.message.BasicNameValuePair;
 
 import com.quickblox.supersamples.R;
+import com.quickblox.supersamples.main.helpers.AlertManager;
 import com.quickblox.supersamples.main.helpers.ChatArrayAdapter;
+import com.quickblox.supersamples.objects.ChatItem;
 import com.quickblox.supersamples.sdk.definitions.ActionResultDelegate;
+import com.quickblox.supersamples.sdk.definitions.Consts;
 import com.quickblox.supersamples.sdk.definitions.QBQueries;
 import com.quickblox.supersamples.sdk.definitions.QueryMethod;
 import com.quickblox.supersamples.sdk.definitions.ResponseHttpStatus;
@@ -27,6 +32,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 public class ChatActivity extends Activity implements ActionResultDelegate{
@@ -34,22 +40,43 @@ public class ChatActivity extends Activity implements ActionResultDelegate{
 	private EditText messageTextEdit;
 	private ListView chatListView;
 	private ChatArrayAdapter listAdapter;
+	private ProgressBar queryProgressBar;
+	boolean isChatUpdating;
+	private Timer chatUpdateTimer;
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
         setContentView(R.layout.chat_view);
         
         chatListView = (ListView)findViewById(R.id.chat_listView);
         messageTextEdit = (EditText)findViewById(R.id.message_editText);
         chatListView = (ListView)findViewById(R.id.chat_listView);
+        queryProgressBar = (ProgressBar)findViewById(R.id.chatQuery_progressBar);
         
-        // update chat periodicaly
-        new Timer().schedule(new TimerTask() {
+        List<ChatItem> chatData = new ArrayList<ChatItem>();
+        listAdapter = new ChatArrayAdapter(ChatActivity.this, R.layout.chat_listview_item, chatData);
+	    chatListView.setAdapter(listAdapter);
+    }
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		chatUpdateTimer.cancel();
+		chatUpdateTimer = null;
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		chatUpdateTimer = new Timer();
+		chatUpdateTimer.schedule(new TimerTask() {
 			public void run() {
 				updateChat();
 			}
-		}, 0, 7000);
-    }
+		}, 50, Consts.CHAT_UPDATE_PERIOD);
+	}
 	
 	public void onClickButtons(View v) {
 		switch (v.getId()) {
@@ -67,17 +94,25 @@ public class ChatActivity extends Activity implements ActionResultDelegate{
 					return;
 				}
 				
+				queryProgressBar.setVisibility(View.VISIBLE);
+				
 				// create entity for current user
 				String geoUserId = Store.getInstance().getCurrentUser().findChild("external-user-id").getText();
+				String lat = "45.45", lng = "45.45";
+				if(Store.getInstance().getCurrentLocation() != null){
+					lat = Double.toString(Store.getInstance().getCurrentLocation().getLatitude());
+					lng = Double.toString(Store.getInstance().getCurrentLocation().getLongitude());
+				}
+				
 				List<NameValuePair> formparamsGeoData = new ArrayList<NameValuePair>();
 				formparamsGeoData.add(new BasicNameValuePair(
 						"geo_data[user_id]", geoUserId));
 				formparamsGeoData.add(new BasicNameValuePair(
 						"geo_data[status]", message));
 				formparamsGeoData.add(new BasicNameValuePair(
-						"geo_data[latitude]", "23.534234"));
+						"geo_data[latitude]", lat));
 				formparamsGeoData.add(new BasicNameValuePair(
-						"geo_data[longitude]", "44.523424"));
+						"geo_data[longitude]", lng));
 
 				UrlEncodedFormEntity postEntityGeoData = null;
 				try {
@@ -99,16 +134,56 @@ public class ChatActivity extends Activity implements ActionResultDelegate{
 	
 	// update chat
 	private void updateChat(){
+		isChatUpdating = true;
+		
 		Query.makeQueryAsync(QueryMethod.Get, QBQueries.GET_GEODATA_QUERY,
 				null, null, this, QBQueries.QBQueryType.QBQueryTypeGetGeodata);
 	}
 	
-	private void reloadList(XMLNode object){
-		object.getChildren().remove(0);
-		
-	    listAdapter = new ChatArrayAdapter(this, R.layout.chat_listview_item, 
-	    		object.getChildren());
-	    chatListView.setAdapter(listAdapter);
+	// reload listView
+	private void reloadList(final XMLNode object){
+		new Thread(new Runnable() {
+			public void run() {
+				// remove 'page count' element
+				object.getChildren().remove(0);
+
+				// populate chats
+				for(int i=object.getChildren().size()-1; i>=0; --i){
+					XMLNode child = object.getChildren().get(i);
+					
+					String status = child.findChild("status").getAttributes().get("nil");
+					if(status == null){
+						String ID = child.findChild("id").getText();
+						
+						// skip if already exist
+						if(listAdapter.isHasElement(ID)){
+							continue;
+						}
+						
+						// create new element
+						final ChatItem item = new ChatItem();
+						item.setDate(child.findChild("created-at").getText().replace("T", " ").replace("Z", " "));
+						item.setMessage(child.findChild("status").getText());
+						item.setID(ID);
+						//
+						// get geouser name
+						RestResponse response = Query.makeQuery(QueryMethod.Get, 
+								String.format(QBQueries.GET_GEOUSER_QUERY_FORMAT, child.findChild("user-id").getText()),
+								null, null);
+						item.setUserName(response.getBody().findChild("name").getText());
+
+						// add to list view adapter
+						ChatActivity.this.runOnUiThread(new Runnable(){
+							public void run() {
+								listAdapter.insert(item, 0);
+							}
+						});
+					}
+				}
+				
+				isChatUpdating = false;
+            }
+		}).start();
 	}
 
 	@Override
@@ -120,6 +195,29 @@ public class ChatActivity extends Activity implements ActionResultDelegate{
 				}
 				break;
 			case QBQueryTypeCreateGeodata:
+				queryProgressBar.setVisibility(View.GONE);
+				// Created
+				if(response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus201){
+					if(!isChatUpdating){
+						// add to adapter
+						ChatItem item = new ChatItem();
+						Calendar cal = Calendar.getInstance();
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						item.setDate(sdf.format(cal.getTime()));
+						item.setMessage(messageTextEdit.getText().toString());
+						item.setUserName(Store.getInstance().getCurrentGeoUser().findChild("name").getText());
+						item.setID(response.getBody().findChild("id").getText());
+						listAdapter.insert(item, 0);
+						
+						messageTextEdit.setText("");
+					}
+				}else if(response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus403){
+					AlertManager.showServerError(this, "User access denied");
+					
+				}else if(response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus422){
+					String error = response.getBody().getChildren().get(0).getText();
+					AlertManager.showServerError(this, error);
+				}
 				break;
 		}
 	}

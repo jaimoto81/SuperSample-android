@@ -1,5 +1,7 @@
 package com.quickblox.supersamples.sdk.helpers;
 
+import android.location.Location;
+
 import com.quickblox.supersamples.sdk.objects.XMLNode;
 
 public class Store {
@@ -7,20 +9,21 @@ public class Store {
 	/*
 	 * Singleton
 	 */
-	 private static Store instance;
+	private static Store instance;
 	    
-	 public static synchronized Store getInstance() {
-	     if (instance == null) {
-	         instance = new Store();
-	     } 
-	     return instance;
-	 }
+	public static synchronized Store getInstance() {
+		if (instance == null) {
+			instance = new Store();
+	    } 
+	    return instance;
+	}
 	 
 	/*
 	 * Fields
 	 */
 	private XMLNode currentUser;
 	private XMLNode currentGeoUser;
+	private Location currentLocation;
 	 
 	/*
      * Properties
@@ -38,5 +41,11 @@ public class Store {
 	public void setCurrentGeoUser(XMLNode currentGeoUser) {
 		this.currentGeoUser = currentGeoUser;
 	}
+	
+	public Location getCurrentLocation() {
+		return currentLocation;
+	}
+	public void setCurrentLocation(Location currentLocation) {
+		this.currentLocation = currentLocation;
+	}
 }
-

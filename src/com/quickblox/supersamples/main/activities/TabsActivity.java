@@ -5,7 +5,6 @@ import com.quickblox.supersamples.R;
 
 import android.app.TabActivity;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.widget.TabHost;
 
@@ -16,7 +15,6 @@ public class TabsActivity extends TabActivity {
 		super.onCreate(savedInstanceState);
 		setContentView (R.layout.tabs_view);
 		
-		Resources res = getResources();
 		TabHost tabs = getTabHost();  // The activity TabHost
 		TabHost.TabSpec spec; // Reusable TabSpec for each tab
 	    Intent intent;  // Reusable Intent for each tab
@@ -41,6 +39,6 @@ public class TabsActivity extends TabActivity {
 	    spec = tabs.newTabSpec("settings").setIndicator("Settings").setContent(intent);
 	    tabs.addTab(spec);
 	    
-	    tabs.setCurrentTab(0);	
+	    tabs.setCurrentTab(1);	
 	}
 }
