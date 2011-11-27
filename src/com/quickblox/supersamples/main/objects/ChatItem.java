@@ -1,4 +1,4 @@
-package com.quickblox.supersamples.objects;
+package com.quickblox.supersamples.main.objects;
 
 import android.graphics.Bitmap;
 

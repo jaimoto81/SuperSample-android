@@ -1,20 +1,14 @@
 package com.quickblox.supersamples.main.activities;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.message.BasicNameValuePair;
-import org.xml.sax.InputSource;
-import org.xml.sax.XMLReader;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
@@ -24,20 +18,19 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.OverlayItem;
 import com.quickblox.supersamples.R;
+import com.quickblox.supersamples.main.views.MapPopUp;
 import com.quickblox.supersamples.sdk.definitions.ActionResultDelegate;
 import com.quickblox.supersamples.sdk.definitions.Consts;
 import com.quickblox.supersamples.sdk.definitions.QBQueries;
 import com.quickblox.supersamples.sdk.definitions.QueryMethod;
 import com.quickblox.supersamples.sdk.definitions.QBQueries.QBQueryType;
 import com.quickblox.supersamples.sdk.definitions.ResponseHttpStatus;
-import com.quickblox.supersamples.sdk.helpers.LocationsXMLHandler;
 import com.quickblox.supersamples.sdk.helpers.Query;
 import com.quickblox.supersamples.sdk.helpers.Store;
-import com.quickblox.supersamples.sdk.objects.LocationsList;
 import com.quickblox.supersamples.sdk.objects.RestResponse;
+import com.quickblox.supersamples.sdk.objects.XMLNode;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
@@ -46,11 +39,9 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -65,26 +56,15 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 	private TimerTask task;
 	private Timer timer;
 	
-	// thread callback handler
-	private Handler mHandler = new Handler();
-	
-	private static boolean TIMER_STARTED = false;
-
-	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		Log.i("MapViewActivity:", "onCreate");
+		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.map_view);
 
 		initMapView();
 		initMyLocation();
-
-		marker = getResources().getDrawable(R.drawable.map_marker_my);
-		marker.setBounds(0, 0, marker.getIntrinsicWidth(),
-				marker.getIntrinsicHeight());
-
-		//startTimer();
-
 		
 		// get a latitude and a longitude of the current user
 		LocationManager locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -109,7 +89,6 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 			// send the data on the server
 			@Override
 			public void onLocationChanged(Location location) {
-				Log.i("onLocationChanged", "onLocationChanged");
 				if (location != null) {
 					
 					Store.getInstance().setCurrentLocation(location);
@@ -128,6 +107,8 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 					String currentGeoUserId = Store.getInstance().getCurrentUser().findChild("external-user-id").getText();
 					formparamsGeoUser.add(new BasicNameValuePair(
 							"geo_data[user_id]", currentGeoUserId));
+					formparamsGeoUser.add(new BasicNameValuePair(
+							"geo_data[status]", Store.getInstance().getCurrentStatus()));
 					formparamsGeoUser.add(new BasicNameValuePair(
 							"geo_data[latitude]", lat));
 					formparamsGeoUser.add(new BasicNameValuePair(
@@ -151,12 +132,35 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 		};
 
 		// registration of the LocationListener.
-		locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 
+		locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, Consts.MAP_CHECK_OWN_POSITION_PERIOD, 
 				0, locListener);
 		
 		Store.getInstance().setCurrentLocation(locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER));
+		
+		marker = getResources().getDrawable(R.drawable.map_marker_my);
+		marker.setBounds(0, 0, marker.getIntrinsicWidth(),
+				marker.getIntrinsicHeight());
 	}
 
+	@Override
+	protected void onPause() {
+		Log.i("MapViewActivity:", "onPause");
+		
+		super.onPause();
+		timer.cancel();
+		task.cancel();
+		timer = null;
+		task = null;
+	}
+	
+	@Override
+	protected void onResume() {
+		Log.i("MapViewActivity:", "onResume");
+		
+		super.onResume();
+		startTimer();	
+	}
+	
 	private void initMapView() {
 		mapView = (MapView) findViewById(R.id.mapview);
 		mapController = mapView.getController();
@@ -191,161 +195,69 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 		return false;
 	}
 
-	@Override
-	public void completedWithResult(QBQueryType queryType, RestResponse response) {
-		if (queryType == QBQueries.QBQueryType.QBQueryTypeCreateGeodata) {
-			if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus201) {
-				Log.i("completedWithResult", "The current location has been added to the database");
-			} else{
-				Log.e("completedWithResult", "The current location HAS NOT BEEN ADDED to the database!");
-			}
-		}
-	}
-
 	public void startTimer() {
-		if (!TIMER_STARTED){
-			TIMER_STARTED = true;
-
-			timer = new Timer();
-			task = new TimerTask() {
+		timer = new Timer();
+		task = new TimerTask() {
 				@Override
 				public void run() {
-					mHandler.post(new Runnable() {
-						@Override
-						public void run() {
-							ShowAllUsers whereAreUsers = new ShowAllUsers(marker);
-							mapView.getOverlays().add(whereAreUsers);
-						}
-					});
+					updateMap();
 				}
-			};
-			// each 30 seconds to do
-			timer.schedule(task, 0, Consts.MAP_UPDATE_PERIOD);
+		};
+		
+		// each 30 seconds to do
+		timer.schedule(task, 0, Consts.MAP_UPDATE_PERIOD);
+	}
+	
+	// update map query
+	private void updateMap(){
+		Query.makeQueryAsync(QueryMethod.Get, QBQueries.GET_ALL_LOCATIONS_QUERY,
+				null, null, this, QBQueries.QBQueryType.QBQueryTypeGetAllLocations);
+	}
+		
+	@Override
+	public void completedWithResult(QBQueryType queryType, RestResponse response) {
+		switch(queryType){
+			case QBQueryTypeCreateGeodata:
+				if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus201) {
+					Log.i("completedWithResult", "The current location has been added to the database");
+				} else{
+					Log.e("completedWithResult", "The current location HAS NOT BEEN ADDED to the database!");
+				}
+			
+			break;
+			
+			case QBQueryTypeGetAllLocations:
+				if(response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus200){
+					// remove 'page count' element
+					XMLNode data = response.getBody();
+					data.getChildren().remove(0);
+					ShowAllUsers whereAreUsers = new ShowAllUsers(marker, data);
+					mapView.getOverlays().add(whereAreUsers);
+				}
+				break;
 		}
 	}
-		
-	@Override
-	protected void onStop() {
-		timer.cancel();
-		super.onStop();
-		
-		Log.i("MapViewActivity:", "onStop");
-	}
-	
-	@Override
-	protected void onPause() {
-		timer.cancel();
-		TIMER_STARTED = false;
-		super.onPause();
-		
-		Log.i("MapViewActivity:", "onPause");
-	}
-	
-	@Override
-	protected void onResume() {
-		startTimer();	
-		super.onResume();
-		
-		Log.i("MapViewActivity:", "onResume");
-	}
-		
-	class PopupPanel {
-	    View popup;
-	    boolean isVisible=false;
-	    
-	    PopupPanel(int layout) {
-	      ViewGroup parent=(ViewGroup)mapView.getParent();
-
-	      popup=getLayoutInflater().inflate(layout, parent, false);
-	                  
-	      popup.setOnClickListener(new View.OnClickListener() {
-	        public void onClick(View v) {
-	          hide();
-	        }
-	      });
-	    }
-	    
-	    View getView() {
-	      return(popup);
-	    }
-	    
-	    void show(boolean alignTop) {
-	    	
-			RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-					RelativeLayout.LayoutParams.WRAP_CONTENT,
-					RelativeLayout.LayoutParams.WRAP_CONTENT);
-	      
-			if (alignTop) {
-				lp.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-				lp.setMargins(0, 20, 0, 0);
-			} else {
-				lp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-				lp.setMargins(0, 0, 0, 60);
-			}
-
-			hide();
-	      
-	      ((ViewGroup)mapView.getParent()).addView(popup, lp);
-	      isVisible=true;
-	    }
-	    
-	    void hide() {
-	      if (isVisible) {
-	        isVisible=false;
-	        ((ViewGroup)popup.getParent()).removeView(popup);
-	      }
-	    }
-	  }
-	
-	
-	
-	
 	
 	class ShowAllUsers extends ItemizedOverlay<OverlayItem> {
 
 		private List<OverlayItem> locations = new ArrayList<OverlayItem>();
 		private Drawable marker;
-		LocationsList locList = null;
-		private PopupPanel panel=new PopupPanel(R.layout.pop_up);
+		private MapPopUp panel = new MapPopUp(MapViewActivity.this, (ViewGroup)mapView.getParent());
 
-		public ShowAllUsers(Drawable marker) {
+		public ShowAllUsers(Drawable marker, XMLNode data) {
 			super(marker);
 
 			this.marker = marker;
 
-			try {
-
-				// Handling XML 
-				SAXParserFactory spf = SAXParserFactory.newInstance();
-				SAXParser sp = spf.newSAXParser();
-				XMLReader xr = sp.getXMLReader();
-
-				// Send URL to parse XML Tags 
-				URL sourceUrl = new URL(QBQueries.GET_ALL_LOCATIONS_QUERY);
-
-				// Create handler to handle XML Tags ( extends DefaultHandler ) 
-				LocationsXMLHandler locXMLHandler = new LocationsXMLHandler();
-				xr.setContentHandler(locXMLHandler);
-				xr.parse(new InputSource(sourceUrl.openStream()));
-
-			} catch (Exception e) {
-				Log.e("XML Parsing Exception = ", e.getMessage());
-			}
-
-			// Get result from LocationsXMLHandler locationsList Object 
-			locList = LocationsXMLHandler.locList;
-
-			for (int i = 0; i < locList.getUserID().size(); i++) {
-				if (locList.getUserID().get(i).equals(Store.getInstance().getCurrentUser().findChild("external-user-id").getText()) == false) {
+			for (XMLNode child : data.getChildren()) {
+				if (child.findChild("user-id").getText().equals(Store.getInstance().getCurrentGeoUser().findChild("id").getText()) == false) {
 					try {
-						int lat = (int) (Double.parseDouble(locList.getLat()
-								.get(i)) * 1000000);
-						int lng = (int) (Double.parseDouble(locList.getLng()
-								.get(i)) * 1000000);
+						int lat = (int) (Double.parseDouble(child.findChild("latitude").getText()) * 1000000);
+						int lng = (int) (Double.parseDouble(child.findChild("longitude").getText()) * 1000000);
 
 						// the geodata adding in to list of the locations
 						GeoPoint p = new GeoPoint(lat, lng);
-						locations.add(new OverlayItem(p, "Hello", ""));
+						locations.add(new OverlayItem(p, "", ""));
 
 					} catch (NumberFormatException e) {
 						e.printStackTrace();
@@ -371,7 +283,6 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 
 		@Override
 		public int size() {
-			// TODO Auto-generated method stub
 			return locations.size();
 		}
 		
@@ -393,6 +304,4 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 			return true;
 		}
 	}
-
 }
-

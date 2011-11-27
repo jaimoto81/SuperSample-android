@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.quickblox.supersamples.R;
-import com.quickblox.supersamples.objects.ChatItem;
+import com.quickblox.supersamples.main.objects.ChatItem;
 
 import android.content.Context;
 import android.view.LayoutInflater;

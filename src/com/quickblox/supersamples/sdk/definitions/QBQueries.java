@@ -51,7 +51,6 @@ public class QBQueries {
 	public static final String GET_ALL_LOCATIONS_QUERY = String.format("http://%s/geodata/find.xml?app.id=%s&last_only=1", 
 			GEOPOS_SERVICE_HOST_NAME, APPLICATION_ID);
 		
-	
 	// get all geodata
 	public static final String GET_GEODATA_QUERY = String.format("http://%s/geodata/find.xml?app.id=%s&page_size=20&sort_by=created_at", GEOPOS_SERVICE_HOST_NAME, APPLICATION_ID);
 	
@@ -72,7 +71,7 @@ public class QBQueries {
 		QBQueryTypeGetGeoUser,
 		QBQueryTypeCreateGeoUser,
 		QBQueryTypeRemoveGeoUser,
-		QBQueryTypeGetAllLocationsGeoUser,
+		QBQueryTypeGetAllLocations,
 		QBQueryTypeGetGeodata,
 		QBQueryTypeCreateGeodata,
 	}

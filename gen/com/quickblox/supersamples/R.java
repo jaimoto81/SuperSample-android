@@ -39,10 +39,10 @@ public final class R {
         public static final int edit_login=0x7f060008;
         public static final int edit_password=0x7f060009;
         public static final int edit_retype_pass=0x7f060019;
-        public static final int latitude=0x7f060015;
+        public static final int latitude=0x7f060014;
         public static final int logo=0x7f06000d;
-        public static final int longitude=0x7f060016;
-        public static final int mapview=0x7f060014;
+        public static final int longitude=0x7f060015;
+        public static final int mapview=0x7f060016;
         public static final int message_editText=0x7f060003;
         public static final int queryLogin_progressBar=0x7f06000c;
         public static final int queryRegistration_progressBar=0x7f06001a;
@@ -58,8 +58,8 @@ public final class R {
         public static final int chat_view=0x7f030001;
         public static final int login_view=0x7f030002;
         public static final int main=0x7f030003;
-        public static final int map_view=0x7f030004;
-        public static final int pop_up=0x7f030005;
+        public static final int map_pop_up=0x7f030004;
+        public static final int map_view=0x7f030005;
         public static final int registration_view=0x7f030006;
         public static final int tabs_view=0x7f030007;
     }

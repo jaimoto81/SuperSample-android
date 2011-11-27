@@ -24,6 +24,7 @@ public class Store {
 	private XMLNode currentUser;
 	private XMLNode currentGeoUser;
 	private Location currentLocation;
+	private String currentStatus;
 	 
 	/*
      * Properties
@@ -47,5 +48,15 @@ public class Store {
 	}
 	public void setCurrentLocation(Location currentLocation) {
 		this.currentLocation = currentLocation;
+	}
+	
+	public String getCurrentStatus() {
+		if(currentStatus == null){
+			currentStatus = "I am QuickBlox user!";
+		}
+		return currentStatus;
+	}
+	public void setCurrentStatus(String currentStatus) {
+		this.currentStatus = currentStatus;
 	}
 }

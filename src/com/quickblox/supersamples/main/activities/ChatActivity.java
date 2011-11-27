@@ -15,7 +15,7 @@ import org.apache.http.message.BasicNameValuePair;
 import com.quickblox.supersamples.R;
 import com.quickblox.supersamples.main.helpers.AlertManager;
 import com.quickblox.supersamples.main.helpers.ChatArrayAdapter;
-import com.quickblox.supersamples.objects.ChatItem;
+import com.quickblox.supersamples.main.objects.ChatItem;
 import com.quickblox.supersamples.sdk.definitions.ActionResultDelegate;
 import com.quickblox.supersamples.sdk.definitions.Consts;
 import com.quickblox.supersamples.sdk.definitions.QBQueries;
@@ -209,6 +209,7 @@ public class ChatActivity extends Activity implements ActionResultDelegate{
 						item.setID(response.getBody().findChild("id").getText());
 						listAdapter.insert(item, 0);
 						
+						Store.getInstance().setCurrentStatus(messageTextEdit.getText().toString());
 						messageTextEdit.setText("");
 					}
 				}else if(response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus403){
