@@ -4,15 +4,30 @@ public class QBQueries {
 
 	// Constants
 	//
+	
+	// Applications settings
+	//
 	public static final String APPLICATION_ID = "20";
 	public static final String OWNER_ID = "35";
-	public static final String GEO_STATUS = "I am";
+	public static final String AUTH_KEY = "r8z8xMnexVYCAss";
+	public static final String AUTH_SECRET = "UtcvFsw9FX2uJ9B";
 	
+	
+	// Services
+	//
 	public static final String USERS_SERVICE_HOST_NAME = "users.quickblox.com";
 	public static final String GEOPOS_SERVICE_HOST_NAME = "geopos.quickblox.com";
-	public static final String CHAT_SERVICE_HOST_NAME = "jabber.quickblox.com";
+	
 	
 	// Queries
+	//
+	
+	// AUTH
+	//
+	public static final String GET_AUTH_TOKEN_FORMAT = String.format("http://admin.quickblox.com/token?app_id=%s&auth_key=%s", 
+			APPLICATION_ID, AUTH_KEY) + "&timestamp=%s&nonce=%s&signature=%s";
+	
+	// USERS service
 	//
 	// get all users
 	public static final String GET_ALL_USERS_QUERY = String.format("http://%s/owners/%s/users.xml", 
@@ -37,7 +52,8 @@ public class QBQueries {
 	public static final String LOGOUT_USER_QUERY = String.format("http://%s/users/logout", USERS_SERVICE_HOST_NAME);
 	
 	
-	
+	// LOCATION service
+	//
 	// get a geouser
 	public static final String GET_GEOUSER_QUERY_FORMAT = String.format("http://%s/users/", GEOPOS_SERVICE_HOST_NAME) + "%s.xml";
 		
@@ -58,8 +74,13 @@ public class QBQueries {
 	public static final String CREATE_GEODATA_QUERY = String.format("http://%s/geodata", GEOPOS_SERVICE_HOST_NAME);
 	
 
+	
 	// Types of queries. They must match queries above 
 	public static enum QBQueryType{
+		// AUTH
+		QBQueryTypeGetAuthToken,
+		
+		// USERS service
 		QBQueryTypeGetAllUsers,
 		QBQueryTypeCreateUser,
 		QBQueryTypeEditUser,
@@ -68,6 +89,7 @@ public class QBQueries {
 		QBQueryTypeIdentifyUser,
 		QBQueryTypeLogoutUser,
 		
+		// LOCATION service
 		QBQueryTypeGetGeoUser,
 		QBQueryTypeCreateGeoUser,
 		QBQueryTypeRemoveGeoUser,

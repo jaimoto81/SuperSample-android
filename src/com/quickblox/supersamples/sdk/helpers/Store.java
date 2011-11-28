@@ -21,6 +21,8 @@ public class Store {
 	/*
 	 * Fields
 	 */
+	private String authToken;
+	
 	private XMLNode currentUser;
 	private XMLNode currentGeoUser;
 	private Location currentLocation;
@@ -58,5 +60,12 @@ public class Store {
 	}
 	public void setCurrentStatus(String currentStatus) {
 		this.currentStatus = currentStatus;
+	}
+	
+	public String getAuthToken() {
+		return authToken;
+	}
+	public void setAuthToken(String authToken) {
+		this.authToken = authToken;
 	}
 }

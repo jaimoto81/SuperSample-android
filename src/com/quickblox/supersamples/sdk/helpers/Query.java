@@ -92,7 +92,6 @@ public class Query {
 			Log.e("makeQuery, ClientProtocolException:", e.toString());
 			e.printStackTrace();
 		} catch (IOException e) {
-			Log.i("responseStatus", String.valueOf(response.getStatusLine().getStatusCode()));
 			Log.e("makeQuery, IOException:", e.toString());
 			e.printStackTrace();
 		}
@@ -141,7 +140,7 @@ public class Query {
 			}
 			
 			Log.i("responseStatus", String.valueOf(response.getStatusLine().getStatusCode()));
-			Log.i("responseEntity", responseEntity);
+			//Log.i("responseEntity", responseEntity);
 			
 			if(responseEntity != null && responseEntity.length() > 1){
 				// parse entity

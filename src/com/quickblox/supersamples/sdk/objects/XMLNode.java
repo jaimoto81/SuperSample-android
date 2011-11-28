@@ -3,8 +3,6 @@ package com.quickblox.supersamples.sdk.objects;
 import java.util.List;
 import java.util.Map;
 
-import android.util.Log;
-
 public class XMLNode extends Object{
 	/*
 	 * Fields

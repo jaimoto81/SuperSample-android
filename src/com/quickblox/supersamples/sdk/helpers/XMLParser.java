@@ -14,8 +14,6 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.*;
 
-import android.util.Log;
-
 import com.quickblox.supersamples.sdk.definitions.ResponseBodyType;
 import com.quickblox.supersamples.sdk.objects.XMLNode;
 
@@ -125,7 +123,6 @@ public class XMLParser extends DefaultHandler {
 
 	@Override
 	public void endDocument() {
-		Log.i("XMLParser", "endDocument");
 		result = new Object[2];
 
 		XMLNode firstNode = root.getChildren().get(0);
