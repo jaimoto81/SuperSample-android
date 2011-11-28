@@ -43,6 +43,7 @@ public class ChatActivity extends Activity implements ActionResultDelegate{
 	private ProgressBar queryProgressBar;
 	boolean isChatUpdating;
 	private Timer chatUpdateTimer;
+	private Thread processChatDataThread;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -142,10 +143,18 @@ public class ChatActivity extends Activity implements ActionResultDelegate{
 	
 	// reload listView
 	private void reloadList(final XMLNode object){
-		new Thread(new Runnable() {
+ 
+		// empty response
+		if(object.getChildren() == null){
+			isChatUpdating = false;
+			
+			return;
+		}
+		// remove 'page count' element
+		object.getChildren().remove(0);
+		
+		processChatDataThread = new Thread(new Runnable() {
 			public void run() {
-				// remove 'page count' element
-				object.getChildren().remove(0);
 
 				// populate chats
 				for(int i=object.getChildren().size()-1; i>=0; --i){
@@ -183,7 +192,9 @@ public class ChatActivity extends Activity implements ActionResultDelegate{
 				
 				isChatUpdating = false;
             }
-		}).start();
+		});
+		
+		processChatDataThread.start();
 	}
 
 	@Override
@@ -192,6 +203,8 @@ public class ChatActivity extends Activity implements ActionResultDelegate{
 			case QBQueryTypeGetGeodata:
 				if(response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus200){
 					reloadList(response.getBody());
+				}else{
+					isChatUpdating = false;
 				}
 				break;
 			case QBQueryTypeCreateGeodata:

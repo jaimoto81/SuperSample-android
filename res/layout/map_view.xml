@@ -1,14 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:layout_height="fill_parent">
+
+	<RelativeLayout
+    	android:layout_width="fill_parent"
+    	android:layout_height="fill_parent" >
     
-    <com.google.android.maps.MapView
-        android:id="@+id/mapview"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:apiKey="0mv9IyEyYVzRfHbsWHTeG9N0SpwWaMS5yvaAqsQ"
-        android:clickable="true" />
-    
-</RelativeLayout>
+    	<com.google.android.maps.MapView
+        	android:id="@+id/mapview"
+        	android:layout_width="fill_parent"
+        	android:layout_height="fill_parent"
+        	android:apiKey="@string/map_api_key"
+        	android:clickable="true" />
+
+	</RelativeLayout>
+	<RelativeLayout
+    	android:layout_width="fill_parent"
+    	android:layout_height="fill_parent" >
+
+		<ProgressBar
+		    android:id="@+id/mapUpdate_progressBar"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:background="@android:color/transparent"
+		    android:layout_alignParentRight="true"
+		    android:layout_alignParentTop="true"
+		    android:layout_marginRight="16dp"
+		    android:layout_marginTop="16dp" android:visibility="gone"/>
+
+    </RelativeLayout>
+
+</FrameLayout>

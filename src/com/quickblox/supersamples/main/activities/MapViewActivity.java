@@ -16,9 +16,9 @@ import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
-import com.google.android.maps.Overlay;
-import com.google.android.maps.OverlayItem;
 import com.quickblox.supersamples.R;
+import com.quickblox.supersamples.main.helpers.AlertManager;
+import com.quickblox.supersamples.main.objects.MapOverlayItem;
 import com.quickblox.supersamples.main.views.MapPopUp;
 import com.quickblox.supersamples.sdk.definitions.ActionResultDelegate;
 import com.quickblox.supersamples.sdk.definitions.Consts;
@@ -46,11 +46,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.ProgressBar;
 
 public class MapViewActivity extends MapActivity implements ActionResultDelegate {
 
@@ -58,19 +54,33 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 	List<Address> addressList;
 	MapController mapController;
 	private Drawable marker;
+	private WhereAmI ownOverlay;
+	
+	private MapPopUp mapPopUp;
 	
 	private TimerTask task;
 	private Timer timer;
 	
+	private ProgressBar mapUpdateProgress;
+	
+	private Thread processLocationsDataThread;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		Log.i("MapViewActivity:", "onCreate");
-		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.map_view);
 
+		// Init Map
 		initMapView();
 		initMyLocation();
+		
+		
+		// init progress wheel
+		mapUpdateProgress = (ProgressBar)findViewById(R.id.mapUpdate_progressBar);
+		
+		// init map popup
+		mapPopUp = new MapPopUp(this, (ViewGroup)mapView.getParent());
+		
 		
 		// get a latitude and a longitude of the current user
 		LocationManager locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -97,13 +107,8 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 			public void onLocationChanged(Location location) {
 				if (location != null) {
 					
+					// save current location
 					Store.getInstance().setCurrentLocation(location);
-					
-					Toast.makeText(
-							getBaseContext(),
-							"New location latitude [" + location.getLatitude()
-									+ "] longitude [" + location.getLongitude()
-									+ "]", Toast.LENGTH_LONG).show();
 					
 					String lat = Double.toString(location.getLatitude());
 					String lng = Double.toString(location.getLongitude());
@@ -150,8 +155,6 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 
 	@Override
 	protected void onPause() {
-		Log.i("MapViewActivity:", "onPause");
-		
 		super.onPause();
 		timer.cancel();
 		task.cancel();
@@ -161,8 +164,6 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 	
 	@Override
 	protected void onResume() {
-		Log.i("MapViewActivity:", "onResume");
-		
 		super.onResume();
 		startTimer();	
 	}
@@ -175,20 +176,19 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 	}
 
 	private void initMyLocation() {
-		final WhereAmI wai = new WhereAmI(this, mapView);
+		ownOverlay = new WhereAmI(this, mapView);
 		// to begin follow for the updates of the location
-		wai.enableMyLocation();
-		wai.enableCompass(); // it's no works in the emulator
-		wai.runOnFirstFix(new Runnable() {
-
+		ownOverlay.enableMyLocation();
+		ownOverlay.enableCompass(); // it's no works in the emulator
+		ownOverlay.runOnFirstFix(new Runnable() {
 			@Override
 			public void run() {
 				// Show current location and change a zoom
-				mapController.setZoom(3);
-				mapController.animateTo(wai.getMyLocation());
+				mapController.setZoom(1);
+				mapController.animateTo(ownOverlay.getMyLocation());
 			}
 		});
-		mapView.getOverlays().add(wai);
+		mapView.getOverlays().add(ownOverlay);
 	}
 
 	@Override
@@ -204,10 +204,10 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 	public void startTimer() {
 		timer = new Timer();
 		task = new TimerTask() {
-				@Override
-				public void run() {
-					updateMap();
-				}
+			@Override
+			public void run() {
+				updateMap();
+			}
 		};
 		
 		// each 30 seconds to do
@@ -216,6 +216,16 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 	
 	// update map query
 	private void updateMap(){
+
+		// show progress wheel
+		MapViewActivity.this.runOnUiThread(new Runnable(){
+			@Override
+			public void run() {
+				mapUpdateProgress.setVisibility(View.VISIBLE);
+			}
+		});
+
+		// make query
 		Query.makeQueryAsync(QueryMethod.Get, QBQueries.GET_ALL_LOCATIONS_QUERY,
 				null, null, this, QBQueries.QBQueryType.QBQueryTypeGetAllLocations);
 	}
@@ -234,46 +244,104 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 			
 			case QBQueryTypeGetAllLocations:
 				if(response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus200){
+					
 					// remove 'page count' element
-					XMLNode data = response.getBody();
+					final XMLNode data = response.getBody();
+					// empty response
+					if(data.getChildren() == null){
+						mapUpdateProgress.setVisibility(View.GONE);
+						
+						return;
+					}
 					data.getChildren().remove(0);
-					ShowAllUsers whereAreUsers = new ShowAllUsers(marker, data);
-					mapView.getOverlays().add(whereAreUsers);
+					
+					final List<MapOverlayItem> locationsList = new ArrayList<MapOverlayItem>();
+					
+					processLocationsDataThread = new Thread(new Runnable() {
+						public void run() {
+
+							// populate chats
+							for(XMLNode child : data.getChildren()){
+								
+								Log.i("GEO=", Store.getInstance().getCurrentGeoUser().toString());
+								
+								// skip own location
+								if(child.findChild("user-id").getText().equals(Store.getInstance().getCurrentGeoUser().findChild("id").getText())){
+									continue;
+								}
+	
+								int lat = (int) (Double.parseDouble(child.findChild("latitude").getText()) * 1000000);
+								int lng = (int) (Double.parseDouble(child.findChild("longitude").getText()) * 1000000);
+
+								final MapOverlayItem overlayItem = new MapOverlayItem(new GeoPoint(lat, lng), "", "");
+								overlayItem.setGeoUserStatus(child.findChild("status").getText());
+									
+								// get geouser name
+								RestResponse response = Query.makeQuery(QueryMethod.Get, 
+										String.format(QBQueries.GET_GEOUSER_QUERY_FORMAT, child.findChild("user-id").getText()),
+											null, null);
+								overlayItem.setGeoUserName(response.getBody().findChild("name").getText());
+
+								locationsList.add(overlayItem);
+							}
+							
+							// there are no points
+							if(locationsList.size() == 0){
+								MapViewActivity.this.runOnUiThread(new Runnable(){
+									@Override
+									public void run() {
+										mapUpdateProgress.setVisibility(View.GONE);
+									}
+								});
+								return;
+							}
+							
+							
+							final ShowAllUsers whereAreUsers = new ShowAllUsers(marker, locationsList);
+							
+							// update map
+							MapViewActivity.this.runOnUiThread(new Runnable(){
+								@Override
+								public void run() {
+									// add overlays
+									mapView.getOverlays().clear();
+									mapView.getOverlays().add(whereAreUsers);
+									mapView.getOverlays().add(ownOverlay);
+									mapView.invalidate();
+									
+									mapUpdateProgress.setVisibility(View.GONE);
+								}
+							});
+			            }
+					});
+					
+					processLocationsDataThread.start();
+
+				}else{
+					mapUpdateProgress.setVisibility(View.GONE);
+					
+					AlertManager.showServerError(this, "Error while updating map");
 				}
 				break;
 		}
 	}
 	
-	class ShowAllUsers extends ItemizedOverlay<OverlayItem> implements ActionResultDelegate {
+	
+	// Other Users overlays
+	class ShowAllUsers extends ItemizedOverlay<MapOverlayItem> {
 
-		private List<OverlayItem> locations = new ArrayList<OverlayItem>();
+		private List<MapOverlayItem> locations = new ArrayList<MapOverlayItem>();
 		private Drawable marker;
-		private MapPopUp panel = new MapPopUp(MapViewActivity.this, (ViewGroup)mapView.getParent());
-		private TextView textUserId;
-		private TextView textUserStatus;
-		private View view;
 
-		public ShowAllUsers(Drawable marker, XMLNode data) {
+
+		public ShowAllUsers(Drawable marker, List<MapOverlayItem> overlayItems) {
 			super(marker);
 
 			this.marker = marker;
 
-			for (XMLNode child : data.getChildren()) {
-				if (child.findChild("user-id").getText().equals(Store.getInstance().getCurrentGeoUser().findChild("id").getText()) == false) {
-					try {
-						int lat = (int) (Double.parseDouble(child.findChild("latitude").getText()) * 1000000);
-						int lng = (int) (Double.parseDouble(child.findChild("longitude").getText()) * 1000000);
-
-						// the geodata adding in to list of the locations
-						GeoPoint p = new GeoPoint(lat, lng);
-						locations.add(new OverlayItem(p, "", ""));
-
-					} catch (NumberFormatException e) {
-						e.printStackTrace();
-					}
-				} else
-					continue;
-
+			// populate items
+			for (MapOverlayItem overlayItem : overlayItems) {
+				locations.add(overlayItem);
 				populate();
 			}
 		}
@@ -286,7 +354,7 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 		}
 		
 		@Override
-		protected OverlayItem createItem(int i) {
+		protected MapOverlayItem createItem(int i) {
 			return locations.get(i);
 		}
 
@@ -295,58 +363,23 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 			return locations.size();
 		}
 		
+		// tab on marker
 		@Override
-		protected boolean onTap(int i) {		
-			OverlayItem item = getItem(i);
-			GeoPoint geo = item.getPoint();
-			
-			Point pt = mapView.getProjection().toPixels(geo, null);
+		protected boolean onTap(int i) {
+			MapOverlayItem item = (MapOverlayItem) getItem(i);
 
-			View view = panel.getView();
+			// set data
+			mapPopUp.setData(item.getGeoUserName(), item.getGeoUserStatus());
 			
-			ImageButton butClosePopUp = (ImageButton) view.findViewById(R.id.butClosePopUp);
-			
-			
-			
-			
-			butClosePopUp.setOnClickListener(new View.OnClickListener() {
-	    		public void onClick(View v) {
-	    			panel.hide();
-	    		}
-	    	});
-
-			panel.show();
+			// show popup
+			mapPopUp.show();
 			
 			return true;
 		}
-
-		@Override
-		public void completedWithResult(QBQueryType queryType,
-				RestResponse response) {
-			switch (queryType) {
-
-			case QBQueryTypeGetGeoUser:
-				if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus200) {
-					
-					XMLNode data = response.getBody();
-					data.getChildren().remove(0);
-					ShowAllUsers whereAreUsers = new ShowAllUsers(marker, data);
-					mapView.getOverlays().add(whereAreUsers);
-					
-					textUserId = (TextView)view.findViewById(R.id.textUserID);
-					textUserStatus = (TextView)view.findViewById(R.id.textStatusID);
-					
-					textUserId.setText(response.getBody().findChild("user-id").getText());
-					
-					
-				}
-				break;
-			}
-
-		}
 	}
 	
-	// change custom bitmap of the current user
+	
+	// Current User overlay
 	public class WhereAmI extends MyLocationOverlay {
 	    private Context mContext;
 	    private float   mOrientation;
@@ -385,6 +418,16 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 	    public void setOrientation(float newOrientation) {
 	         mOrientation = newOrientation;
 	    }
+	    
+	    @Override
+	    public boolean onTap(GeoPoint p, MapView map) {
+	    	// show popup data
+	    	mapPopUp.setData(Store.getInstance().getCurrentGeoUser().findChild("name").getText(), "It's me!");
+			
+			// show popup
+			mapPopUp.show();
+			
+	    	return true;
+	    }
 	}
-	
 }

@@ -26,7 +26,7 @@
             <EditText
                 android:id="@+id/edit_login"
                 android:layout_width="fill_parent"
-                android:text="putin"
+                android:text="test2"
                 android:inputType="text"/>
         </TableRow>
 
@@ -41,7 +41,7 @@
 
             <EditText
                 android:id="@+id/edit_password"
-                android:text="123"
+                android:text="test2"
                 android:inputType="textPassword"/>
         </TableRow>
     </TableLayout>

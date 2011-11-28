@@ -16,19 +16,18 @@ public final class R {
         public static final int white=0x7f050000;
     }
     public static final class drawable {
-        public static final int close=0x7f020000;
-        public static final int ic_launcher=0x7f020001;
-        public static final int listview_selector=0x7f020002;
-        public static final int logo=0x7f020003;
-        public static final int map_marker_my=0x7f020004;
-        public static final int map_marker_other=0x7f020005;
+        public static final int ic_launcher=0x7f020000;
+        public static final int listview_selector=0x7f020001;
+        public static final int logo=0x7f020002;
+        public static final int map_marker_my=0x7f020003;
+        public static final int map_marker_other=0x7f020004;
+        public static final int map_popup_shape=0x7f020005;
         public static final int popup_frame=0x7f020006;
-        public static final int popup_selector=0x7f020007;
-        public static final int user_icon=0x7f020008;
+        public static final int user_icon=0x7f020007;
+        public static final int x=0x7f020008;
     }
     public static final class id {
         public static final int butBack=0x7f06000a;
-        public static final int butClosePopUp=0x7f06001a;
         public static final int butLogin=0x7f060011;
         public static final int butNext=0x7f06000b;
         public static final int butRegistration=0x7f060012;
@@ -37,27 +36,27 @@ public final class R {
         public static final int chat_message=0x7f060002;
         public static final int chat_message_header=0x7f060001;
         public static final int chat_user_avatar=0x7f060000;
-        public static final int edit_email=0x7f06001d;
-        public static final int edit_full_name=0x7f06001c;
+        public static final int edit_email=0x7f06001c;
+        public static final int edit_full_name=0x7f06001b;
         public static final int edit_login=0x7f060008;
         public static final int edit_password=0x7f060009;
-        public static final int edit_retype_pass=0x7f06001e;
+        public static final int edit_retype_pass=0x7f06001d;
         public static final int logo=0x7f06000d;
-        public static final int mapview=0x7f06001b;
+        public static final int mapPopup_close_button=0x7f060018;
+        public static final int mapPopup_user_image=0x7f060014;
+        public static final int mapPopup_user_name=0x7f060016;
+        public static final int mapPopup_user_status=0x7f060017;
+        public static final int mapUpdate_progressBar=0x7f06001a;
+        public static final int mapview=0x7f060019;
         public static final int message_editText=0x7f060003;
         public static final int queryLogin_progressBar=0x7f06000c;
-        public static final int queryRegistration_progressBar=0x7f06001f;
+        public static final int queryRegistration_progressBar=0x7f06001e;
         public static final int quickblox=0x7f06000e;
         public static final int send_message_button=0x7f060005;
-        public static final int statusID=0x7f060018;
         public static final int tableLayout1=0x7f060007;
         public static final int textSlogan=0x7f060013;
-        public static final int textStatusID=0x7f060019;
         public static final int textTitle1=0x7f06000f;
-        public static final int textUserID=0x7f060017;
         public static final int url_samples=0x7f060010;
-        public static final int usID=0x7f060016;
-        public static final int userImage=0x7f060014;
         public static final int user_info=0x7f060015;
     }
     public static final class layout {
@@ -88,6 +87,7 @@ public final class R {
         public static final int full_name=0x7f040005;
         public static final int hello=0x7f040000;
         public static final int login=0x7f040006;
+        public static final int map_api_key=0x7f04001b;
         public static final int next=0x7f04000e;
         public static final int ok=0x7f040019;
         public static final int password=0x7f04000a;
