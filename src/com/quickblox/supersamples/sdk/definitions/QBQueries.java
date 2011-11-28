@@ -2,16 +2,13 @@ package com.quickblox.supersamples.sdk.definitions;
 
 public class QBQueries {
 
-	// Constants
-	//
-	
 	// Applications settings
 	//
 	public static final String APPLICATION_ID = "20";
 	public static final String OWNER_ID = "35";
 	public static final String AUTH_KEY = "r8z8xMnexVYCAss";
 	public static final String AUTH_SECRET = "UtcvFsw9FX2uJ9B";
-	
+
 	
 	// Services
 	//
