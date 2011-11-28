@@ -39,6 +39,6 @@ public class TabsActivity extends TabActivity {
 	    spec = tabs.newTabSpec("settings").setIndicator("Settings").setContent(intent);
 	    tabs.addTab(spec);
 	    
-	    tabs.setCurrentTab(1);	
+	    tabs.setCurrentTab(0);	
 	}
 }

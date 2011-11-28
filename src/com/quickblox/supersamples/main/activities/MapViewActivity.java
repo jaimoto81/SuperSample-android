@@ -31,7 +31,10 @@ import com.quickblox.supersamples.sdk.objects.RestResponse;
 import com.quickblox.supersamples.sdk.objects.XMLNode;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
@@ -137,7 +140,7 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 		
 		Store.getInstance().setCurrentLocation(locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER));
 		
-		marker = getResources().getDrawable(R.drawable.map_marker_my);
+		marker = getResources().getDrawable(R.drawable.map_marker_other);
 		marker.setBounds(0, 0, marker.getIntrinsicWidth(),
 				marker.getIntrinsicHeight());
 	}
@@ -169,20 +172,20 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 	}
 
 	private void initMyLocation() {
-		final MyLocationOverlay whereAmI = new MyLocationOverlay(this, mapView);
+		final WhereAmI wai = new WhereAmI(this, mapView);
 		// to begin follow for the updates of the location
-		whereAmI.enableMyLocation();
-		whereAmI.enableCompass(); // it's no works in the emulator
-		whereAmI.runOnFirstFix(new Runnable() {
+		wai.enableMyLocation();
+		wai.enableCompass(); // it's no works in the emulator
+		wai.runOnFirstFix(new Runnable() {
 
 			@Override
 			public void run() {
 				// Show current location and change a zoom
 				mapController.setZoom(3);
-				mapController.animateTo(whereAmI.getMyLocation());
+				mapController.animateTo(wai.getMyLocation());
 			}
 		});
-		mapView.getOverlays().add(whereAmI);
+		mapView.getOverlays().add(wai);
 	}
 
 	@Override
@@ -304,4 +307,46 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 			return true;
 		}
 	}
+	
+	// change custom bitmap of the current user
+	public class WhereAmI extends MyLocationOverlay {
+	    private Context mContext;
+	    private float   mOrientation;
+
+	    public WhereAmI(Context context, MapView mapView) {
+	        super(context, mapView);
+	        mContext = context;
+	    }
+
+	    @Override 
+	    protected void drawMyLocation(Canvas canvas, MapView mapView, Location lastFix, GeoPoint myLocation, long when) {
+	        // translate the GeoPoint to screen pixels
+	        Point screenPts = mapView.getProjection().toPixels(myLocation, null);
+
+	        // create a rotated copy of the marker
+	        Bitmap arrowBitmap = BitmapFactory.decodeResource( mContext.getResources(), R.drawable.map_marker_my);
+	        Matrix matrix = new Matrix();
+	        matrix.postRotate(mOrientation);
+	        Bitmap rotatedBmp = Bitmap.createBitmap(
+	            arrowBitmap, 
+	            0, 0, 
+	            arrowBitmap.getWidth(), 
+	            arrowBitmap.getHeight(), 
+	            matrix, 
+	            true
+	        );
+	        // add the rotated marker to the canvas
+	        canvas.drawBitmap(
+	            rotatedBmp, 
+	            screenPts.x - (rotatedBmp.getWidth()  / 2), 
+	            screenPts.y - (rotatedBmp.getHeight() / 2), 
+	            null
+	        );
+	    }
+
+	    public void setOrientation(float newOrientation) {
+	         mOrientation = newOrientation;
+	    }
+	}
+	
 }
