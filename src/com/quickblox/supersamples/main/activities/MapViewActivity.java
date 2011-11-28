@@ -16,6 +16,7 @@ import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
+import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 import com.quickblox.supersamples.R;
 import com.quickblox.supersamples.main.views.MapPopUp;
@@ -45,6 +46,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -241,11 +244,14 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 		}
 	}
 	
-	class ShowAllUsers extends ItemizedOverlay<OverlayItem> {
+	class ShowAllUsers extends ItemizedOverlay<OverlayItem> implements ActionResultDelegate {
 
 		private List<OverlayItem> locations = new ArrayList<OverlayItem>();
 		private Drawable marker;
 		private MapPopUp panel = new MapPopUp(MapViewActivity.this, (ViewGroup)mapView.getParent());
+		private TextView textUserId;
+		private TextView textUserStatus;
+		private View view;
 
 		public ShowAllUsers(Drawable marker, XMLNode data) {
 			super(marker);
@@ -293,18 +299,50 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 		protected boolean onTap(int i) {		
 			OverlayItem item = getItem(i);
 			GeoPoint geo = item.getPoint();
+			
 			Point pt = mapView.getProjection().toPixels(geo, null);
 
 			View view = panel.getView();
+			
+			ImageButton butClosePopUp = (ImageButton) view.findViewById(R.id.butClosePopUp);
+			
+			
+			
+			
+			butClosePopUp.setOnClickListener(new View.OnClickListener() {
+	    		public void onClick(View v) {
+	    			panel.hide();
+	    		}
+	    	});
 
-			((TextView) view.findViewById(R.id.latitude)).setText(String
-					.valueOf(geo.getLatitudeE6() / 1000000.0));
-			((TextView) view.findViewById(R.id.longitude)).setText(String
-					.valueOf(geo.getLongitudeE6() / 1000000.0));
-
-			panel.show(pt.y*2>mapView.getHeight());
-		
+			panel.show();
+			
 			return true;
+		}
+
+		@Override
+		public void completedWithResult(QBQueryType queryType,
+				RestResponse response) {
+			switch (queryType) {
+
+			case QBQueryTypeGetGeoUser:
+				if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus200) {
+					
+					XMLNode data = response.getBody();
+					data.getChildren().remove(0);
+					ShowAllUsers whereAreUsers = new ShowAllUsers(marker, data);
+					mapView.getOverlays().add(whereAreUsers);
+					
+					textUserId = (TextView)view.findViewById(R.id.textUserID);
+					textUserStatus = (TextView)view.findViewById(R.id.textStatusID);
+					
+					textUserId.setText(response.getBody().findChild("user-id").getText());
+					
+					
+				}
+				break;
+			}
+
 		}
 	}
 	
