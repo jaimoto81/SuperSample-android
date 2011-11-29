@@ -88,6 +88,7 @@ public final class R {
         public static final int hello=0x7f040000;
         public static final int login=0x7f040006;
         public static final int map_api_key=0x7f04001b;
+        public static final int map_api_key_ubuntu=0x7f04001c;
         public static final int next=0x7f04000e;
         public static final int ok=0x7f040019;
         public static final int password=0x7f04000a;

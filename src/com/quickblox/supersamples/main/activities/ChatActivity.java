@@ -95,8 +95,6 @@ public class ChatActivity extends Activity implements ActionResultDelegate{
 		}, 50, Consts.CHAT_UPDATE_PERIOD);
 	}
 	
-	
-	
 	public void onClickButtons(View v) {
 		switch (v.getId()) {
 			case R.id.send_message_button:
@@ -232,12 +230,13 @@ public class ChatActivity extends Activity implements ActionResultDelegate{
 		// no internet connection
 		if(response == null){
 			isChatUpdating = false;
-			AlertManager.showServerError(this, "Please check your internet connection");
+			AlertManager.showServerError(this, "Please, check your internet connection");
 			return;
 		}
 		
 		switch(queryType){
 			case QBQueryTypeGetGeodata:
+				// Ok
 				if(response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus200){
 					reloadList(response.getBody());
 				}else{
@@ -263,9 +262,11 @@ public class ChatActivity extends Activity implements ActionResultDelegate{
 						messageTextEdit.setText("");
 						messageTextEdit.clearFocus();
 					}
+				// access denied
 				}else if(response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus403){
 					AlertManager.showServerError(this, "User access denied");
-					
+				
+				// validation error
 				}else if(response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus422){
 					String error = response.getBody().getChildren().get(0).getText();
 					AlertManager.showServerError(this, error);

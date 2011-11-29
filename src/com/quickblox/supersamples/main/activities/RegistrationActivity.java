@@ -96,7 +96,7 @@ public class RegistrationActivity extends Activity implements ActionResultDelega
 					e1.printStackTrace();
 				}
 				
-				// make query
+				// make query for creating a geouser
 				Query.makeQueryAsync(QueryMethod.Post, QBQueries.CREATE_GEOUSER_QUERY, postEntityGeoUser, null, 
 						this, QBQueryType.QBQueryTypeCreateGeoUser);
 
@@ -117,6 +117,7 @@ public class RegistrationActivity extends Activity implements ActionResultDelega
 		finish();
 	}
 
+	// show dialog, if the fields is invalid 
 	@Override
 	protected Dialog onCreateDialog(int id) {
 
@@ -163,6 +164,7 @@ public class RegistrationActivity extends Activity implements ActionResultDelega
 	}
 	
 
+	
 	@Override
 	public void completedWithResult(QBQueryType queryType, RestResponse response) {
 		// no internet connection
@@ -214,7 +216,7 @@ public class RegistrationActivity extends Activity implements ActionResultDelega
 						e1.printStackTrace();
 					}
 
-					// make query
+					// make query for creating a user
 					Query.makeQueryAsync(QueryMethod.Post, QBQueries.CREATE_USER_QUERY, postEntityUser, null, 
 							this, QBQueries.QBQueryType.QBQueryTypeCreateUser);
 				
