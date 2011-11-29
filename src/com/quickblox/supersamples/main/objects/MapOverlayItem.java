@@ -5,26 +5,26 @@ import com.google.android.maps.OverlayItem;
 
 public class MapOverlayItem extends OverlayItem{
 
-	private String geoUserName;
-	private String geoUserStatus;
+	private String userName;
+	private String userStatus;
 	
 	public MapOverlayItem(GeoPoint point, String title, String snippet) {
 		super(point, title, snippet);
 	}
 
-	public String getGeoUserName() {
-		return geoUserName;
+	public String getUserName() {
+		return userName;
 	}
 
-	public void setGeoUserName(String geoUserName) {
-		this.geoUserName = geoUserName;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
-	public String getGeoUserStatus() {
-		return geoUserStatus;
+	public String getUserStatus() {
+		return userStatus;
 	}
 
-	public void setGeoUserStatus(String geoUserStatus) {
-		this.geoUserStatus = geoUserStatus;
+	public void setUserStatus(String userStatus) {
+		this.userStatus = userStatus;
 	}
 }

@@ -135,6 +135,10 @@ public class ChatActivity extends Activity implements ActionResultDelegate{
 	
 	// update chat
 	private void updateChat(){
+		if(isChatUpdating){
+			return;
+		}
+		
 		isChatUpdating = true;
 		
 		Query.makeQueryAsync(QueryMethod.Get, QBQueries.GET_GEODATA_QUERY,
@@ -177,16 +181,19 @@ public class ChatActivity extends Activity implements ActionResultDelegate{
 						//
 						// get geouser name
 						RestResponse response = Query.makeQuery(QueryMethod.Get, 
-								String.format(QBQueries.GET_GEOUSER_QUERY_FORMAT, child.findChild("user-id").getText()),
+								String.format(QBQueries.GET_USER_BY_EXTERNAL_ID_QUERY_FORMAT, child.findChild("user-id").getText()),
 								null, null);
-						item.setUserName(response.getBody().findChild("name").getText());
+						
+						if(response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus200){
+							item.setUserName(response.getBody().findChild("login").getText());
 
-						// add to list view adapter
-						ChatActivity.this.runOnUiThread(new Runnable(){
-							public void run() {
-								listAdapter.insert(item, 0);
-							}
-						});
+							// add to list view adapter
+							ChatActivity.this.runOnUiThread(new Runnable(){
+								public void run() {
+									listAdapter.insert(item, 0);
+								}
+							});
+						};
 					}
 				}
 				
@@ -199,6 +206,13 @@ public class ChatActivity extends Activity implements ActionResultDelegate{
 
 	@Override
 	public void completedWithResult(QBQueryType queryType, RestResponse response) {
+		// no internet connection
+		if(response == null){
+			isChatUpdating = false;
+			AlertManager.showServerError(this, "Please check your internet connection");
+			return;
+		}
+		
 		switch(queryType){
 			case QBQueryTypeGetGeodata:
 				if(response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus200){

@@ -30,6 +30,9 @@ public class QBQueries {
 	public static final String GET_ALL_USERS_QUERY = String.format("http://%s/owners/%s/users.xml", 
 			USERS_SERVICE_HOST_NAME, OWNER_ID);
 	
+	// get user by external user id
+	public static final String GET_USER_BY_EXTERNAL_ID_QUERY_FORMAT = String.format("http://%s/users/external/", USERS_SERVICE_HOST_NAME) + "%s.xml";
+	
 	// add user
 	public static final String CREATE_USER_QUERY = String.format("http://%s/users", USERS_SERVICE_HOST_NAME);
 	
@@ -79,6 +82,7 @@ public class QBQueries {
 		
 		// USERS service
 		QBQueryTypeGetAllUsers,
+		QBQueryTypeGetUserByExternalID,
 		QBQueryTypeCreateUser,
 		QBQueryTypeEditUser,
 		QBQueryTypeRemoveUser,

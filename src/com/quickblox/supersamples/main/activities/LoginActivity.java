@@ -122,6 +122,13 @@ public class LoginActivity extends Activity implements ActionResultDelegate{
 
 	@Override
 	public void completedWithResult(QBQueryType queryType, RestResponse response) {
+		// no internet connection
+		if(response == null){
+			queryProgressBar.setVisibility(View.GONE);
+			AlertManager.showServerError(this, "Please check your internet connection");
+			return;
+		}
+				
 		switch(queryType){
 			case QBQueryTypeLoginUser:
 				if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus202) {

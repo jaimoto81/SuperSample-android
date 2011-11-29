@@ -90,10 +90,10 @@ public class Query {
 			response = httpclient.execute(httpQuery);
 		} catch (ClientProtocolException e) {
 			Log.e("makeQuery, ClientProtocolException:", e.toString());
-			e.printStackTrace();
+			return null;
 		} catch (IOException e) {
 			Log.e("makeQuery, IOException:", e.toString());
-			e.printStackTrace();
+			return null;
 		}
 		
 		if(response != null){
@@ -140,7 +140,7 @@ public class Query {
 			}
 			
 			Log.i("responseStatus", String.valueOf(response.getStatusLine().getStatusCode()));
-			Log.i("responseEntity", responseEntity);
+			//Log.i("responseEntity", responseEntity);
 			
 			if(responseEntity != null && responseEntity.length() > 1){
 				// parse entity

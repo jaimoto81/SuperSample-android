@@ -216,6 +216,9 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 	
 	// update map query
 	private void updateMap(){
+		if(mapUpdateProgress.getVisibility() == View.VISIBLE){
+			return;
+		}
 
 		// show progress wheel
 		MapViewActivity.this.runOnUiThread(new Runnable(){
@@ -232,6 +235,13 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 		
 	@Override
 	public void completedWithResult(QBQueryType queryType, RestResponse response) {
+		// no internet connection
+		if(response == null){
+			mapUpdateProgress.setVisibility(View.GONE);
+			AlertManager.showServerError(this, "Please check your internet connection");
+			return;
+		}
+				
 		switch(queryType){
 			case QBQueryTypeCreateGeodata:
 				if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus201) {
@@ -263,8 +273,6 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 							// populate chats
 							for(XMLNode child : data.getChildren()){
 								
-								Log.i("GEO=", Store.getInstance().getCurrentGeoUser().toString());
-								
 								// skip own location
 								if(child.findChild("user-id").getText().equals(Store.getInstance().getCurrentGeoUser().findChild("id").getText())){
 									continue;
@@ -274,15 +282,16 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 								int lng = (int) (Double.parseDouble(child.findChild("longitude").getText()) * 1000000);
 
 								final MapOverlayItem overlayItem = new MapOverlayItem(new GeoPoint(lat, lng), "", "");
-								overlayItem.setGeoUserStatus(child.findChild("status").getText());
+								overlayItem.setUserStatus(child.findChild("status").getText());
 									
 								// get geouser name
 								RestResponse response = Query.makeQuery(QueryMethod.Get, 
-										String.format(QBQueries.GET_GEOUSER_QUERY_FORMAT, child.findChild("user-id").getText()),
+										String.format(QBQueries.GET_USER_BY_EXTERNAL_ID_QUERY_FORMAT, child.findChild("user-id").getText()),
 											null, null);
-								overlayItem.setGeoUserName(response.getBody().findChild("name").getText());
-
-								locationsList.add(overlayItem);
+								if(response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus200){
+									overlayItem.setUserName(response.getBody().findChild("login").getText());
+									locationsList.add(overlayItem);
+								};
 							}
 							
 							// there are no points
@@ -366,10 +375,11 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 		// tab on marker
 		@Override
 		protected boolean onTap(int i) {
+			
 			MapOverlayItem item = (MapOverlayItem) getItem(i);
 
 			// set data
-			mapPopUp.setData(item.getGeoUserName(), item.getGeoUserStatus());
+			mapPopUp.setData(item.getUserName(), item.getUserStatus());
 			
 			// show popup
 			mapPopUp.show();
@@ -421,6 +431,11 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 	    
 	    @Override
 	    public boolean onTap(GeoPoint p, MapView map) {
+
+	    	if(!p.equals(getMyLocation())){
+	    		return false;
+	    	}
+	    	
 	    	// show popup data
 	    	mapPopUp.setData(Store.getInstance().getCurrentGeoUser().findChild("name").getText(), "It's me!");
 			

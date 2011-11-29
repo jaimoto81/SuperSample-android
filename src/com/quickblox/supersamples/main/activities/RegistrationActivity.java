@@ -72,7 +72,7 @@ public class RegistrationActivity extends Activity implements ActionResultDelega
 				//
 				// create entity for geoUser
 				List<NameValuePair> formparamsGeoUser = new ArrayList<NameValuePair>();
-				formparamsGeoUser.add(new BasicNameValuePair("user[name]", editLogin.getText().toString()));
+				formparamsGeoUser.add(new BasicNameValuePair("user[name]", editFullName.getText().toString() + "(" + editLogin.getText().toString() + ")"));
 				formparamsGeoUser.add(new BasicNameValuePair("user[app_id]", QBQueries.APPLICATION_ID));
 				UrlEncodedFormEntity postEntityGeoUser = null;
 				try {
@@ -150,6 +150,12 @@ public class RegistrationActivity extends Activity implements ActionResultDelega
 
 	@Override
 	public void completedWithResult(QBQueryType queryType, RestResponse response) {
+		// no internet connection
+		if(response == null){
+			queryProgressBar.setVisibility(View.GONE);
+			AlertManager.showServerError(this, "Please check your internet connection");
+			return;
+		}
 
 		switch(queryType){
 			case QBQueryTypeCreateUser:
