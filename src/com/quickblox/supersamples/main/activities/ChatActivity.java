@@ -14,11 +14,11 @@ import org.apache.http.message.BasicNameValuePair;
 
 import com.flurry.android.FlurryAgent;
 import com.quickblox.supersamples.R;
+import com.quickblox.supersamples.main.definitions.Consts;
 import com.quickblox.supersamples.main.helpers.AlertManager;
 import com.quickblox.supersamples.main.helpers.ChatArrayAdapter;
 import com.quickblox.supersamples.main.objects.ChatItem;
 import com.quickblox.supersamples.sdk.definitions.ActionResultDelegate;
-import com.quickblox.supersamples.sdk.definitions.Consts;
 import com.quickblox.supersamples.sdk.definitions.QBQueries;
 import com.quickblox.supersamples.sdk.definitions.QueryMethod;
 import com.quickblox.supersamples.sdk.definitions.ResponseHttpStatus;

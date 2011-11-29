@@ -1,4 +1,4 @@
-package com.quickblox.supersamples.sdk.definitions;
+package com.quickblox.supersamples.main.definitions;
 
 public class Consts {
 	public static final int MAP_CHECK_OWN_POSITION_PERIOD = 1000 * 60 * 2; // 2 min
