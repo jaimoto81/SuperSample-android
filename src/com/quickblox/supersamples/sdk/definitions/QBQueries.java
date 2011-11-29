@@ -4,8 +4,8 @@ public class QBQueries {
 
 	// Applications settings
 	//
-	public static final String APPLICATION_ID = "20";
-	public static final String OWNER_ID = "35";
+	public static final String APPLICATION_ID = "38";
+	public static final String OWNER_ID = "831";
 	public static final String AUTH_KEY = "r8z8xMnexVYCAss";
 	public static final String AUTH_SECRET = "UtcvFsw9FX2uJ9B";
 

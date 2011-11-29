@@ -155,12 +155,14 @@ public class LoginActivity extends Activity implements ActionResultDelegate{
 					String geouserId = response.getBody().findChild("external-user-id").getText();
 					Query.makeQueryAsync(QueryMethod.Get, String.format(QBQueries.GET_GEOUSER_QUERY_FORMAT, geouserId), null, null, 
 							this, QBQueries.QBQueryType.QBQueryTypeGetGeoUser);
-	
+					
+					// authentication error
 				} else if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus401) {
 					queryProgressBar.setVisibility(View.GONE);
 				
 					AlertManager.showServerError(this, "Unauthorized. Please check you login and password");
-				
+					
+					//validation error
 				} else if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus422) {
 					queryProgressBar.setVisibility(View.GONE);
 					
