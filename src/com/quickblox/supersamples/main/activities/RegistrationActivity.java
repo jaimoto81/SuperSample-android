@@ -58,6 +58,7 @@ public class RegistrationActivity extends Activity implements ActionResultDelega
 	{
 	    super.onStart();
 	    FlurryAgent.onStartSession(this, "B6G7VFD3ZY767YUJA1J2");
+	    FlurryAgent.logEvent("run RegistrationActivity");
 	    
 	}
 	
@@ -86,7 +87,7 @@ public class RegistrationActivity extends Activity implements ActionResultDelega
 				//
 				// create entity for geoUser
 				List<NameValuePair> formparamsGeoUser = new ArrayList<NameValuePair>();
-				formparamsGeoUser.add(new BasicNameValuePair("user[name]", editFullName.getText().toString() + "(" + editLogin.getText().toString() + ")"));
+				formparamsGeoUser.add(new BasicNameValuePair("user[name]", editFullName.getText().toString() + "-" + editLogin.getText().toString()));
 				formparamsGeoUser.add(new BasicNameValuePair("user[app_id]", QBQueries.APPLICATION_ID));
 				UrlEncodedFormEntity postEntityGeoUser = null;
 				try {

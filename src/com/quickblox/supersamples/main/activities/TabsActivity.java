@@ -47,6 +47,7 @@ public class TabsActivity extends TabActivity {
 	{
 	    super.onStart();
 	    FlurryAgent.onStartSession(this, "B6G7VFD3ZY767YUJA1J2");
+	    FlurryAgent.logEvent("run TabsActivity");
 	    
 	}
 	
