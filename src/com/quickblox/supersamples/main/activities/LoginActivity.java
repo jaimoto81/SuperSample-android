@@ -8,6 +8,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.message.BasicNameValuePair;
 
+import com.flurry.android.FlurryAgent;
 import com.quickblox.supersamples.R;
 import com.quickblox.supersamples.main.helpers.AlertManager;
 import com.quickblox.supersamples.main.helpers.ValidationManager;
@@ -43,6 +44,19 @@ public class LoginActivity extends Activity implements ActionResultDelegate{
 		queryProgressBar = (ProgressBar)findViewById(R.id.queryLogin_progressBar);
 	}
 
+	public void onStart()
+	{
+	    super.onStart();
+	    FlurryAgent.onStartSession(this, "B6G7VFD3ZY767YUJA1J2");
+
+	}
+	
+	public void onStop()
+	{
+	    super.onStop();
+	    FlurryAgent.onEndSession(this);
+	}
+	
 	public void onClickButtons(View v) {
 		switch (v.getId()) {
 			case R.id.butNext:

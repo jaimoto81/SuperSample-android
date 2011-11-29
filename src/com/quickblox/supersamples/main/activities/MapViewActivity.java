@@ -10,6 +10,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.message.BasicNameValuePair;
 
+import com.flurry.android.FlurryAgent;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapActivity;
@@ -166,6 +167,19 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 	protected void onResume() {
 		super.onResume();
 		startTimer();	
+	}
+	
+	public void onStart()
+	{
+	    super.onStart();
+	    FlurryAgent.onStartSession(this, "B6G7VFD3ZY767YUJA1J2");
+	    
+	}
+	
+	public void onStop()
+	{
+	    super.onStop();
+	    FlurryAgent.onEndSession(this);
 	}
 	
 	private void initMapView() {

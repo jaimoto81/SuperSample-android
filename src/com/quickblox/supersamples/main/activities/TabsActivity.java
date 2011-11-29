@@ -1,6 +1,7 @@
 package com.quickblox.supersamples.main.activities;
 
 
+import com.flurry.android.FlurryAgent;
 import com.quickblox.supersamples.R;
 
 import android.app.TabActivity;
@@ -40,5 +41,18 @@ public class TabsActivity extends TabActivity {
 	    tabs.addTab(spec);
 	    
 	    tabs.setCurrentTab(0);	
+	}
+	
+	public void onStart()
+	{
+	    super.onStart();
+	    FlurryAgent.onStartSession(this, "B6G7VFD3ZY767YUJA1J2");
+	    
+	}
+	
+	public void onStop()
+	{
+	    super.onStop();
+	    FlurryAgent.onEndSession(this);
 	}
 }
