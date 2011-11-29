@@ -12,6 +12,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.message.BasicNameValuePair;
 
+import com.flurry.android.FlurryAgent;
 import com.quickblox.supersamples.R;
 import com.quickblox.supersamples.main.helpers.AlertManager;
 import com.quickblox.supersamples.main.helpers.ChatArrayAdapter;
@@ -61,6 +62,19 @@ public class ChatActivity extends Activity implements ActionResultDelegate{
 	    chatListView.setAdapter(listAdapter);
     }
 	
+	public void onStart()
+	{
+	    super.onStart();
+	    FlurryAgent.onStartSession(this, "B6G7VFD3ZY767YUJA1J2");
+	    
+	}
+	
+	public void onStop()
+	{
+	    super.onStop();
+	    FlurryAgent.onEndSession(this);
+	}
+	
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -78,6 +92,8 @@ public class ChatActivity extends Activity implements ActionResultDelegate{
 			}
 		}, 50, Consts.CHAT_UPDATE_PERIOD);
 	}
+	
+	
 	
 	public void onClickButtons(View v) {
 		switch (v.getId()) {

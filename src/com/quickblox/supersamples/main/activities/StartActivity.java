@@ -1,6 +1,7 @@
 package com.quickblox.supersamples.main.activities;
 
 
+import com.flurry.android.FlurryAgent;
 import com.quickblox.supersamples.R;
 
 import android.app.Activity;
@@ -17,6 +18,19 @@ public class StartActivity extends Activity {
 		setContentView(R.layout.main);
 	}
 
+	public void onStart()
+	{
+	    super.onStart();
+	    FlurryAgent.onStartSession(this, "B6G7VFD3ZY767YUJA1J2");
+	    
+	}
+	
+	public void onStop()
+	{
+	    super.onStop();
+	    FlurryAgent.onEndSession(this);
+	}
+	
 	// Click on the buttons
 	public void buttonOnClick(View v) {
 		Intent intent = new Intent();
