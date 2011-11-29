@@ -141,7 +141,7 @@ public class ChatActivity extends Activity implements ActionResultDelegate{
 				}
 				//
 				// make query
-				Query.makeQueryAsync(QueryMethod.Post,
+				Query.performQueryAsync(QueryMethod.Post,
 						QBQueries.CREATE_GEODATA_QUERY,
 						postEntityGeoData, null, this,
 						QBQueries.QBQueryType.QBQueryTypeCreateGeodata);
@@ -158,7 +158,7 @@ public class ChatActivity extends Activity implements ActionResultDelegate{
 		
 		isChatUpdating = true;
 		
-		Query.makeQueryAsync(QueryMethod.Get, QBQueries.GET_GEODATA_QUERY,
+		Query.performQueryAsync(QueryMethod.Get, QBQueries.GET_GEODATA_QUERY,
 				null, null, this, QBQueries.QBQueryType.QBQueryTypeGetGeodata);
 	}
 	
@@ -202,7 +202,7 @@ public class ChatActivity extends Activity implements ActionResultDelegate{
 						item.setID(ID);
 						//
 						// get geouser name
-						RestResponse response = Query.makeQuery(QueryMethod.Get, 
+						RestResponse response = Query.performQuery(QueryMethod.Get, 
 								String.format(QBQueries.GET_USER_BY_EXTERNAL_ID_QUERY_FORMAT, child.findChild("user-id").getText()),
 								null, null);
 						

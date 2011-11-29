@@ -140,7 +140,7 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 					}
 					//
 					// make query
-					Query.makeQueryAsync(QueryMethod.Post,
+					Query.performQueryAsync(QueryMethod.Post,
 							QBQueries.CREATE_GEODATA_QUERY,
 							postEntityGeoDataUser, null, MapViewActivity.this,
 							QBQueries.QBQueryType.QBQueryTypeCreateGeodata);			
@@ -253,7 +253,7 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 		});
 
 		// make query
-		Query.makeQueryAsync(QueryMethod.Get, QBQueries.GET_ALL_LOCATIONS_QUERY,
+		Query.performQueryAsync(QueryMethod.Get, QBQueries.GET_ALL_LOCATIONS_QUERY,
 				null, null, this, QBQueries.QBQueryType.QBQueryTypeGetAllLocations);
 	}
 		
@@ -311,7 +311,7 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 								overlayItem.setUserStatus(child.findChild("status").getText());
 									
 								// get geouser name
-								RestResponse response = Query.makeQuery(QueryMethod.Get, 
+								RestResponse response = Query.performQuery(QueryMethod.Get, 
 										String.format(QBQueries.GET_USER_BY_EXTERNAL_ID_QUERY_FORMAT, child.findChild("user-id").getText()),
 											null, null);
 								// Ok

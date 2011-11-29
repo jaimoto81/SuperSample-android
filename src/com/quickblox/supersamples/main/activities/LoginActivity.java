@@ -87,7 +87,7 @@ public class LoginActivity extends Activity implements ActionResultDelegate{
 				}
 
 				// make query
-				Query.makeQueryAsync(QueryMethod.Post, QBQueries.LOGIN_USER_QUERY, postEntity, null, 
+				Query.performQueryAsync(QueryMethod.Post, QBQueries.LOGIN_USER_QUERY, postEntity, null, 
 						this, QBQueries.QBQueryType.QBQueryTypeLoginUser);
 
 				break;
