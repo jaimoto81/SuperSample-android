@@ -225,7 +225,7 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 			}
 		};
 		
-		// each 30 seconds to do
+		// each 1 min to do
 		timer.schedule(task, 0, Consts.MAP_UPDATE_PERIOD);
 	}
 	
@@ -258,6 +258,7 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 		}
 				
 		switch(queryType){
+			// CREATED
 			case QBQueryTypeCreateGeodata:
 				if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus201) {
 					Log.i("completedWithResult", "The current location has been added to the database");
@@ -267,6 +268,7 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 			
 			break;
 			
+			// Ok
 			case QBQueryTypeGetAllLocations:
 				if(response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus200){
 					
@@ -303,6 +305,7 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 								RestResponse response = Query.makeQuery(QueryMethod.Get, 
 										String.format(QBQueries.GET_USER_BY_EXTERNAL_ID_QUERY_FORMAT, child.findChild("user-id").getText()),
 											null, null);
+								// Ok
 								if(response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus200){
 									overlayItem.setUserName(response.getBody().findChild("login").getText());
 									locationsList.add(overlayItem);
