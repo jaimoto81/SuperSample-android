@@ -16,7 +16,7 @@
     <TableLayout
         android:id="@+id/user_info"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" android:layout_toRightOf="@id/mapPopup_user_image" android:layout_marginLeft="15dp" android:layout_centerVertical="true">
+        android:layout_height="wrap_content" android:layout_toRightOf="@id/mapPopup_user_image" android:layout_marginLeft="15dp" android:layout_centerVertical="true" android:layout_marginRight="5dp">
 
         <TableRow>
 
@@ -54,7 +54,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="5dp"
-                android:textColor="@color/black" />
+                android:textColor="@color/black" 
+                android:singleLine="false" />
         </TableRow>
     </TableLayout>
 

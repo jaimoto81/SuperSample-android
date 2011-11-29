@@ -30,6 +30,7 @@ import com.quickblox.supersamples.sdk.objects.XMLNode;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -184,16 +185,21 @@ public class ChatActivity extends Activity implements ActionResultDelegate{
 					String status = child.findChild("status").getAttributes().get("nil");
 					if(status == null){
 						String ID = child.findChild("id").getText();
+						String message = child.findChild("status").getText();
 						
 						// skip if already exist
-						if(listAdapter.isHasElement(ID)){
+						if(listAdapter.isHasID(ID)){
 							continue;
 						}
+						if(listAdapter.isHasMessage(message)){
+							continue;
+						}
+
 						
 						// create new element
 						final ChatItem item = new ChatItem();
 						item.setDate(child.findChild("created-at").getText().replace("T", " ").replace("Z", " "));
-						item.setMessage(child.findChild("status").getText());
+						item.setMessage(message);
 						item.setID(ID);
 						//
 						// get geouser name
@@ -249,12 +255,13 @@ public class ChatActivity extends Activity implements ActionResultDelegate{
 						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 						item.setDate(sdf.format(cal.getTime()));
 						item.setMessage(messageTextEdit.getText().toString());
-						item.setUserName(Store.getInstance().getCurrentGeoUser().findChild("name").getText());
+						item.setUserName(Store.getInstance().getCurrentUser().findChild("login").getText());
 						item.setID(response.getBody().findChild("id").getText());
 						listAdapter.insert(item, 0);
 						
 						Store.getInstance().setCurrentStatus(messageTextEdit.getText().toString());
 						messageTextEdit.setText("");
+						messageTextEdit.clearFocus();
 					}
 				}else if(response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus403){
 					AlertManager.showServerError(this, "User access denied");

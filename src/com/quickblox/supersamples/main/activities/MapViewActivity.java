@@ -38,6 +38,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Location;
@@ -108,6 +109,8 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 			public void onLocationChanged(Location location) {
 				if (location != null) {
 					
+					Log.i("onLocationChanged", "onLocationChanged");
+					
 					// save current location
 					Store.getInstance().setCurrentLocation(location);
 					
@@ -119,8 +122,10 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 					String currentGeoUserId = Store.getInstance().getCurrentUser().findChild("external-user-id").getText();
 					formparamsGeoUser.add(new BasicNameValuePair(
 							"geo_data[user_id]", currentGeoUserId));
-					formparamsGeoUser.add(new BasicNameValuePair(
-							"geo_data[status]", Store.getInstance().getCurrentStatus()));
+					if(Store.getInstance().getCurrentStatus() != null){
+						formparamsGeoUser.add(new BasicNameValuePair(
+								"geo_data[status]", Store.getInstance().getCurrentStatus()));
+					}
 					formparamsGeoUser.add(new BasicNameValuePair(
 							"geo_data[latitude]", lat));
 					formparamsGeoUser.add(new BasicNameValuePair(
@@ -142,12 +147,16 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 				}
 			}
 		};
-
-		// registration of the LocationListener.
-		locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, Consts.MAP_CHECK_OWN_POSITION_PERIOD, 
-				0, locListener);
 		
-		Store.getInstance().setCurrentLocation(locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER));
+		List<String> providers = locManager.getProviders(true);
+	    for (String provider : providers) {
+
+	    	// registration of the LocationListener.
+	    	locManager.requestLocationUpdates(provider, Consts.MAP_CHECK_OWN_POSITION_PERIOD, 
+	    			10, locListener);
+		
+	    	Store.getInstance().setCurrentLocation(locManager.getLastKnownLocation(provider));
+	    }
 		
 		marker = getResources().getDrawable(R.drawable.map_marker_other);
 		marker.setBounds(0, 0, marker.getIntrinsicWidth(),
@@ -289,7 +298,7 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 							for(XMLNode child : data.getChildren()){
 								
 								// skip own location
-								if(child.findChild("user-id").getText().equals(Store.getInstance().getCurrentGeoUser().findChild("id").getText())){
+								if(child.findChild("user-id").getText().equals(Store.getInstance().getCurrentUser().findChild("external-user-id").getText())){
 									continue;
 								}
 	
@@ -408,6 +417,7 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 	public class WhereAmI extends MyLocationOverlay {
 	    private Context mContext;
 	    private float   mOrientation;
+	    private Rect markerRect;
 
 	    public WhereAmI(Context context, MapView mapView) {
 	        super(context, mapView);
@@ -418,7 +428,7 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 	    protected void drawMyLocation(Canvas canvas, MapView mapView, Location lastFix, GeoPoint myLocation, long when) {
 	        // translate the GeoPoint to screen pixels
 	        Point screenPts = mapView.getProjection().toPixels(myLocation, null);
-
+	        
 	        // create a rotated copy of the marker
 	        Bitmap arrowBitmap = BitmapFactory.decodeResource( mContext.getResources(), R.drawable.map_marker_my);
 	        Matrix matrix = new Matrix();
@@ -438,6 +448,9 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 	            screenPts.y - (rotatedBmp.getHeight() / 2), 
 	            null
 	        );
+	        
+	        markerRect = new Rect(screenPts.x - (rotatedBmp.getWidth() /2), screenPts.y - (rotatedBmp.getHeight() / 2),
+	        		screenPts.x + (rotatedBmp.getWidth()  / 2), screenPts.y + (rotatedBmp.getHeight() / 2));
 	    }
 
 	    public void setOrientation(float newOrientation) {
@@ -446,13 +459,23 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 	    
 	    @Override
 	    public boolean onTap(GeoPoint p, MapView map) {
-
-	    	if(!p.equals(getMyLocation())){
+	    	
+	    	Point tapPts = mapView.getProjection().toPixels(p, null);
+	    	
+	    	if(markerRect == null || tapPts == null){
+	    		return false;
+	    	}
+	    	
+	    	if(!markerRect.contains(tapPts.x, tapPts.y)){
 	    		return false;
 	    	}
 	    	
 	    	// show popup data
-	    	mapPopUp.setData(Store.getInstance().getCurrentGeoUser().findChild("name").getText(), "It's me!");
+	    	String status = Store.getInstance().getCurrentStatus();
+	    	if(status == null){
+	    		status = "<empty>";
+	    	}
+	    	mapPopUp.setData(Store.getInstance().getCurrentUser().findChild("login").getText(), status);
 			
 			// show popup
 			mapPopUp.show();
