@@ -30,7 +30,6 @@ import com.quickblox.supersamples.sdk.objects.XMLNode;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -57,6 +56,8 @@ public class ChatActivity extends Activity implements ActionResultDelegate{
         messageTextEdit = (EditText)findViewById(R.id.message_editText);
         chatListView = (ListView)findViewById(R.id.chat_listView);
         queryProgressBar = (ProgressBar)findViewById(R.id.chatQuery_progressBar);
+        
+        messageTextEdit.clearFocus();
         
         List<ChatItem> chatData = new ArrayList<ChatItem>();
         listAdapter = new ChatArrayAdapter(ChatActivity.this, R.layout.chat_listview_item, chatData);

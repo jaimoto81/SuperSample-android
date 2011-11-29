@@ -454,6 +454,8 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 	        
 	        markerRect = new Rect(screenPts.x - (rotatedBmp.getWidth() /2), screenPts.y - (rotatedBmp.getHeight() / 2),
 	        		screenPts.x + (rotatedBmp.getWidth()  / 2), screenPts.y + (rotatedBmp.getHeight() / 2));
+	        
+	        rotatedBmp.recycle();
 	    }
 
 	    public void setOrientation(float newOrientation) {
