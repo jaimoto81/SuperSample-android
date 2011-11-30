@@ -87,7 +87,7 @@ public class RegistrationActivity extends Activity implements ActionResultDelega
 				//
 				// create entity for geoUser
 				List<NameValuePair> formparamsGeoUser = new ArrayList<NameValuePair>();
-				formparamsGeoUser.add(new BasicNameValuePair("user[name]", editFullName.getText().toString() + "-" + editLogin.getText().toString()));
+				formparamsGeoUser.add(new BasicNameValuePair("user[name]", editFullName.getText().toString()));
 				formparamsGeoUser.add(new BasicNameValuePair("user[app_id]", QBQueries.APPLICATION_ID));
 				UrlEncodedFormEntity postEntityGeoUser = null;
 				try {
@@ -97,7 +97,7 @@ public class RegistrationActivity extends Activity implements ActionResultDelega
 				}
 				
 				// make query for creating a geouser
-				Query.makeQueryAsync(QueryMethod.Post, QBQueries.CREATE_GEOUSER_QUERY, postEntityGeoUser, null, 
+				Query.performQueryAsync(QueryMethod.Post, QBQueries.CREATE_GEOUSER_QUERY, postEntityGeoUser, null, 
 						this, QBQueryType.QBQueryTypeCreateGeoUser);
 
 				break;
@@ -217,7 +217,7 @@ public class RegistrationActivity extends Activity implements ActionResultDelega
 					}
 
 					// make query for creating a user
-					Query.makeQueryAsync(QueryMethod.Post, QBQueries.CREATE_USER_QUERY, postEntityUser, null, 
+					Query.performQueryAsync(QueryMethod.Post, QBQueries.CREATE_USER_QUERY, postEntityUser, null,
 							this, QBQueries.QBQueryType.QBQueryTypeCreateUser);
 				
 				// Validation error

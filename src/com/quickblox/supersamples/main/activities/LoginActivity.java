@@ -87,7 +87,7 @@ public class LoginActivity extends Activity implements ActionResultDelegate{
 				}
 
 				// make query
-				Query.makeQueryAsync(QueryMethod.Post, QBQueries.LOGIN_USER_QUERY, postEntity, null, 
+				Query.performQueryAsync(QueryMethod.Post, QBQueries.LOGIN_USER_QUERY, postEntity, null, 
 						this, QBQueries.QBQueryType.QBQueryTypeLoginUser);
 
 				break;
@@ -154,10 +154,16 @@ public class LoginActivity extends Activity implements ActionResultDelegate{
 					// get GeoUser
 					// make query
 					String geouserId = response.getBody().findChild("external-user-id").getText();
-					Query.makeQueryAsync(QueryMethod.Get, String.format(QBQueries.GET_GEOUSER_QUERY_FORMAT, geouserId), null, null, 
+					Query.performQueryAsync(QueryMethod.Get, String.format(QBQueries.GET_GEOUSER_QUERY_FORMAT, geouserId), null, null, 
 							this, QBQueries.QBQueryType.QBQueryTypeGetGeoUser);
 					
 					// authentication error
+					// show main activity
+				    Intent intent = new Intent();
+					intent.setClass(this, TabsActivity.class);
+					startActivity(intent);
+					finish();
+
 				} else if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus401) {
 					queryProgressBar.setVisibility(View.GONE);
 				
@@ -171,18 +177,6 @@ public class LoginActivity extends Activity implements ActionResultDelegate{
 					AlertManager.showServerError(this, error);
 				}
 			break;
-			
-			case QBQueryTypeGetGeoUser:
-				// store current geo user
-				Store.getInstance().setCurrentGeoUser(response.getBody());
-				
-				// show main activity
-			    Intent intent = new Intent();
-				intent.setClass(this, TabsActivity.class);
-				startActivity(intent);
-				finish();
-				
-				break;
 		}
 	}
 }

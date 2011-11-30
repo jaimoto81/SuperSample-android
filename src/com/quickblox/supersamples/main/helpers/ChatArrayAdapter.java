@@ -17,6 +17,7 @@ public class ChatArrayAdapter extends ArrayAdapter<ChatItem>{
 	private Context ctx;
 	private List<ChatItem> items;
 	private List<String> ids;
+	private List<String> messages;
 	
 	public ChatArrayAdapter(Context context, int textViewResourceId,
 			List<ChatItem> objects) {
@@ -24,7 +25,9 @@ public class ChatArrayAdapter extends ArrayAdapter<ChatItem>{
 		
 		ctx = context;
 		items = objects;
+		
 		ids = new ArrayList<String>();
+		messages = new ArrayList<String>();
 	}
 
 	@Override
@@ -53,20 +56,29 @@ public class ChatArrayAdapter extends ArrayAdapter<ChatItem>{
 	public void add (ChatItem object){
 		super.add(object);
 		ids.add(object.getID());
+		messages.add(object.getMessage());
 	}
 	
 	public void insert (ChatItem object, int index){
 		super.insert(object, index);
 		ids.add(object.getID());
+		messages.add(object.getMessage());
 	}
 	
 	public void remove (ChatItem object){
 		super.remove(object);
 		ids.remove(object.getID());
+		messages.remove(object.getMessage());
 	}
 	
-	public boolean isHasElement(String elementID){
+	public boolean isHasID(String elementID){
 		if(ids.contains(elementID)){
+			return true;
+		}
+		return false;
+	}
+	public boolean isHasMessage(String elementMessage){
+		if(messages.contains(elementMessage)){
 			return true;
 		}
 		return false;

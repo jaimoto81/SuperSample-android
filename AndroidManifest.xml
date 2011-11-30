@@ -12,27 +12,37 @@
         <activity
             android:label="@string/app_name"
             android:name=".main.activities.StartActivity" 
-            android:theme="@android:style/Theme.NoTitleBar" >
+            android:theme="@android:style/Theme.NoTitleBar" 
+            android:screenOrientation="portrait" >
             <intent-filter >
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".main.activities.LoginActivity" >
+        <activity android:name=".main.activities.LoginActivity" 
+            android:theme="@android:style/Theme.NoTitleBar" 
+            android:screenOrientation="portrait" >
         </activity>
-        <activity android:name=".main.activities.RegistrationActivity" >
+        <activity android:name=".main.activities.RegistrationActivity" 
+            android:theme="@android:style/Theme.NoTitleBar" 
+            android:screenOrientation="portrait" >
         </activity>
-        <activity android:name=".main.activities.MapViewActivity" >
+        <activity android:name=".main.activities.MapViewActivity" 
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".main.activities.TabsActivity"
-            android:theme="@android:style/Theme.NoTitleBar" >
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:screenOrientation="portrait" >
         </activity>
-        <activity android:name=".main.activities.ChatActivity" >
+        <activity android:name=".main.activities.ChatActivity" 
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".main.activities.QuizActivity" >
+        <activity android:name=".main.activities.QuizActivity" 
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".main.activities.SettingsActivity" >
+        <activity android:name=".main.activities.SettingsActivity" 
+            android:screenOrientation="portrait">
         </activity>
         
         <uses-library android:name="com.google.android.maps" />

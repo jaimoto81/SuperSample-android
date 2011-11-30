@@ -14,11 +14,11 @@ import org.apache.http.message.BasicNameValuePair;
 
 import com.flurry.android.FlurryAgent;
 import com.quickblox.supersamples.R;
+import com.quickblox.supersamples.main.definitions.Consts;
 import com.quickblox.supersamples.main.helpers.AlertManager;
 import com.quickblox.supersamples.main.helpers.ChatArrayAdapter;
 import com.quickblox.supersamples.main.objects.ChatItem;
 import com.quickblox.supersamples.sdk.definitions.ActionResultDelegate;
-import com.quickblox.supersamples.sdk.definitions.Consts;
 import com.quickblox.supersamples.sdk.definitions.QBQueries;
 import com.quickblox.supersamples.sdk.definitions.QueryMethod;
 import com.quickblox.supersamples.sdk.definitions.ResponseHttpStatus;
@@ -56,6 +56,8 @@ public class ChatActivity extends Activity implements ActionResultDelegate{
         messageTextEdit = (EditText)findViewById(R.id.message_editText);
         chatListView = (ListView)findViewById(R.id.chat_listView);
         queryProgressBar = (ProgressBar)findViewById(R.id.chatQuery_progressBar);
+        
+        messageTextEdit.clearFocus();
         
         List<ChatItem> chatData = new ArrayList<ChatItem>();
         listAdapter = new ChatArrayAdapter(ChatActivity.this, R.layout.chat_listview_item, chatData);
@@ -139,7 +141,7 @@ public class ChatActivity extends Activity implements ActionResultDelegate{
 				}
 				//
 				// make query
-				Query.makeQueryAsync(QueryMethod.Post,
+				Query.performQueryAsync(QueryMethod.Post,
 						QBQueries.CREATE_GEODATA_QUERY,
 						postEntityGeoData, null, this,
 						QBQueries.QBQueryType.QBQueryTypeCreateGeodata);
@@ -156,7 +158,7 @@ public class ChatActivity extends Activity implements ActionResultDelegate{
 		
 		isChatUpdating = true;
 		
-		Query.makeQueryAsync(QueryMethod.Get, QBQueries.GET_GEODATA_QUERY,
+		Query.performQueryAsync(QueryMethod.Get, QBQueries.GET_GEODATA_QUERY,
 				null, null, this, QBQueries.QBQueryType.QBQueryTypeGetGeodata);
 	}
 	
@@ -182,20 +184,25 @@ public class ChatActivity extends Activity implements ActionResultDelegate{
 					String status = child.findChild("status").getAttributes().get("nil");
 					if(status == null){
 						String ID = child.findChild("id").getText();
+						String message = child.findChild("status").getText();
 						
 						// skip if already exist
-						if(listAdapter.isHasElement(ID)){
+						if(listAdapter.isHasID(ID)){
 							continue;
 						}
+						if(listAdapter.isHasMessage(message)){
+							continue;
+						}
+
 						
 						// create new element
 						final ChatItem item = new ChatItem();
 						item.setDate(child.findChild("created-at").getText().replace("T", " ").replace("Z", " "));
-						item.setMessage(child.findChild("status").getText());
+						item.setMessage(message);
 						item.setID(ID);
 						//
 						// get geouser name
-						RestResponse response = Query.makeQuery(QueryMethod.Get, 
+						RestResponse response = Query.performQuery(QueryMethod.Get, 
 								String.format(QBQueries.GET_USER_BY_EXTERNAL_ID_QUERY_FORMAT, child.findChild("user-id").getText()),
 								null, null);
 						
@@ -248,12 +255,13 @@ public class ChatActivity extends Activity implements ActionResultDelegate{
 						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 						item.setDate(sdf.format(cal.getTime()));
 						item.setMessage(messageTextEdit.getText().toString());
-						item.setUserName(Store.getInstance().getCurrentGeoUser().findChild("name").getText());
+						item.setUserName(Store.getInstance().getCurrentUser().findChild("login").getText());
 						item.setID(response.getBody().findChild("id").getText());
 						listAdapter.insert(item, 0);
 						
 						Store.getInstance().setCurrentStatus(messageTextEdit.getText().toString());
 						messageTextEdit.setText("");
+						messageTextEdit.clearFocus();
 					}
 				// access denied
 				}else if(response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus403){

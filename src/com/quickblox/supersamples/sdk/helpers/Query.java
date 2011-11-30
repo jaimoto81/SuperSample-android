@@ -35,7 +35,7 @@ public class Query {
 	 */
 	
 	// sync query
-	public static RestResponse makeQuery(QueryMethod queryMethod, String query, HttpEntity queryEntity, Header []headers){
+	public static RestResponse performQuery(QueryMethod queryMethod, String query, HttpEntity queryEntity, Header []headers){
 		HttpClient httpclient = new DefaultHttpClient();
 
 		try {
@@ -159,7 +159,7 @@ public class Query {
 	}
 	
 	// async query
-	public static void makeQueryAsync(final QueryMethod queryMethod, final String query, 
+	public static void performQueryAsync(final QueryMethod queryMethod, final String query, 
 			final HttpEntity queryEntity, final Header []headers, final ActionResultDelegate delegate, final QBQueries.QBQueryType queryType){
 		
 		if (mHandler == null){
@@ -168,7 +168,7 @@ public class Query {
 		
 		new Thread(new Runnable() {
 			public void run() {
-				final RestResponse restResponse = Query.makeQuery(queryMethod, query, queryEntity, headers);
+				final RestResponse restResponse = Query.performQuery(queryMethod, query, queryEntity, headers);
 				
 				mHandler.post(new Runnable() {
 		            public void run() {

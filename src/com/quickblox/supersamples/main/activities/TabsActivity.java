@@ -1,11 +1,14 @@
 package com.quickblox.supersamples.main.activities;
 
 
+
+
 import com.flurry.android.FlurryAgent;
 import com.quickblox.supersamples.R;
 
 import android.app.TabActivity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.widget.TabHost;
 
@@ -20,24 +23,26 @@ public class TabsActivity extends TabActivity {
 		TabHost.TabSpec spec; // Reusable TabSpec for each tab
 	    Intent intent;  // Reusable Intent for each tab
 	    
+	    Resources res = getResources();
+	    
 	    // Map tab
 	    intent = new Intent().setClass(this, MapViewActivity.class);
-	    spec = tabs.newTabSpec("map").setIndicator("Map").setContent(intent);
+	    spec = tabs.newTabSpec("map").setIndicator("Map", res.getDrawable(R.drawable.map_tab)).setContent(intent);
 	    tabs.addTab(spec);
 	    
 	    // Chat tab
 	    intent = new Intent().setClass(this, ChatActivity.class);
-	    spec = tabs.newTabSpec("chat").setIndicator("Chat").setContent(intent);
+	    spec = tabs.newTabSpec("chat").setIndicator("Chat", res.getDrawable(R.drawable.chat_tab)).setContent(intent);
 	    tabs.addTab(spec);
 	    
 		// Quiz tab
 	    intent = new Intent().setClass(this, QuizActivity.class);
-	    spec = tabs.newTabSpec("quiz").setIndicator("Quiz").setContent(intent);
+	    spec = tabs.newTabSpec("quiz").setIndicator("Quiz", res.getDrawable(R.drawable.quiz_tab)).setContent(intent);
 	    tabs.addTab(spec);
 	    
 		// Settings tab
 	    intent = new Intent().setClass(this, SettingsActivity.class);
-	    spec = tabs.newTabSpec("settings").setIndicator("Settings").setContent(intent);
+	    spec = tabs.newTabSpec("settings").setIndicator("Settings", res.getDrawable(R.drawable.settings_tab)).setContent(intent);
 	    tabs.addTab(spec);
 	    
 	    tabs.setCurrentTab(0);	

@@ -1,6 +1,7 @@
 package com.quickblox.supersamples.sdk.helpers;
 
 import android.location.Location;
+import android.util.Log;
 
 import com.quickblox.supersamples.sdk.objects.XMLNode;
 
@@ -24,7 +25,6 @@ public class Store {
 	private String authToken;
 	
 	private XMLNode currentUser;
-	private XMLNode currentGeoUser;
 	private Location currentLocation;
 	private String currentStatus;
 	 
@@ -37,25 +37,18 @@ public class Store {
 	public void setCurrentUser(XMLNode currentUser) {
 		this.currentUser = currentUser;
 	}
-	 
-	public XMLNode getCurrentGeoUser() {
-		return currentGeoUser;
-	}
-	public void setCurrentGeoUser(XMLNode currentGeoUser) {
-		this.currentGeoUser = currentGeoUser;
-	}
 	
 	public Location getCurrentLocation() {
 		return currentLocation;
 	}
 	public void setCurrentLocation(Location currentLocation) {
+		if(currentLocation != null){
+			Log.i("setCurrentLocation", "Set!");
+		}
 		this.currentLocation = currentLocation;
 	}
 	
 	public String getCurrentStatus() {
-		if(currentStatus == null){
-			currentStatus = "I am QuickBlox user!";
-		}
 		return currentStatus;
 	}
 	public void setCurrentStatus(String currentStatus) {
