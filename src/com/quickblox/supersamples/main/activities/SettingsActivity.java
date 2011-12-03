@@ -1,6 +1,7 @@
 package com.quickblox.supersamples.main.activities;
 
 import com.flurry.android.FlurryAgent;
+import com.quickblox.supersamples.main.definitions.Consts;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -18,7 +19,7 @@ public class SettingsActivity extends Activity {
 	public void onStart()
 	{
 	    super.onStart();
-	    FlurryAgent.onStartSession(this, "B6G7VFD3ZY767YUJA1J2");
+	    FlurryAgent.onStartSession(this, Consts.FLURRY_API_KEY);
 	    FlurryAgent.logEvent("run SettingsActivity");
 	    
 	}

@@ -10,6 +10,7 @@ import org.apache.http.message.BasicNameValuePair;
 
 import com.flurry.android.FlurryAgent;
 import com.quickblox.supersamples.R;
+import com.quickblox.supersamples.main.definitions.Consts;
 import com.quickblox.supersamples.main.helpers.AlertManager;
 import com.quickblox.supersamples.main.helpers.ValidationManager;
 import com.quickblox.supersamples.sdk.definitions.ActionResultDelegate;
@@ -47,7 +48,7 @@ public class LoginActivity extends Activity implements ActionResultDelegate{
 	public void onStart()
 	{
 	    super.onStart();
-	    FlurryAgent.onStartSession(this, "B6G7VFD3ZY767YUJA1J2");
+	    FlurryAgent.onStartSession(this, Consts.FLURRY_API_KEY);
 	    FlurryAgent.logEvent("run LoginActivity");
 
 	}

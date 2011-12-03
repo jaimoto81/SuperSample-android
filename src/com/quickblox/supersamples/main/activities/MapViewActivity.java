@@ -119,9 +119,9 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 					
 					// create entity for current user
 					List<NameValuePair> formparamsGeoUser = new ArrayList<NameValuePair>();
-					String currentGeoUserId = Store.getInstance().getCurrentUser().findChild("external-user-id").getText();
+					String currentUserId = Store.getInstance().getCurrentUser().findChild("id").getText();
 					formparamsGeoUser.add(new BasicNameValuePair(
-							"geo_data[user_id]", currentGeoUserId));
+							"geo_data[user_id]", currentUserId));
 					if(Store.getInstance().getCurrentStatus() != null){
 						formparamsGeoUser.add(new BasicNameValuePair(
 								"geo_data[status]", Store.getInstance().getCurrentStatus()));
@@ -130,6 +130,8 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 							"geo_data[latitude]", lat));
 					formparamsGeoUser.add(new BasicNameValuePair(
 							"geo_data[longitude]", lng));
+					formparamsGeoUser.add(new BasicNameValuePair(
+							"geo_data[app_id]", QBQueries.APPLICATION_ID));
 
 					UrlEncodedFormEntity postEntityGeoDataUser = null;
 					try {
@@ -138,6 +140,7 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 					} catch (UnsupportedEncodingException e1) {
 						e1.printStackTrace();
 					}
+					
 					//
 					// make query
 					Query.performQueryAsync(QueryMethod.Post,
@@ -181,7 +184,7 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 	public void onStart()
 	{
 	    super.onStart();
-	    FlurryAgent.onStartSession(this, "B6G7VFD3ZY767YUJA1J2");
+	    FlurryAgent.onStartSession(this, Consts.FLURRY_API_KEY);
 	    FlurryAgent.logEvent("run MapViewActivity");
 	    
 	}
@@ -208,7 +211,7 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 			@Override
 			public void run() {
 				// Show current location and change a zoom
-				mapController.setZoom(1);
+				mapController.setZoom(2);
 				mapController.animateTo(ownOverlay.getMyLocation());
 			}
 		});
@@ -289,7 +292,8 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 						
 						return;
 					}
-					data.getChildren().remove(0);
+					// remove 'page count' element
+					data.getChildren().remove(data.getChildren().size()-1);
 					
 					final List<MapOverlayItem> locationsList = new ArrayList<MapOverlayItem>();
 					
@@ -300,7 +304,8 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 							for(XMLNode child : data.getChildren()){
 								
 								// skip own location
-								if(child.findChild("user-id").getText().equals(Store.getInstance().getCurrentUser().findChild("external-user-id").getText())){
+								if(child.findChild("user").findChild("id").getText().equals(Store.getInstance().getCurrentUser().findChild("id").getText())){
+									Store.getInstance().setCurrentStatus(child.findChild("status").getText());
 									continue;
 								}
 	
@@ -309,16 +314,8 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 
 								final MapOverlayItem overlayItem = new MapOverlayItem(new GeoPoint(lat, lng), "", "");
 								overlayItem.setUserStatus(child.findChild("status").getText());
-									
-								// get geouser name
-								RestResponse response = Query.performQuery(QueryMethod.Get, 
-										String.format(QBQueries.GET_USER_BY_EXTERNAL_ID_QUERY_FORMAT, child.findChild("user-id").getText()),
-											null, null);
-								// Ok
-								if(response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus200){
-									overlayItem.setUserName(response.getBody().findChild("login").getText());
-									locationsList.add(overlayItem);
-								};
+								overlayItem.setUserName(child.findChild("user").findChild("login").getText());
+								locationsList.add(overlayItem);
 							}
 							
 							// there are no points

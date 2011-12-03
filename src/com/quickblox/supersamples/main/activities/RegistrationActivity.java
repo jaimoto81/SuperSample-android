@@ -10,6 +10,7 @@ import org.apache.http.message.BasicNameValuePair;
 
 import com.flurry.android.FlurryAgent;
 import com.quickblox.supersamples.R;
+import com.quickblox.supersamples.main.definitions.Consts;
 import com.quickblox.supersamples.main.helpers.AlertManager;
 import com.quickblox.supersamples.main.helpers.ValidationManager;
 import com.quickblox.supersamples.sdk.definitions.ActionResultDelegate;
@@ -57,7 +58,7 @@ public class RegistrationActivity extends Activity implements ActionResultDelega
 	public void onStart()
 	{
 	    super.onStart();
-	    FlurryAgent.onStartSession(this, "B6G7VFD3ZY767YUJA1J2");
+	    FlurryAgent.onStartSession(this, Consts.FLURRY_API_KEY);
 	    FlurryAgent.logEvent("run RegistrationActivity");
 	    
 	}
@@ -83,22 +84,26 @@ public class RegistrationActivity extends Activity implements ActionResultDelega
 				
 				queryProgressBar.setVisibility(View.VISIBLE);
 
-				// Create GeoUser
+				// Create User
 				//
-				// create entity for geoUser
-				List<NameValuePair> formparamsGeoUser = new ArrayList<NameValuePair>();
-				formparamsGeoUser.add(new BasicNameValuePair("user[name]", editFullName.getText().toString()));
-				formparamsGeoUser.add(new BasicNameValuePair("user[app_id]", QBQueries.APPLICATION_ID));
-				UrlEncodedFormEntity postEntityGeoUser = null;
+				// create entity
+				List<NameValuePair> formparamsUser = new ArrayList<NameValuePair>();
+				formparamsUser.add(new BasicNameValuePair("user[full_name]", editFullName.getText().toString()));
+				formparamsUser.add(new BasicNameValuePair("user[email]", editEmail.getText().toString()));
+				formparamsUser.add(new BasicNameValuePair("user[login]", editLogin.getText().toString()));
+				formparamsUser.add(new BasicNameValuePair("user[password]", editPassword.getText().toString()));
+				formparamsUser.add(new BasicNameValuePair("user[owner_id]", QBQueries.OWNER_ID));
+
+				UrlEncodedFormEntity postEntityUser = null;
 				try {
-					postEntityGeoUser = new UrlEncodedFormEntity(formparamsGeoUser, "UTF-8");
+					postEntityUser = new UrlEncodedFormEntity(formparamsUser, "UTF-8");
 				} catch (UnsupportedEncodingException e1) {
 					e1.printStackTrace();
 				}
-				
-				// make query for creating a geouser
-				Query.performQueryAsync(QueryMethod.Post, QBQueries.CREATE_GEOUSER_QUERY, postEntityGeoUser, null, 
-						this, QBQueryType.QBQueryTypeCreateGeoUser);
+
+				// make query for creating a user
+				Query.performQueryAsync(QueryMethod.Post, QBQueries.CREATE_USER_QUERY, postEntityUser, null, 
+						this, QBQueries.QBQueryType.QBQueryTypeCreateUser);
 
 				break;
 
@@ -194,40 +199,6 @@ public class RegistrationActivity extends Activity implements ActionResultDelega
 						
 				break;
 
-			case QBQueryTypeCreateGeoUser:
-				// OK
-				if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus201){ 		
-
-					// Create User
-					//
-					// create entity
-					List<NameValuePair> formparamsUser = new ArrayList<NameValuePair>();
-					formparamsUser.add(new BasicNameValuePair("user[full_name]", editFullName.getText().toString()));
-					formparamsUser.add(new BasicNameValuePair("user[email]", editEmail.getText().toString()));
-					formparamsUser.add(new BasicNameValuePair("user[login]", editLogin.getText().toString()));
-					formparamsUser.add(new BasicNameValuePair("user[password]", editPassword.getText().toString()));
-					formparamsUser.add(new BasicNameValuePair("user[owner_id]", QBQueries.OWNER_ID));
-					formparamsUser.add(new BasicNameValuePair("user[external_user_id]", response.getBody().findChild("id").getText()));
-
-					UrlEncodedFormEntity postEntityUser = null;
-					try {
-						postEntityUser = new UrlEncodedFormEntity(formparamsUser, "UTF-8");
-					} catch (UnsupportedEncodingException e1) {
-						e1.printStackTrace();
-					}
-
-					// make query for creating a user
-					Query.performQueryAsync(QueryMethod.Post, QBQueries.CREATE_USER_QUERY, postEntityUser, null, 
-							this, QBQueries.QBQueryType.QBQueryTypeCreateUser);
-				
-				// Validation error
-				}else if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus422) {
-					queryProgressBar.setVisibility(View.GONE);
-					
-					String error = response.getBody().getChildren().get(0).getText();
-					AlertManager.showServerError(this, error);
-				}
-				break;
 		}
 	}
 }
