@@ -12,7 +12,8 @@ public class QBQueries {
 	
 	// Server
 	//
-	public static final String SERVER_ZONE = "qbtest01.quickblox.com";
+	                                      // "quickblox.com" - production server
+	public static final String SERVER_ZONE = "qbtest01.quickblox.com"; // test server
 	
 	
 	// Services
