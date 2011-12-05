@@ -36,12 +36,12 @@ import android.widget.ProgressBar;
 public class LoginActivity extends Activity implements ActionResultDelegate{
 
 	private ProgressBar queryProgressBar;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login_view);
-		
+
 		queryProgressBar = (ProgressBar)findViewById(R.id.queryLogin_progressBar);
 	}
 
@@ -52,13 +52,13 @@ public class LoginActivity extends Activity implements ActionResultDelegate{
 	    FlurryAgent.logEvent("run LoginActivity");
 
 	}
-	
+
 	public void onStop()
 	{
 	    super.onStop();
 	    FlurryAgent.onEndSession(this);
 	}
-	
+
 	public void onClickButtons(View v) {
 		switch (v.getId()) {
 			case R.id.butNext:
@@ -74,7 +74,7 @@ public class LoginActivity extends Activity implements ActionResultDelegate{
 				}
 
 				queryProgressBar.setVisibility(View.VISIBLE);
-				
+
 				// create entity
 				List<NameValuePair> formparams = new ArrayList<NameValuePair>();
 				formparams.add(new BasicNameValuePair("owner_id", QBQueries.OWNER_ID));
@@ -144,21 +144,14 @@ public class LoginActivity extends Activity implements ActionResultDelegate{
 			AlertManager.showServerError(this, "Please check your internet connection");
 			return;
 		}
-				
+
 		switch(queryType){
 			case QBQueryTypeLoginUser:
 				if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus202) {
-					
+
 					// store current user
 					Store.getInstance().setCurrentUser(response.getBody());
-	
-					// get GeoUser
-					// make query
-					String geouserId = response.getBody().findChild("external-user-id").getText();
-					Query.performQueryAsync(QueryMethod.Get, String.format(QBQueries.GET_GEOUSER_QUERY_FORMAT, geouserId), null, null, 
-							this, QBQueries.QBQueryType.QBQueryTypeGetGeoUser);
-					
-					// authentication error
+
 					// show main activity
 				    Intent intent = new Intent();
 					intent.setClass(this, TabsActivity.class);
@@ -167,13 +160,13 @@ public class LoginActivity extends Activity implements ActionResultDelegate{
 
 				} else if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus401) {
 					queryProgressBar.setVisibility(View.GONE);
-				
+
 					AlertManager.showServerError(this, "Unauthorized. Please check you login and password");
-					
+
 					//validation error
 				} else if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus422) {
 					queryProgressBar.setVisibility(View.GONE);
-					
+
 					String error = response.getBody().getChildren().get(0).getText();
 					AlertManager.showServerError(this, error);
 				}
