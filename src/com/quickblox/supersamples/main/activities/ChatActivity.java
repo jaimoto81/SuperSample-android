@@ -67,7 +67,7 @@ public class ChatActivity extends Activity implements ActionResultDelegate{
 	public void onStart()
 	{
 	    super.onStart();
-	    FlurryAgent.onStartSession(this, "B6G7VFD3ZY767YUJA1J2");
+	    FlurryAgent.onStartSession(this, Consts.FLURRY_API_KEY);
 	    FlurryAgent.logEvent("run ChatActivity");
 	    
 	}
@@ -115,7 +115,7 @@ public class ChatActivity extends Activity implements ActionResultDelegate{
 				queryProgressBar.setVisibility(View.VISIBLE);
 				
 				// create entity for current user
-				String geoUserId = Store.getInstance().getCurrentUser().findChild("external-user-id").getText();
+				String userId = Store.getInstance().getCurrentUser().findChild("id").getText();
 				String lat = "45.45", lng = "45.45";
 				if(Store.getInstance().getCurrentLocation() != null){
 					lat = Double.toString(Store.getInstance().getCurrentLocation().getLatitude());
@@ -124,13 +124,15 @@ public class ChatActivity extends Activity implements ActionResultDelegate{
 				
 				List<NameValuePair> formparamsGeoData = new ArrayList<NameValuePair>();
 				formparamsGeoData.add(new BasicNameValuePair(
-						"geo_data[user_id]", geoUserId));
+						"geo_data[user_id]", userId));
 				formparamsGeoData.add(new BasicNameValuePair(
 						"geo_data[status]", message));
 				formparamsGeoData.add(new BasicNameValuePair(
 						"geo_data[latitude]", lat));
 				formparamsGeoData.add(new BasicNameValuePair(
 						"geo_data[longitude]", lng));
+				formparamsGeoData.add(new BasicNameValuePair(
+						"geo_data[app_id]", QBQueries.APPLICATION_ID));
 
 				UrlEncodedFormEntity postEntityGeoData = null;
 				try {
@@ -158,8 +160,8 @@ public class ChatActivity extends Activity implements ActionResultDelegate{
 		
 		isChatUpdating = true;
 		
-		Query.performQueryAsync(QueryMethod.Get, QBQueries.GET_GEODATA_QUERY,
-				null, null, this, QBQueries.QBQueryType.QBQueryTypeGetGeodata);
+		Query.performQueryAsync(QueryMethod.Get, QBQueries.GET_GEODATA_WITH_STATUS_QUERY,
+				null, null, this, QBQueries.QBQueryType.QBQueryTypeGetGeodataWithStatus);
 	}
 	
 	// reload listView
@@ -172,7 +174,7 @@ public class ChatActivity extends Activity implements ActionResultDelegate{
 			return;
 		}
 		// remove 'page count' element
-		object.getChildren().remove(0);
+		object.getChildren().remove(object.getChildren().size()-1);
 		
 		processChatDataThread = new Thread(new Runnable() {
 			public void run() {
@@ -200,22 +202,15 @@ public class ChatActivity extends Activity implements ActionResultDelegate{
 						item.setDate(child.findChild("created-at").getText().replace("T", " ").replace("Z", " "));
 						item.setMessage(message);
 						item.setID(ID);
-						//
-						// get geouser name
-						RestResponse response = Query.performQuery(QueryMethod.Get, 
-								String.format(QBQueries.GET_USER_BY_EXTERNAL_ID_QUERY_FORMAT, child.findChild("user-id").getText()),
-								null, null);
-						
-						if(response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus200){
-							item.setUserName(response.getBody().findChild("login").getText());
+						item.setUserName(child.findChild("user").findChild("login").getText());
 
-							// add to list view adapter
-							ChatActivity.this.runOnUiThread(new Runnable(){
-								public void run() {
-									listAdapter.insert(item, 0);
-								}
-							});
-						};
+						// add to list view adapter
+						ChatActivity.this.runOnUiThread(new Runnable(){
+							public void run() {
+								listAdapter.insert(item, 0);
+							}
+						});
+
 					}
 				}
 				
@@ -236,7 +231,7 @@ public class ChatActivity extends Activity implements ActionResultDelegate{
 		}
 		
 		switch(queryType){
-			case QBQueryTypeGetGeodata:
+			case QBQueryTypeGetGeodataWithStatus:
 				// Ok
 				if(response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus200){
 					reloadList(response.getBody());

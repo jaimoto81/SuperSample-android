@@ -4,16 +4,22 @@ public class QBQueries {
 
 	// Applications settings
 	//
-	public static final String APPLICATION_ID = "38";
-	public static final String OWNER_ID = "831";
+	public static final String APPLICATION_ID = "9";
+	public static final String OWNER_ID = "210";
 	public static final String AUTH_KEY = "r8z8xMnexVYCAss";
 	public static final String AUTH_SECRET = "UtcvFsw9FX2uJ9B";
 
 	
+	// Server
+	//
+	                                      // "quickblox.com" - production server
+	public static final String SERVER_ZONE = "qbtest01.quickblox.com"; // test server
+	
+	
 	// Services
 	//
-	public static final String USERS_SERVICE_HOST_NAME = "users.quickblox.com";
-	public static final String GEOPOS_SERVICE_HOST_NAME = "geopos.quickblox.com";
+	public static final String USERS_SERVICE_HOST_NAME = String.format("users.%s", SERVER_ZONE);
+	public static final String GEOPOS_SERVICE_HOST_NAME = String.format("location.%s", SERVER_ZONE);
 	
 	
 	// Queries
@@ -54,26 +60,18 @@ public class QBQueries {
 	
 	// LOCATION service
 	//
-	// get a geouser
-	public static final String GET_GEOUSER_QUERY_FORMAT = String.format("http://%s/users/", GEOPOS_SERVICE_HOST_NAME) + "%s.xml";
-		
-	// create a geouser
-	public static final String CREATE_GEOUSER_QUERY = String.format("http://%s/users", GEOPOS_SERVICE_HOST_NAME);
-	
-	// remove a geouser by id
-	public static final String REMOVE_GEOUSER_QUERY_FORMAT = String.format("http://%s/users/", GEOPOS_SERVICE_HOST_NAME) + "%s";
-	
-	// get the location's data all users
-	public static final String GET_ALL_LOCATIONS_QUERY = String.format("http://%s/geodata/find.xml?app.id=%s&last_only=1", 
-			GEOPOS_SERVICE_HOST_NAME, APPLICATION_ID);
-		
-	// get all geodata
-	public static final String GET_GEODATA_QUERY = String.format("http://%s/geodata/find.xml?app.id=%s&page_size=20&sort_by=created_at", GEOPOS_SERVICE_HOST_NAME, APPLICATION_ID);
-	
 	// create geodata
 	public static final String CREATE_GEODATA_QUERY = String.format("http://%s/geodata", GEOPOS_SERVICE_HOST_NAME);
 	
+	// get all the location's with last_only
+	public static final String GET_ALL_LOCATIONS_QUERY = String.format("http://%s/geodata/find.xml?app.id=%s&last_only=1", 
+			GEOPOS_SERVICE_HOST_NAME, APPLICATION_ID);
+		
+	// get all geodata with 'status' != null
+	public static final String GET_GEODATA_WITH_STATUS_QUERY = String.format("http://%s/geodata/find.xml?app.id=%s&page_size=20&sort_by=created_at&status=1", GEOPOS_SERVICE_HOST_NAME, APPLICATION_ID);
 
+	
+	
 	
 	// Types of queries. They must match queries above 
 	public static enum QBQueryType{
@@ -91,11 +89,8 @@ public class QBQueries {
 		QBQueryTypeLogoutUser,
 		
 		// LOCATION service
-		QBQueryTypeGetGeoUser,
-		QBQueryTypeCreateGeoUser,
-		QBQueryTypeRemoveGeoUser,
-		QBQueryTypeGetAllLocations,
-		QBQueryTypeGetGeodata,
 		QBQueryTypeCreateGeodata,
+		QBQueryTypeGetAllLocations,
+		QBQueryTypeGetGeodataWithStatus,
 	}
 }

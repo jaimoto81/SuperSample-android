@@ -10,6 +10,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.message.BasicNameValuePair;
 
 import com.flurry.android.FlurryAgent;
+
 import com.quickblox.supersamples.R;
 import com.quickblox.supersamples.main.helpers.ValidationManager;
 import com.quickblox.supersamples.main.views.MapPopUp;
@@ -17,6 +18,9 @@ import com.quickblox.supersamples.main.views.ProfilePopUp;
 import com.quickblox.supersamples.sdk.definitions.QBQueries;
 import com.quickblox.supersamples.sdk.definitions.QueryMethod;
 import com.quickblox.supersamples.sdk.helpers.Query;
+
+import com.quickblox.supersamples.main.definitions.Consts;
+
 
 import android.app.Activity;
 import android.content.Intent;
@@ -39,6 +43,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 public class SettingsActivity extends Activity {
 
@@ -52,21 +57,25 @@ public class SettingsActivity extends Activity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.settings);
+		 super.onCreate(savedInstanceState);
 
+	        TextView textview = new TextView(this);
+	        textview.setText("Coming soon...");
+	        setContentView(textview);
+	    }
+
+	public void onStart()
+	{
+	    super.onStart();
+	    FlurryAgent.onStartSession(this, Consts.FLURRY_API_KEY);
+	    FlurryAgent.logEvent("run SettingsActivity");
+	    
 	}
 
-	public void onStart() {
-		super.onStart();
-		FlurryAgent.onStartSession(this, "B6G7VFD3ZY767YUJA1J2");
-		FlurryAgent.logEvent("run SettingsActivity");
-
-	}
-
-	public void onStop() {
-		super.onStop();
-		FlurryAgent.onEndSession(this);
+	public void onStop()
+	{
+	    super.onStop();
+	    FlurryAgent.onEndSession(this);
 	}
 
 	public void onClickButtons(View v) {
