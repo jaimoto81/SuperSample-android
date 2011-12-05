@@ -8,12 +8,21 @@
 package com.quickblox.supersamples;
 
 public final class R {
+    public static final class anim {
+        public static final int hint=0x7f040000;
+        public static final int translate=0x7f040001;
+        public static final int window_appear=0x7f040002;
+        public static final int window_hide=0x7f040003;
+    }
+    public static final class array {
+        public static final int parameters_array=0x7f060000;
+    }
     public static final class attr {
     }
     public static final class color {
-        public static final int black=0x7f050001;
-        public static final int dark_gray=0x7f050002;
-        public static final int white=0x7f050000;
+        public static final int black=0x7f080001;
+        public static final int dark_gray=0x7f080002;
+        public static final int white=0x7f080000;
     }
     public static final class drawable {
         public static final int chat_tab=0x7f020000;
@@ -31,77 +40,124 @@ public final class R {
         public static final int x=0x7f02000c;
     }
     public static final class id {
-        public static final int butBack=0x7f06000a;
-        public static final int butLogin=0x7f060011;
-        public static final int butNext=0x7f06000b;
-        public static final int butRegistration=0x7f060012;
-        public static final int chatQuery_progressBar=0x7f060004;
-        public static final int chat_listView=0x7f060006;
-        public static final int chat_message=0x7f060002;
-        public static final int chat_message_header=0x7f060001;
-        public static final int chat_user_avatar=0x7f060000;
-        public static final int edit_email=0x7f06001c;
-        public static final int edit_full_name=0x7f06001b;
-        public static final int edit_login=0x7f060008;
-        public static final int edit_password=0x7f060009;
-        public static final int edit_retype_pass=0x7f06001d;
-        public static final int logo=0x7f06000d;
-        public static final int mapPopup_close_button=0x7f060018;
-        public static final int mapPopup_user_image=0x7f060014;
-        public static final int mapPopup_user_name=0x7f060016;
-        public static final int mapPopup_user_status=0x7f060017;
-        public static final int mapUpdate_progressBar=0x7f06001a;
-        public static final int mapview=0x7f060019;
-        public static final int message_editText=0x7f060003;
-        public static final int queryLogin_progressBar=0x7f06000c;
-        public static final int queryRegistration_progressBar=0x7f06001e;
-        public static final int quickblox=0x7f06000e;
-        public static final int send_message_button=0x7f060005;
-        public static final int tableLayout1=0x7f060007;
-        public static final int textSlogan=0x7f060013;
-        public static final int textTitle1=0x7f06000f;
-        public static final int url_samples=0x7f060010;
-        public static final int user_info=0x7f060015;
+        public static final int avatar=0x7f090025;
+        public static final int butBack=0x7f09000f;
+        public static final int butLogin=0x7f090016;
+        public static final int butNext=0x7f090010;
+        public static final int butRegistration=0x7f090017;
+        public static final int cancel_prf=0x7f09000e;
+        public static final int cancel_profile=0x7f09002f;
+        public static final int chatQuery_progressBar=0x7f090004;
+        public static final int chat_listView=0x7f090006;
+        public static final int chat_message=0x7f090002;
+        public static final int chat_message_header=0x7f090001;
+        public static final int chat_user_avatar=0x7f090000;
+        public static final int edit_email=0x7f090009;
+        public static final int edit_full_name=0x7f090008;
+        public static final int edit_login=0x7f09000a;
+        public static final int edit_password=0x7f09000b;
+        public static final int edit_profile=0x7f09002b;
+        public static final int edit_retype_pass=0x7f09000c;
+        public static final int frameLayout1=0x7f090021;
+        public static final int from_gallery=0x7f090026;
+        public static final int logo=0x7f090012;
+        public static final int logout=0x7f090024;
+        public static final int make_photo=0x7f090027;
+        public static final int mapPopup_close_button=0x7f09001d;
+        public static final int mapPopup_user_image=0x7f090019;
+        public static final int mapPopup_user_name=0x7f09001b;
+        public static final int mapPopup_user_status=0x7f09001c;
+        public static final int mapUpdate_progressBar=0x7f09001f;
+        public static final int map_settings=0x7f090028;
+        public static final int mapview=0x7f09001e;
+        public static final int message_editText=0x7f090003;
+        public static final int offline_users=0x7f090029;
+        public static final int profile=0x7f09002d;
+        public static final int queryLogin_progressBar=0x7f090011;
+        public static final int queryRegistration_progressBar=0x7f090020;
+        public static final int quickblox=0x7f090013;
+        public static final int save=0x7f09002c;
+        public static final int save_prf=0x7f09000d;
+        public static final int save_profile=0x7f09002e;
+        public static final int send_message_button=0x7f090005;
+        public static final int settings_layout=0x7f090022;
+        public static final int share_location=0x7f09002a;
+        public static final int tableLayout1=0x7f090007;
+        public static final int textSlogan=0x7f090018;
+        public static final int textTitle1=0x7f090014;
+        public static final int text_photo=0x7f090023;
+        public static final int url_samples=0x7f090015;
+        public static final int user_info=0x7f09001a;
     }
     public static final class layout {
         public static final int chat_listview_item=0x7f030000;
         public static final int chat_view=0x7f030001;
-        public static final int login_view=0x7f030002;
-        public static final int main=0x7f030003;
-        public static final int map_pop_up=0x7f030004;
-        public static final int map_view=0x7f030005;
-        public static final int registration_view=0x7f030006;
-        public static final int tabs_view=0x7f030007;
+        public static final int edit_profile_layout=0x7f030002;
+        public static final int login_view=0x7f030003;
+        public static final int main=0x7f030004;
+        public static final int map_pop_up=0x7f030005;
+        public static final int map_view=0x7f030006;
+        public static final int registration_view=0x7f030007;
+        public static final int settings=0x7f030008;
+        public static final int tabs_view=0x7f030009;
     }
     public static final class string {
-        public static final int alert_email_blank=0x7f040014;
-        public static final int alert_email_short=0x7f040018;
-        public static final int alert_fullname_blank=0x7f040013;
-        public static final int alert_fullname_short=0x7f040017;
-        public static final int alert_login_blank=0x7f040011;
-        public static final int alert_login_short=0x7f040015;
-        public static final int alert_pass_short=0x7f040016;
-        public static final int alert_password_blank=0x7f040012;
-        public static final int alert_password_repeat=0x7f04001a;
-        public static final int app_name=0x7f040001;
-        public static final int back=0x7f04000d;
-        public static final int defaultAdress=0x7f040010;
-        public static final int email=0x7f04000c;
-        public static final int findLocation=0x7f04000f;
-        public static final int full_name=0x7f040005;
-        public static final int hello=0x7f040000;
-        public static final int login=0x7f040006;
-        public static final int map_api_key=0x7f04001b;
-        public static final int map_api_key_ubuntu=0x7f04001c;
-        public static final int next=0x7f04000e;
-        public static final int ok=0x7f040019;
-        public static final int password=0x7f04000a;
-        public static final int procede=0x7f040007;
-        public static final int registration=0x7f040008;
-        public static final int retype_pass=0x7f04000b;
-        public static final int slogan=0x7f040009;
-        public static final int title1=0x7f040003;
-        public static final int url_quickblox=0x7f040002;
-        public static final int url_samples=0x7f040004;
+        public static final int adjust_settings_summary=0x7f070028;
+        public static final int adjust_settings_title=0x7f070027;
+        public static final int alert_email_blank=0x7f070014;
+        public static final int alert_email_short=0x7f070018;
+        public static final int alert_fullname_blank=0x7f070013;
+        public static final int alert_fullname_short=0x7f070017;
+        public static final int alert_login_blank=0x7f070011;
+        public static final int alert_login_short=0x7f070015;
+        public static final int alert_pass_short=0x7f070016;
+        public static final int alert_password_blank=0x7f070012;
+        public static final int alert_password_repeat=0x7f07001a;
+        public static final int app_name=0x7f070001;
+        public static final int avatar_summary=0x7f07001d;
+        public static final int avatar_title=0x7f07001e;
+        public static final int back=0x7f07000d;
+        public static final int cancel=0x7f070033;
+        public static final int defaultAdress=0x7f070010;
+        public static final int dialog_title_list_preference=0x7f070029;
+        public static final int display_on_off_summary=0x7f07001f;
+        public static final int display_on_off_title=0x7f070020;
+        public static final int edit_custom_info_summary=0x7f070025;
+        public static final int edit_custom_info_title=0x7f070026;
+        public static final int edit_profile=0x7f070030;
+        public static final int email=0x7f07000c;
+        public static final int findLocation=0x7f07000f;
+        public static final int from_gallery=0x7f07002b;
+        public static final int full_name=0x7f070005;
+        public static final int hello=0x7f070000;
+        public static final int login=0x7f070006;
+        public static final int logout=0x7f070032;
+        public static final int logout_summary=0x7f070023;
+        public static final int logout_title=0x7f070024;
+        public static final int make_photo=0x7f07002c;
+        public static final int map_api_key=0x7f07001b;
+        public static final int map_api_key_ubuntu=0x7f07001c;
+        public static final int map_settings=0x7f07002d;
+        public static final int next=0x7f07000e;
+        public static final int offline_users=0x7f07002e;
+        public static final int ok=0x7f070019;
+        public static final int password=0x7f07000a;
+        /**   
+         */
+        public static final int photo=0x7f07002a;
+        public static final int procede=0x7f070007;
+        public static final int registration=0x7f070008;
+        public static final int retype_pass=0x7f07000b;
+        public static final int save=0x7f070031;
+        public static final int share_location=0x7f07002f;
+        public static final int share_summary=0x7f070021;
+        public static final int share_title=0x7f070022;
+        public static final int slogan=0x7f070009;
+        public static final int title1=0x7f070003;
+        public static final int url_quickblox=0x7f070002;
+        public static final int url_samples=0x7f070004;
+    }
+    public static final class xml {
+        public static final int settings=0x7f050000;
     }
 }

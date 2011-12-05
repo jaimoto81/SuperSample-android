@@ -34,6 +34,31 @@
 	<string name="alert_password_repeat">Both passwords must be the same</string>
 	<string name="map_api_key">0k6UGhTMJCIdgKMs_VJH87JntYyoq3HOmHmr-hw</string>
 	<string name="map_api_key_ubuntu">0mv9IyEyYVzRfHbsWHTeG9N0SpwWaMS5yvaAqsQ</string>
-
-
+	
+	<string name="avatar_summary">Add/change photo/avatar - take a new picture or choose one from gallery</string>
+	<string name="avatar_title">Avatar</string>
+	<string name="display_on_off_summary">Enable/disable a show of the offline users</string>
+	<string name="display_on_off_title">Show of the offline-users</string>
+	<string name="share_summary">Enable/disable a sending your coordinates to a server</string>
+	<string name="share_title">Share your location</string>
+	<string name="logout_summary">Sign in to another account</string>
+	<string name="logout_title">Logout</string>
+	<string name="edit_custom_info_summary">Change details - edit name, bio etc.</string>
+	<string name="edit_custom_info_title">Custom information</string>
+	<string name="adjust_settings_title">Adjust settings</string>
+	<string name="adjust_settings_summary">Whether to display offline users and whether to share user’s own location</string>
+	<string name="dialog_title_list_preference">Choose a setting</string>
+	
+	<!--  -->
+	<string name="photo">Photo</string>
+	<string name="from_gallery">Choose from gallery</string>
+	<string name="make_photo">Make a photo</string>
+	<string name="map_settings">Map settings</string>
+	<string name="offline_users">Display offline users</string>
+	<string name="share_location">Share your location</string>
+	<string name="edit_profile">Edit detailed profile</string>
+	<string name="save">Save</string>
+	<string name="logout">Logout</string>
+	<string name="cancel">Cancel</string>
+	    
 </resources>
