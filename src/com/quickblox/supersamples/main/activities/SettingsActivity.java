@@ -37,12 +37,14 @@ import com.quickblox.supersamples.main.definitions.Consts;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -60,6 +62,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -68,14 +71,16 @@ public class SettingsActivity extends Activity implements ActionResultDelegate {
 
 	private RelativeLayout relativeLayout;
 	private Animation animation;
-	RelativeLayout editProfilelayout;
-	LinearLayout settingsLayout;
+	private RelativeLayout editProfilelayout;
+	private LinearLayout settingsLayout;
 	private ImageView imageView;
+	private EditText editFullNameProfile;
+	
+	private ProgressBar queryProgressBar;
 
 	private CheckBox displayOfflineUsers;
 	private CheckBox shareLocation;
 	
-	private static final String TAG = "Camera";
 	Uri myPicture = null;
 
 	private static final int GALLERY_REQUEST = 0; 
@@ -86,6 +91,7 @@ public class SettingsActivity extends Activity implements ActionResultDelegate {
 		 super.onCreate(savedInstanceState);
 		 
 		 	setContentView(R.layout.settings);
+		 	queryProgressBar = (ProgressBar)findViewById(R.id.saveProfile_progressBar);
 	    }
 
 	public void onStart()
@@ -116,6 +122,7 @@ public class SettingsActivity extends Activity implements ActionResultDelegate {
 				
 			break;
 
+		
 		case R.id.from_gallery:
 			
 			Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -130,26 +137,59 @@ public class SettingsActivity extends Activity implements ActionResultDelegate {
 			break;
 
 		case R.id.offline_users:
-			displayOfflineUsers = (CheckBox) findViewById(R.id.offline_users);
-			changeChecked(displayOfflineUsers);
-
 			break;
 
 		case R.id.share_location:
-			shareLocation = (CheckBox) findViewById(R.id.share_location);
-			changeChecked(shareLocation);
 
 			break;
 		case R.id.save:
+			shareLocation = (CheckBox) findViewById(R.id.share_location);
+			changeChecked(shareLocation);
+			
+			SharedPreferences prefs  = PreferenceManager.getDefaultSharedPreferences(this);
+			SharedPreferences.Editor editor = prefs.edit();
+			editor.putBoolean(getString(R.string.share_location), changeChecked(shareLocation));
+			
+			editor.commit();
+			Log.i("SAVE THE PREFERENCES", Boolean.toString(changeChecked(shareLocation)));
+			
 			break;
 
 		case R.id.edit_profile:
 
 			editProfilelayout.setVisibility(View.VISIBLE);
 			windowAnimationAppear(editProfilelayout);
+			//EditText editFullnamePrf = (EditText)findViewById(R.id.e);
+			
 
 			break;
 		case R.id.save_profile:
+			
+			editFullNameProfile = (EditText)findViewById(R.id.edit_full_name_prf);
+			/// create entity
+			List<NameValuePair> formparamsUser = new ArrayList<NameValuePair>();
+			// get current user's id
+			String currentUserId = Store.getInstance().getCurrentUser().findChild("id").getText();
+			
+			formparamsUser.add(new BasicNameValuePair("user[full_name]", editFullNameProfile.getText().toString()));
+			Log.i("editFullNameProfile", editFullNameProfile.getText().toString());
+			//formparamsUser.add(new BasicNameValuePair("user[email]", editEmail.getText().toString()));
+			//formparamsUser.add(new BasicNameValuePair("user[login]", editLogin.getText().toString()));
+			//formparamsUser.add(new BasicNameValuePair("user[password]", editPassword.getText().toString()));
+
+			UrlEncodedFormEntity postEntityUser = null;
+			try {
+				postEntityUser = new UrlEncodedFormEntity(formparamsUser, "UTF-8");
+			} catch (UnsupportedEncodingException e1) {
+				e1.printStackTrace();
+			}
+
+			// make query for creating a user
+			Query.performQueryAsync(QueryMethod.Put, String.format(QBQueries.EDIT_USER_QUERY_FORMAT, currentUserId), postEntityUser, null, 
+					this, QBQueries.QBQueryType.QBQueryTypeEditUser);
+			
+			queryProgressBar.setVisibility(View.VISIBLE);
+			
 			break;
 		case R.id.cancel_profile:
 
@@ -160,11 +200,10 @@ public class SettingsActivity extends Activity implements ActionResultDelegate {
 		}
 	}
 
-	public void changeChecked(CheckBox checkbox) {
-		if (checkbox.isChecked())
-			checkbox.setTextColor(Color.RED);
+	public boolean changeChecked(CheckBox checkbox) {
+		if (checkbox.isChecked()) return true;
 		else
-			checkbox.setTextColor(Color.YELLOW);
+			return false;
 	}
 
 	public void windowAnimationExtended(View layout, int animationId) {
@@ -221,6 +260,12 @@ public class SettingsActivity extends Activity implements ActionResultDelegate {
 
 	@Override
 	public void completedWithResult(QBQueryType queryType, RestResponse response) {
+		// no internet connection
+		if(response == null){
+			queryProgressBar.setVisibility(View.GONE);
+			AlertManager.showServerError(this, "Please check your internet connection");
+			return;
+		}
 
 		switch (queryType) {
 
@@ -240,36 +285,65 @@ public class SettingsActivity extends Activity implements ActionResultDelegate {
 				Log.e("completedWithResult", "The session is NOT removed");
 			}
 			break;
+			
+		case QBQueryTypeEditUser:	
+			// OK
+			if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus200) {
+				
+				queryProgressBar.setVisibility(View.GONE);
+				AlertManager.showServerError(this, getString(R.string.alert_successful_edit_profile).toString());
+				
+				settingsLayout.setVisibility(View.VISIBLE);
+				editProfilelayout.setVisibility(View.INVISIBLE);
+				
+			// Validation error
+			} else if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus422) {
+				queryProgressBar.setVisibility(View.GONE);
+				
+				String error = response.getBody().getChildren().get(0).getText();
+				AlertManager.showServerError(this, error);
+				
+			// not found
+			} else if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus404){
+				
+				String error = response.getBody().getChildren().get(0).getText();
+				AlertManager.showServerError(this, error);
+			}
+					
+			break;
 		}
 	}
 
+	
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		imageView = (ImageView) findViewById(R.id.avatar);
+		
 		switch (requestCode) {
+		// open gallery and download image
 		case GALLERY_REQUEST:
-			try {			
+			try {
 				if (data != null) {
 					Uri currImageURI = data.getData();
-					Bitmap thumbnail = MediaStore.Images.Media.getBitmap(this.getContentResolver(), currImageURI);
-					imageView = (ImageView) findViewById(R.id.avatar);
+					Bitmap thumbnail = MediaStore.Images.Media.getBitmap(
+							this.getContentResolver(), currImageURI);		
 					imageView.setImageBitmap(thumbnail);
 				}
-			}catch(NullPointerException e) {
+			} catch (NullPointerException e) {
 				e.printStackTrace();
 			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 				
 			break;
-
+			
+		// make photo
 		case CAMERA_REQUEST:
 			if (data != null) {
 				Bitmap photo = (Bitmap) data.getExtras().get("data");
-				imageView = (ImageView) findViewById(R.id.avatar);
 				imageView.setImageBitmap(photo.createScaledBitmap(photo, 80, 80, false));
 			}
 			break;

@@ -33,6 +33,7 @@ import com.quickblox.supersamples.sdk.objects.RestResponse;
 import com.quickblox.supersamples.sdk.objects.XMLNode;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -45,10 +46,12 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 public class MapViewActivity extends MapActivity implements ActionResultDelegate {
 
@@ -66,6 +69,7 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 	private ProgressBar mapUpdateProgress;
 	
 	private Thread processLocationsDataThread;
+	private static boolean shareLocationChecked;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -74,7 +78,7 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 
 		// Init Map
 		initMapView();
-		initMyLocation();
+		//initMyLocation();
 		
 		
 		// init progress wheel
@@ -107,7 +111,7 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 			// send the data on the server
 			@Override
 			public void onLocationChanged(Location location) {
-				if (location != null) {
+				if (location != null && shareLocationChecked == true) {
 					
 					Log.i("onLocationChanged", "onLocationChanged");
 					
@@ -146,8 +150,14 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 					Query.performQueryAsync(QueryMethod.Post,
 							QBQueries.CREATE_GEODATA_QUERY,
 							postEntityGeoDataUser, null, MapViewActivity.this,
-							QBQueries.QBQueryType.QBQueryTypeCreateGeodata);			
+							QBQueries.QBQueryType.QBQueryTypeCreateGeodata);	
+					
+					Log.i("SEND OWN LOCATION ON THE SERVER", "ON");
 				}
+				else
+					Log.i("SEND OWN LOCATION ON THE SERVER", "OFF");
+					
+					
 			}
 		};
 		
@@ -178,7 +188,19 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 	@Override
 	protected void onResume() {
 		super.onResume();
-		startTimer();	
+		startTimer();
+				
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);	
+		shareLocationChecked = prefs.getBoolean(getString(R.string.share_location), false);
+		
+		// read a value which is established from CheckBoxPreference
+	    if (shareLocationChecked)
+	    {
+	        initMyLocation();
+	        Log.i("SHARE_LOCATION", "ON");
+	    }
+	    else
+	    	Log.i("SHARE_LOCATION", "OFF");
 	}
 	
 	public void onStart()
@@ -216,6 +238,7 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 			}
 		});
 		mapView.getOverlays().add(ownOverlay);
+		
 	}
 
 	@Override
@@ -338,8 +361,9 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 								public void run() {
 									// add overlays
 									mapView.getOverlays().clear();
-									mapView.getOverlays().add(whereAreUsers);
+									mapView.getOverlays().add(whereAreUsers);		
 									mapView.getOverlays().add(ownOverlay);
+									
 									mapView.invalidate();
 									
 									mapUpdateProgress.setVisibility(View.GONE);

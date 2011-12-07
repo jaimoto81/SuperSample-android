@@ -42,8 +42,8 @@ public class QBQueries {
 	// add user
 	public static final String CREATE_USER_QUERY = String.format("http://%s/users", USERS_SERVICE_HOST_NAME);
 	
-	// edit user
-	public static final String EDIT_USER_QUERY = String.format("http://%s/users", USERS_SERVICE_HOST_NAME);
+	// edit user by id
+	public static final String EDIT_USER_QUERY_FORMAT = String.format("http://%s/users/", USERS_SERVICE_HOST_NAME) + "%s";
 	
 	// remove user by id
 	public static final String REMOVE_USER_QUERY_FORMAT = String.format("http://%s/users/", USERS_SERVICE_HOST_NAME) + "%s";

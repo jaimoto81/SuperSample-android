@@ -26,6 +26,7 @@
 	<string name="alert_pass_short">Password is too short (minimum is 3 characters)</string>
 	<string name="alert_fullname_short">Fullname is too short (minimum is 3 characters)</string>
 	<string name="alert_email_short">Email is too short (minimum is 3 characters)</string>
+	<string name="alert_successful_edit_profile">Your account details were changed successfully</string>
 	<string name="ok">OK</string>
 	
 	<color name="white">#FFFFFF</color>

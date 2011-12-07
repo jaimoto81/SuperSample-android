@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/frameLayout1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:id="@+id/settings_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:visibility="visible" >
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/text_photo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="50dp"
+                android:text="@string/photo"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/logout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/text_photo"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp"
+                android:onClick="onClickButtons"
+                android:text="@string/logout"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <ImageView
+                android:id="@+id/avatar"
+                android:layout_width="123dp"
+                android:layout_height="123dp"
+                android:layout_alignParentTop="true"
+                android:paddingTop="6dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="5dp"
+                android:paddingBottom="6dp"
+                android:layout_marginBottom="20dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_launcher" />
+
+            <Button
+                android:id="@+id/from_gallery"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/from_gallery"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@+id/avatar"
+                android:onClick="onClickButtons"
+                android:text="@string/from_gallery" />
+
+            <Button
+                android:id="@+id/make_photo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/from_gallery"
+                android:layout_alignRight="@+id/from_gallery"
+                android:layout_below="@+id/from_gallery"
+                android:onClick="onClickButtons"
+                android:text="@string/make_photo" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/map_settings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="@string/map_settings"
+            android:textStyle="bold" />
+
+        <CheckBox
+            android:id="@+id/offline_users"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:onClick="onClickButtons"
+            android:text="@string/offline_users" />
+
+        <CheckBox
+            android:id="@+id/share_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:onClick="onClickButtons"
+            android:text="@string/share_location" />
+
+        <Button
+            android:id="@+id/edit_profile"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:onClick="onClickButtons"
+            android:text="@string/edit_profile" />
+
+        <Button
+            android:id="@+id/save"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:onClick="onClickButtons"
+            android:text="@string/save" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/profile"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:visibility="invisible" >
+
+        <TableLayout
+            android:id="@+id/tableLayout1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:stretchColumns="1" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="Edit of the profile"
+                android:textColor="@color/black"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <TableRow
+                android:layout_marginTop="20dp"
+                android:paddingBottom="5dp" >
+
+                <TextView
+                    android:gravity="right"
+                    android:paddingRight="10dip"
+                    android:text="@string/full_name"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/edit_full_name_prf"
+                    android:layout_width="fill_parent"
+                    android:hint="min is 3 characters"
+                    android:inputType="text" />
+            </TableRow>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center_horizontal" >
+
+                <Button
+                    android:id="@+id/save_profile"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:onClick="onClickButtons"
+                    android:text="@string/save" />
+
+                <Button
+                    android:id="@+id/cancel_profile"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:onClick="onClickButtons"
+                    android:text="@string/cancel" />
+            </LinearLayout>
+        </TableLayout>
+
+                    <ProgressBar
+                        android:id="@+id/saveProfile_progressBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentTop="true" 
+                        android:visibility="gone"/>
+
+    </RelativeLayout>
+
+</FrameLayout>
