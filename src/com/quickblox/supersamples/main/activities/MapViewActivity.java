@@ -325,9 +325,15 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 
 							// populate chats
 							for(XMLNode child : data.getChildren()){
+
+								// if user doesnt exist
+								XMLNode userNode = child.findChild("user");
+								if(userNode == null){
+									continue;
+								}
 								
 								// skip own location
-								if(child.findChild("user").findChild("id").getText().equals(Store.getInstance().getCurrentUser().findChild("id").getText())){
+								if(userNode.findChild("id").getText().equals(Store.getInstance().getCurrentUser().findChild("id").getText())){
 									Store.getInstance().setCurrentStatus(child.findChild("status").getText());
 									continue;
 								}

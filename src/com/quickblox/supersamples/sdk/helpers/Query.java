@@ -140,7 +140,7 @@ public class Query {
 			}
 			
 			Log.i("responseStatus", String.valueOf(response.getStatusLine().getStatusCode()));
-			//Log.i("responseEntity", responseEntity);
+			Log.i("responseEntity", responseEntity);
 			
 			if(responseEntity != null && responseEntity.length() > 1){
 				// parse entity
