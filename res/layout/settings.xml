@@ -47,11 +47,11 @@
                 android:layout_width="123dp"
                 android:layout_height="123dp"
                 android:layout_alignParentTop="true"
-                android:paddingTop="6dp"
+                android:layout_marginBottom="20dp"
+                android:paddingBottom="6dp"
                 android:paddingLeft="20dp"
                 android:paddingRight="5dp"
-                android:paddingBottom="6dp"
-                android:layout_marginBottom="20dp"
+                android:paddingTop="6dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_launcher" />
 
@@ -91,6 +91,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
+            android:checked="true"
             android:onClick="onClickButtons"
             android:text="@string/offline_users" />
 
@@ -99,6 +100,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
+            android:checked="true"
             android:onClick="onClickButtons"
             android:text="@string/share_location" />
 
@@ -164,6 +166,38 @@
                     android:inputType="text" />
             </TableRow>
 
+            <TableRow android:layout_marginTop="20dp" >
+
+                <TextView
+                    android:gravity="right"
+                    android:paddingRight="10dip"
+                    android:text="@string/phone"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/edit_phone_prf"
+                    android:layout_width="fill_parent"
+                    android:hint="min 6 characters"
+                    android:inputType="phone" />
+            </TableRow>
+
+            <TableRow android:layout_marginTop="20dp" >
+
+                <TextView
+                    android:gravity="right"
+                    android:paddingRight="10dip"
+                    android:text="@string/website"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/edit_website_prf"
+                    android:layout_width="fill_parent"
+                    android:hint="injoit.com (min 6 characters)"
+                    android:inputType="textWebEditText" />
+            </TableRow>
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_marginTop="20dp"
@@ -186,14 +220,13 @@
             </LinearLayout>
         </TableLayout>
 
-                    <ProgressBar
-                        android:id="@+id/saveProfile_progressBar"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentTop="true" 
-                        android:visibility="gone"/>
-
+        <ProgressBar
+            android:id="@+id/saveProfile_progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:visibility="gone" />
     </RelativeLayout>
 
 </FrameLayout>

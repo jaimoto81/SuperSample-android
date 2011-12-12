@@ -7,6 +7,8 @@
 	<string name="title1">SuperSample</string>
 	<string name="url_samples">http://quickblox.com/community/samples/</string>	
 	<string name="full_name">Full name</string>
+	<string name="phone">Phone</string>
+	<string name="website">Website</string>
 	<string name="login">Login</string>
 	<string name="procede">Procede</string>
 	<string name="registration">Registration</string>

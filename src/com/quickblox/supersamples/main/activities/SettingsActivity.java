@@ -75,6 +75,8 @@ public class SettingsActivity extends Activity implements ActionResultDelegate {
 	private LinearLayout settingsLayout;
 	private ImageView imageView;
 	private EditText editFullNameProfile;
+	private EditText editPhoneProfile;
+	private EditText editWebsiteProfile;
 	
 	private ProgressBar queryProgressBar;
 
@@ -110,6 +112,10 @@ public class SettingsActivity extends Activity implements ActionResultDelegate {
 	public void onClickButtons(View v) {
 		editProfilelayout = (RelativeLayout) findViewById(R.id.profile);
 		settingsLayout = (LinearLayout) findViewById(R.id.settings_layout);
+		
+		editFullNameProfile = (EditText)findViewById(R.id.edit_full_name_prf);
+		editPhoneProfile = (EditText)findViewById(R.id.edit_phone_prf);
+		editWebsiteProfile = (EditText)findViewById(R.id.edit_website_prf);
 
 		switch (v.getId()) {
 
@@ -159,23 +165,28 @@ public class SettingsActivity extends Activity implements ActionResultDelegate {
 
 			editProfilelayout.setVisibility(View.VISIBLE);
 			windowAnimationAppear(editProfilelayout);
-			//EditText editFullnamePrf = (EditText)findViewById(R.id.e);
 			
+			// get current user's full name, a phone, a website
+			String currentUserFullName = Store.getInstance().getCurrentUser().findChild("full-name").getText();
+			String currentUserPhone = Store.getInstance().getCurrentUser().findChild("phone").getText();
+			String currentUserWebsite = Store.getInstance().getCurrentUser().findChild("website").getText();
+			
+			// set the user's values by default  
+			editFullNameProfile.setText(currentUserFullName);
+			editPhoneProfile.setText(currentUserPhone);
+			editWebsiteProfile.setText(currentUserWebsite);
 
 			break;
 		case R.id.save_profile:
 			
-			editFullNameProfile = (EditText)findViewById(R.id.edit_full_name_prf);
 			/// create entity
 			List<NameValuePair> formparamsUser = new ArrayList<NameValuePair>();
 			// get current user's id
 			String currentUserId = Store.getInstance().getCurrentUser().findChild("id").getText();
 			
-			formparamsUser.add(new BasicNameValuePair("user[full_name]", editFullNameProfile.getText().toString()));
-			Log.i("editFullNameProfile", editFullNameProfile.getText().toString());
-			//formparamsUser.add(new BasicNameValuePair("user[email]", editEmail.getText().toString()));
-			//formparamsUser.add(new BasicNameValuePair("user[login]", editLogin.getText().toString()));
-			//formparamsUser.add(new BasicNameValuePair("user[password]", editPassword.getText().toString()));
+			formparamsUser.add(new BasicNameValuePair("user[full_name]", editFullNameProfile.getText().toString().trim()));
+			formparamsUser.add(new BasicNameValuePair("user[phone]", editPhoneProfile.getText().toString().trim()));;
+			formparamsUser.add(new BasicNameValuePair("user[website]", editWebsiteProfile.getText().toString().trim()));
 
 			UrlEncodedFormEntity postEntityUser = null;
 			try {
@@ -257,7 +268,6 @@ public class SettingsActivity extends Activity implements ActionResultDelegate {
 		}
 	}
 	
-
 	@Override
 	public void completedWithResult(QBQueryType queryType, RestResponse response) {
 		// no internet connection
@@ -313,8 +323,6 @@ public class SettingsActivity extends Activity implements ActionResultDelegate {
 			break;
 		}
 	}
-
-	
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {

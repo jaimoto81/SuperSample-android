@@ -191,7 +191,7 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 		startTimer();
 				
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);	
-		shareLocationChecked = prefs.getBoolean(getString(R.string.share_location), false);
+		shareLocationChecked = prefs.getBoolean(getString(R.string.share_location), true);
 		
 		// read a value which is established from CheckBoxPreference
 	    if (shareLocationChecked)
@@ -214,7 +214,7 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 	public void onStop()
 	{
 	    super.onStop();
-	    FlurryAgent.onEndSession(this);
+	    FlurryAgent.onEndSession(this);		
 	}
 	
 	private void initMapView() {
