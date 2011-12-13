@@ -1,0 +1,20 @@
+<quiz>
+ 	<question 
+ 	    text="Whats your name?" 
+ 	    right_answer="1">
+ 	    
+ 	    <answer n="0">Garry</answer>
+ 	    <answer n="1">Bob</answer>
+	    <answer n="2">Jim</answer>
+ 	</question>
+	
+	<question 
+	    text="How old are you?" 
+	    right_answer="2">
+	    
+		<answer n="0">22</answer>
+	    <answer n="1">33</answer>
+	    <answer n="2">44</answer>
+	</question>
+	
+</quiz>
