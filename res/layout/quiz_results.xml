@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/quiz_results"
+    android:id="@+id/quiz_results_layout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
@@ -65,10 +65,9 @@
             android:textColor="@color/black" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/total_points"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TextView"
             android:textColor="@color/black" />
     </LinearLayout>
 

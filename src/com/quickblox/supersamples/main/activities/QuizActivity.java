@@ -44,11 +44,15 @@ import android.widget.ViewFlipper;
 public class QuizActivity extends Activity implements OnClickListener {
 
 	private ViewFlipper flipper = null;
-	private ArrayList<Map<String, Object>> questions; 
-	private QuizViewGroup quizViewGroup;
+	private ArrayList<Map<String, Object>> questions;
+	// private QuizViewGroup quizViewGroup;
 
-	private static int quizPower;
-	
+	private ArrayList<QuizViewGroup> quizViewGroup;
+
+	private static int countQuizGroup = 0;
+	private static int sumScore = 0;
+	private static int nubmerOfObject = 0;
+
 	public void onCreate(Bundle savedInstanceState) {
 
 		Log.i("QuizActivity", "onCreate");
@@ -56,119 +60,163 @@ public class QuizActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.quiz);
 
-		final Button butBackQuiz = (Button)findViewById(R.id.butBackQuiz);
+		final Button butBackQuiz = (Button) findViewById(R.id.butBackQuiz);
 		butBackQuiz.setOnClickListener(this);
-		
+
 		flipper = (ViewFlipper) findViewById(R.id.flipper);
-		
+
 		addFlipping();
-		
-			
 	}
-	
-	public void addFlipping ()
-	{
+
+	public static void setCountQuizGroup() {
+		countQuizGroup++;
+	}
+
+	public static int getCountQuizGroup() {
+		return countQuizGroup;
+	}
+
+	public void addFlipping() {
+		
+		Log.i("totalScore",
+				String.valueOf(QuizActivity.getQuizPower(this,
+						QuizViewGroup.getCurrentScore())));
+		
 		if (questions != null)
 			questions = null;
-		questions = new ArrayList<Map<String, Object>>();	
-		
-		Map <String, Object> currentQuestion = null;	
-		ArrayList<String> answers = null;		
+		questions = new ArrayList<Map<String, Object>>();
+
+		Map<String, Object> currentQuestion = null;
+		ArrayList<String> answers = null;
 		String currentElementName = null;
-		
+
 		// Create imageButton "GO" and add it to the flipper
 		LayoutInflater inflater = (LayoutInflater) getLayoutInflater();
-		ViewGroup layout1 = (ViewGroup)inflater.inflate(R.layout.begin_quiz, (ViewGroup)findViewById(R.id.go_layout));
-		
-		final ImageButton butGoQuiz = (ImageButton)layout1.findViewById(R.id.butGoQuiz);
+		ViewGroup layout1 = (ViewGroup) inflater.inflate(R.layout.begin_quiz,
+				(ViewGroup) findViewById(R.id.go_layout));
+
+		final ImageButton butGoQuiz = (ImageButton) layout1
+				.findViewById(R.id.butGoQuiz);
 		butGoQuiz.setOnClickListener(this);
-		
+
 		flipper.addView(layout1);
 
 		try {
-            XmlPullParser parser = getResources().getXml(R.xml.quiz_questions);
+			XmlPullParser parser = getResources().getXml(R.xml.quiz_questions);
 
-            while (parser.getEventType()!= XmlPullParser.END_DOCUMENT) {
-                switch(parser.getEventType()){
-                	case  XmlPullParser.START_TAG:
-                		currentElementName = parser.getName();
-                		
-                        if(currentElementName.equals("question")) {
-                        	currentQuestion = new HashMap<String, Object>();
-                        	currentQuestion.put("question", parser.getAttributeValue(0));
-                        	currentQuestion.put("right_answer", parser.getAttributeValue(1));
-                	
-                        	answers = new ArrayList<String>();     	
-                        } 
-                		break;
-                	case XmlPullParser.TEXT:
-                		if(currentElementName.equals("answer")) {
-                			answers.add(parser.getText());
-                		}
-                		break;
-                	case XmlPullParser.END_TAG:
-                        if(parser.getName().equals("question")) {
-                        	currentQuestion.put("answers", answers);
-                        	answers = null;
-                        	
-                        	questions.add(currentQuestion);
-                        	currentQuestion = null;
-                        }
-                        break;
-                }
-                parser.next();
-            }
-        } catch (Exception e) {
+			while (parser.getEventType() != XmlPullParser.END_DOCUMENT) {
+				switch (parser.getEventType()) {
+				case XmlPullParser.START_TAG:
+					currentElementName = parser.getName();
+
+					if (currentElementName.equals("question")) {
+						currentQuestion = new HashMap<String, Object>();
+						currentQuestion.put("question",
+								parser.getAttributeValue(0));
+						currentQuestion.put("right_answer",
+								parser.getAttributeValue(1));
+
+						answers = new ArrayList<String>();
+					}
+					break;
+				case XmlPullParser.TEXT:
+					if (currentElementName.equals("answer")) {
+						answers.add(parser.getText());
+					}
+					break;
+				case XmlPullParser.END_TAG:
+					if (parser.getName().equals("question")) {
+						currentQuestion.put("answers", answers);
+						answers = null;
+
+						questions.add(currentQuestion);
+						currentQuestion = null;
+					}
+					break;
+				}
+				parser.next();
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 			Toast.makeText(this, "Error loading XML document: " + e.toString(),
 					4000).show();
 		}
-		
+
+		quizViewGroup = new ArrayList<QuizViewGroup>();
 		// init of the Quiz's views
-		for (Map<String, Object> question : questions) {
-			quizViewGroup = new QuizViewGroup(this, question);
-			quizViewGroup.getButAnswer().setOnClickListener(this); // each button "Answer" must shows next the QuizViewGroup
-			flipper.addView(quizViewGroup.getQuizView());
+		for (int i = 0; i < questions.size(); i++) {
+			QuizViewGroup quizGroup = new QuizViewGroup(this, questions.get(i));
+			
+			// each button shows next the QuizViewGroup
+			quizGroup.getButAnswer().setOnClickListener(this);
+
+			quizViewGroup.add(quizGroup);
+
+			flipper.addView(quizViewGroup.get(i).getQuizView());
+			// flipper.addView(quizGroup.getQuizView());
 		}
-		
-		setQuizPower(quizViewGroup.getScore());
+
+		// add of a current score in a total score and to save a result in the
+		// settings
+		QuizActivity.setQuizPower(this, QuizViewGroup.getCurrentScore());
+
+		// add Result view
 		// Create layout with the quiz's results and add it to the flipper
 		LayoutInflater inflater2 = (LayoutInflater) getLayoutInflater();
-		ViewGroup layout2 = (ViewGroup) inflater2.inflate(R.layout.quiz_results, (ViewGroup)findViewById(R.id.quiz_results));
+		ViewGroup layout2 = (ViewGroup) inflater2.inflate(
+				R.layout.quiz_results,
+				(ViewGroup) findViewById(R.id.quiz_results_layout));
 
-		//final TextView curScore = (TextView)layout2.findViewById(R.id.current_score);
-		//curScore.setText(quizViewGroup.getScore());
-		
-		final Button butLeaderBoard = (Button)layout2.findViewById(R.id.butLeaderboard);
+		final TextView curScore = (TextView) layout2
+				.findViewById(R.id.current_score);
+		final TextView totalScore = (TextView) layout2
+				.findViewById(R.id.total_points);
+
+		curScore.setText(String.valueOf(QuizViewGroup.getCurrentScore()));
+
+		totalScore.setText(String.valueOf(QuizActivity.getQuizPower(this,
+				QuizViewGroup.getCurrentScore())));
+
+		final Button butLeaderBoard = (Button) layout2
+				.findViewById(R.id.butLeaderboard);
 		butLeaderBoard.setOnClickListener(this);
-		
+
 		flipper.addView(layout2);
 	}
-	
-	public void setQuizPower (int currentScore)
-	{	
-		String currentUserId = Store.getInstance().getCurrentUser().findChild("id").getText();
-		
+
+	public static int getQuizPower(Context context, int currentScore) {
+		String currentUserId = Store.getInstance().getCurrentUser()
+				.findChild("id").getText();
+
+		SharedPreferences settings = PreferenceManager
+				.getDefaultSharedPreferences(context);
+		return settings.getInt(currentUserId, currentScore);
+	}
+
+	public static void setQuizPower(Context context, int currentScore) {
+		String currentUserId = Store.getInstance().getCurrentUser()
+				.findChild("id").getText();
+
 		// to get of the current total score from of the settings
 		SharedPreferences settings = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		int sumScore = 0;
+				.getDefaultSharedPreferences(context);
+
 		// if a user's key does not exist, then it will be create
 		// if this preference does not exist, then currenScore is as defValue
-		if (!settings.contains(currentUserId))	
+		if (!settings.contains(currentUserId))
 			sumScore = settings.getInt(currentUserId, currentScore);
-		else {		
-			
-			sumScore = settings.getInt(currentUserId, currentScore);	
+		else {
+			sumScore = settings.getInt(currentUserId, currentScore);
 			sumScore += currentScore;
 		}
-		
+
 		// add and save a current score in the total score
 		Editor editor = settings.edit();
 		editor.putInt(currentUserId, sumScore);
 		editor.commit();
+
 	}
-	
+
 	public void onStart() {
 		super.onStart();
 		FlurryAgent.onStartSession(this, Consts.FLURRY_API_KEY);
@@ -176,19 +224,25 @@ public class QuizActivity extends Activity implements OnClickListener {
 	}
 
 	public void onStop() {
-		super.onStop();		
+		super.onStop();
 		FlurryAgent.onEndSession(this);
 	}
-	
 
 	@Override
 	public void onClick(View v) {
+
 		switch (v.getId()) {
 		case 1: // IDs of the butAnswers
-			quizViewGroup.setScore();
 
-			// to begin Quiz
-		case R.id.butGoQuiz:
+			QuizViewGroup.setCurrentScore(quizViewGroup.get(nubmerOfObject)
+					.getRightAnswer());
+
+			// setCurrentScore();
+			if (nubmerOfObject != quizViewGroup.size())
+				quizViewGroup.get(nubmerOfObject++);
+
+		case R.id.butGoQuiz: // to begin Quiz
+
 			flipper.setInAnimation(AnimationUtils.loadAnimation(this,
 					R.anim.go_next_in));
 			flipper.setOutAnimation(AnimationUtils.loadAnimation(this,
@@ -202,15 +256,14 @@ public class QuizActivity extends Activity implements OnClickListener {
 			flipper.removeAllViews();
 
 			addFlipping();
+			QuizViewGroup.resetCurrentScore();
+
+			nubmerOfObject = 0;
+
 			break;
 
 		case R.id.butLeaderboard:
-			
-			
 			break;
 		}
-		
-		
-		
-	}	
+	}
 }

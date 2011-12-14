@@ -36,8 +36,11 @@ public class QuizViewGroup {
 	private RadioGroup radioGroup;
 	private RadioButton radioAnswer;
 	private Button butAnswer;
-
-	private int ansUserID = 0;
+	
+	private final static int BUT_ANS_ID = 1;
+	
+	private static int ansUserID = -1;
+	
 	private String rightAns = null;
 
 	private static int score = 0;
@@ -62,10 +65,9 @@ public class QuizViewGroup {
 
 		// get a number (id) of a right answer
 		rightAns = question.get("right_answer").toString();
-		Log.i("rightAns", String.valueOf(rightAns));
+		//Log.i("rightAns", String.valueOf(rightAns));
 
-		for (int i = 0; i < ((ArrayList<String>) question.get("answers"))
-				.size(); i++) {
+		for (int i = 0; i < ((ArrayList<String>) question.get("answers")).size(); i++) {
 			radioAnswer = new RadioButton(context);
 			radioAnswer.setId(i);
 			radioGroup.addView(radioAnswer);
@@ -73,8 +75,8 @@ public class QuizViewGroup {
 				@Override
 				public void onClick(View v) {
 					// get an users's answer
-					ansUserID = getAnswerById(v);
-					Log.i("ansUserID", String.valueOf(getAnswerById(v)));
+					QuizViewGroup.this.ansUserID = getUserAnswerById(v);
+					Log.i("ansUserID", String.valueOf(ansUserID));
 				}
 			});
 			setRadioAnswer(((ArrayList<String>) question.get("answers")).get(i));
@@ -112,8 +114,7 @@ public class QuizViewGroup {
 	}
 
 	public void setButAnswer() {
-		final int BUT_ANS = 1;
-		butAnswer.setId(BUT_ANS);
+		butAnswer.setId(BUT_ANS_ID);
 		butAnswer.setText(R.string.answer);
 		butAnswer.setBackgroundColor(Color.RED);
 		butAnswer.setGravity(Gravity.CENTER);
@@ -124,7 +125,7 @@ public class QuizViewGroup {
 		return butAnswer;
 	}
 
-	public int getAnswerById(View v) {
+	public int getUserAnswerById(View v) {
 		return v.getId();
 	}
 
@@ -133,13 +134,22 @@ public class QuizViewGroup {
 	}
 
 	// to increment a score, if a user answered right
-	public void setScore() {
+	public static void setCurrentScore(String rightAns) {
+		
+		Log.i("rightAns", String.valueOf(rightAns));
+		
 		if (Integer.valueOf(rightAns) == ansUserID)
 			++score;
 		Log.i("score", String.valueOf(score));
+		
+		ansUserID = -1;
 	}
 
-	public int getScore() {
+	public static int getCurrentScore() {
 		return score;
+	}
+	
+	public static void resetCurrentScore(){
+		score = 0;
 	}
 }
