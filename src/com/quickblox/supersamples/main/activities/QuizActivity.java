@@ -29,6 +29,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -45,12 +46,13 @@ public class QuizActivity extends Activity implements OnClickListener {
 
 	private ViewFlipper flipper = null;
 	private ArrayList<Map<String, Object>> questions;
-	// private QuizViewGroup quizViewGroup;
-
 	private ArrayList<QuizViewGroup> quizViewGroup;
+	
+	private static TextView correctAnswersText;
+	private static TextView currentScoreText;
+	private static TextView totalScoreText;
 
-	private static int countQuizGroup = 0;
-	private static int sumScore = 0;
+	//private static int sumScore = 0;
 	private static int nubmerOfObject = 0;
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -68,16 +70,8 @@ public class QuizActivity extends Activity implements OnClickListener {
 		addFlipping();
 	}
 
-	public static void setCountQuizGroup() {
-		countQuizGroup++;
-	}
-
-	public static int getCountQuizGroup() {
-		return countQuizGroup;
-	}
-
 	public void addFlipping() {
-		
+
 		Log.i("totalScore",
 				String.valueOf(QuizActivity.getQuizPower(this,
 						QuizViewGroup.getCurrentScore())));
@@ -92,11 +86,9 @@ public class QuizActivity extends Activity implements OnClickListener {
 
 		// Create imageButton "GO" and add it to the flipper
 		LayoutInflater inflater = (LayoutInflater) getLayoutInflater();
-		ViewGroup layout1 = (ViewGroup) inflater.inflate(R.layout.begin_quiz,
-				(ViewGroup) findViewById(R.id.go_layout));
+		ViewGroup layout1 = (ViewGroup) inflater.inflate(R.layout.begin_quiz, (ViewGroup) findViewById(R.id.go_layout));
 
-		final ImageButton butGoQuiz = (ImageButton) layout1
-				.findViewById(R.id.butGoQuiz);
+		final ImageButton butGoQuiz = (ImageButton) layout1.findViewById(R.id.butGoQuiz);
 		butGoQuiz.setOnClickListener(this);
 
 		flipper.addView(layout1);
@@ -149,16 +141,9 @@ public class QuizActivity extends Activity implements OnClickListener {
 			
 			// each button shows next the QuizViewGroup
 			quizGroup.getButAnswer().setOnClickListener(this);
-
 			quizViewGroup.add(quizGroup);
-
 			flipper.addView(quizViewGroup.get(i).getQuizView());
-			// flipper.addView(quizGroup.getQuizView());
 		}
-
-		// add of a current score in a total score and to save a result in the
-		// settings
-		QuizActivity.setQuizPower(this, QuizViewGroup.getCurrentScore());
 
 		// add Result view
 		// Create layout with the quiz's results and add it to the flipper
@@ -167,18 +152,11 @@ public class QuizActivity extends Activity implements OnClickListener {
 				R.layout.quiz_results,
 				(ViewGroup) findViewById(R.id.quiz_results_layout));
 
-		final TextView curScore = (TextView) layout2
-				.findViewById(R.id.current_score);
-		final TextView totalScore = (TextView) layout2
-				.findViewById(R.id.total_points);
+		correctAnswersText = (TextView) layout2.findViewById(R.id.correct_ans);
+		currentScoreText = (TextView) layout2.findViewById(R.id.current_score);
+		totalScoreText = (TextView) layout2.findViewById(R.id.total_points);
 
-		curScore.setText(String.valueOf(QuizViewGroup.getCurrentScore()));
-
-		totalScore.setText(String.valueOf(QuizActivity.getQuizPower(this,
-				QuizViewGroup.getCurrentScore())));
-
-		final Button butLeaderBoard = (Button) layout2
-				.findViewById(R.id.butLeaderboard);
+		final Button butLeaderBoard = (Button) layout2.findViewById(R.id.butLeaderboard);
 		butLeaderBoard.setOnClickListener(this);
 
 		flipper.addView(layout2);
@@ -194,6 +172,7 @@ public class QuizActivity extends Activity implements OnClickListener {
 	}
 
 	public static void setQuizPower(Context context, int currentScore) {
+		int sumScore = 0;
 		String currentUserId = Store.getInstance().getCurrentUser()
 				.findChild("id").getText();
 
@@ -214,7 +193,6 @@ public class QuizActivity extends Activity implements OnClickListener {
 		Editor editor = settings.edit();
 		editor.putInt(currentUserId, sumScore);
 		editor.commit();
-
 	}
 
 	public void onStart() {
@@ -230,27 +208,45 @@ public class QuizActivity extends Activity implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-
 		switch (v.getId()) {
-		case 1: // IDs of the butAnswers
-
+		// IDs of the butAnswers
+		case 1: 		
+				
+			// begin to count if user answered correctly
 			QuizViewGroup.setCurrentScore(quizViewGroup.get(nubmerOfObject)
 					.getRightAnswer());
-
+			
+			Log.i("totalScore",
+					String.valueOf(QuizActivity.getQuizPower(this,
+							QuizViewGroup.getCurrentScore())));
+			Log.i("QuizViewGroup, score", String.valueOf(QuizViewGroup.getCurrentScore()));	
+			Log.i("totalScoreText", totalScoreText.getText().toString());
+			
 			// setCurrentScore();
-			if (nubmerOfObject != quizViewGroup.size())
+			if (nubmerOfObject < quizViewGroup.size()-1)
 				quizViewGroup.get(nubmerOfObject++);
-
-		case R.id.butGoQuiz: // to begin Quiz
+			else
+			{
+				// add of a current score in a total score and to save a result in the settings
+				QuizActivity.setQuizPower(this, QuizViewGroup.getCurrentScore());
+				
+				// set the correct answers, current score and total score in the Result's view
+				correctAnswersText.setText(String.valueOf(QuizViewGroup.getCurrentScore()));
+				currentScoreText.setText(String.valueOf(QuizViewGroup.getCurrentScore()));
+				totalScoreText.setText(String.valueOf(QuizActivity.getQuizPower(this, QuizViewGroup.getCurrentScore())));
+			}
+	
+		// to begin Quiz
+		case R.id.butGoQuiz:
 
 			flipper.setInAnimation(AnimationUtils.loadAnimation(this,
 					R.anim.go_next_in));
 			flipper.setOutAnimation(AnimationUtils.loadAnimation(this,
 					R.anim.go_next_out));
 			flipper.showNext();
-
+			
 			break;
-
+			
 		// to return in begin
 		case R.id.butBackQuiz:
 			flipper.removeAllViews();
@@ -261,7 +257,6 @@ public class QuizActivity extends Activity implements OnClickListener {
 			nubmerOfObject = 0;
 
 			break;
-
 		case R.id.butLeaderboard:
 			break;
 		}

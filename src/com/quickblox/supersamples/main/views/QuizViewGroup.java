@@ -38,12 +38,10 @@ public class QuizViewGroup {
 	private Button butAnswer;
 	
 	private final static int BUT_ANS_ID = 1;
-	
 	private static int ansUserID = -1;
+	private static int score = 0;
 	
 	private String rightAns = null;
-
-	private static int score = 0;
 
 	public QuizViewGroup(Context context, Map<String, Object> question) {
 
@@ -51,7 +49,8 @@ public class QuizViewGroup {
 		quizView.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
 				LayoutParams.WRAP_CONTENT));
 		quizView.setOrientation(LinearLayout.VERTICAL);
-		quizView.setBackgroundColor(Color.WHITE);
+		//quizView.setBackgroundColor(Color.WHITE);
+		quizView.setBackgroundResource(R.drawable.map_popup_shape);
 		quizView.setGravity(Gravity.CENTER);
 		quizView.setPadding(30, 30, 200, 30);
 
@@ -65,7 +64,6 @@ public class QuizViewGroup {
 
 		// get a number (id) of a right answer
 		rightAns = question.get("right_answer").toString();
-		//Log.i("rightAns", String.valueOf(rightAns));
 
 		for (int i = 0; i < ((ArrayList<String>) question.get("answers")).size(); i++) {
 			radioAnswer = new RadioButton(context);
@@ -116,7 +114,7 @@ public class QuizViewGroup {
 	public void setButAnswer() {
 		butAnswer.setId(BUT_ANS_ID);
 		butAnswer.setText(R.string.answer);
-		butAnswer.setBackgroundColor(Color.RED);
+		butAnswer.setBackgroundResource(R.drawable.red_button);
 		butAnswer.setGravity(Gravity.CENTER);
 
 	}
@@ -140,7 +138,6 @@ public class QuizViewGroup {
 		
 		if (Integer.valueOf(rightAns) == ansUserID)
 			++score;
-		Log.i("score", String.valueOf(score));
 		
 		ansUserID = -1;
 	}

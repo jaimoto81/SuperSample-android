@@ -39,9 +39,10 @@ public final class R {
         public static final int map_tab=0x7f020008;
         public static final int popup_frame=0x7f020009;
         public static final int quiz_tab=0x7f02000a;
-        public static final int settings_tab=0x7f02000b;
-        public static final int user_icon=0x7f02000c;
-        public static final int x=0x7f02000d;
+        public static final int red_button=0x7f02000b;
+        public static final int settings_tab=0x7f02000c;
+        public static final int user_icon=0x7f02000d;
+        public static final int x=0x7f02000e;
     }
     public static final class id {
         public static final int avatar=0x7f08002e;
@@ -58,6 +59,7 @@ public final class R {
         public static final int chat_message=0x7f080004;
         public static final int chat_message_header=0x7f080003;
         public static final int chat_user_avatar=0x7f080002;
+        public static final int correct_ans=0x7f080022;
         public static final int current_score=0x7f080023;
         public static final int edit_email=0x7f080027;
         public static final int edit_full_name=0x7f080026;
@@ -100,7 +102,6 @@ public final class R {
         public static final int textSlogan=0x7f080015;
         public static final int textTitle1=0x7f080011;
         public static final int textView1=0x7f080021;
-        public static final int textView2=0x7f080022;
         public static final int text_photo=0x7f08002c;
         public static final int total_points=0x7f080024;
         public static final int url_samples=0x7f080012;
