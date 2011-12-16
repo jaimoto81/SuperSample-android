@@ -1,78 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<string name="hello">Hello World, MainActivity!</string>
-	<string name="app_name">SuperSample</string>
-	<string name="url_quickblox">http://quickblox.com/</string>	
-	<string name="title1">SuperSample</string>
-	<string name="url_samples">http://quickblox.com/community/samples/</string>	
-	<string name="full_name">Full name</string>
-	<string name="phone">Phone</string>
-	<string name="website">Website</string>
-	<string name="login">Login</string>
-	<string name="procede">Procede</string>
-	<string name="registration">Registration</string>
-	<string name="slogan">QuickBlox: brings superpowers to your apps!</string>
-	<string name="password">Password</string>
-	<string name="retype_pass">Retype pass</string>
-	<string name="email">E-mail</string>
-	<string name="back">Back</string>
-	<string name="next">Next</string>
-	<string name="answer">Answer</string>
-	<string name="findLocation">Find Location</string>
-	<string name="defaultAdress">Kharkov, Serpova St, 4</string>
-	<string name="alert_login_blank">Login can\'t be blank</string>
-	<string name="alert_password_blank">Password can\'t be blank</string>
-	<string name="alert_fullname_blank">Fullname can\'t be blank</string>
-	<string name="alert_email_blank">Email can\'t be blank</string>
-	<string name="alert_login_short">Login is too short (minimum is 3 characters)</string>
-	<string name="alert_pass_short">Password is too short (minimum is 3 characters)</string>
-	<string name="alert_fullname_short">Fullname is too short (minimum is 3 characters)</string>
-	<string name="alert_email_short">Email is too short (minimum is 3 characters)</string>
-	<string name="alert_successful_edit_profile">Your account details were changed successfully</string>
-	<string name="ok">OK</string>
-	
-	<color name="white">#FFFFFF</color>
-	<color name="black">#000000</color>
-	<color name="dark_gray">#808080</color>
-	<color name="red">#FF0000</color>
-	<color name="blue">#4A708B</color>
-	
-	<string name="alert_password_repeat">Both passwords must be the same</string>
-	<string name="map_api_key">0k6UGhTMJCIdgKMs_VJH87JntYyoq3HOmHmr-hw</string>
-	<string name="map_api_key_ubuntu">0mv9IyEyYVzRfHbsWHTeG9N0SpwWaMS5yvaAqsQ</string>
-	
-	<string name="avatar_summary">Add/change photo/avatar - take a new picture or choose one from gallery</string>
-	<string name="avatar_title">Avatar</string>
-	<string name="display_on_off_summary">Enable/disable a show of the offline users</string>
-	<string name="display_on_off_title">Show of the offline-users</string>
-	<string name="share_summary">Enable/disable a sending your coordinates to a server</string>
-	<string name="share_title">Share your location</string>
-	<string name="logout_summary">Sign in to another account</string>
-	<string name="logout_title">Logout</string>
-	<string name="edit_custom_info_summary">Change details - edit name, bio etc.</string>
-	<string name="edit_custom_info_title">Custom information</string>
-	<string name="adjust_settings_title">Adjust settings</string>
-	<string name="adjust_settings_summary">Whether to display offline users and whether to share user’s own location</string>
-	<string name="dialog_title_list_preference">Choose a setting</string>
-	
-	<!-- Setting's tab  -->
-	<string name="photo">Photo</string>
-	<string name="from_gallery">Choose from gallery</string>
-	<string name="make_photo">Make a photo</string>
-	<string name="map_settings">Map settings</string>
-	<string name="offline_users">Display offline users</string>
-	<string name="share_location">Share your location</string>
-	<string name="edit_profile">Edit detailed profile</string>
-	<string name="save">Save</string>
-	<string name="logout">Logout</string>
-	<string name="cancel">Cancel</string>
-	
-	<!-- Quiz's result -->
-	<string name="correct_answers">Correct answers:</string>
-	<string name="earned_points">You have earned:</string>
-	<string name="total_points">Your total Fan Power is now:</string>
-	<string name="but_leaderboard">View leaderboard</string>
-	
-	    
+    <string name="hello">Hello World, MainActivity!</string>
+    <string name="app_name">SuperSample</string>
+    <string name="url_quickblox">http://quickblox.com/</string>
+    <string name="title1">SuperSample</string>
+    <string name="url_samples">http://quickblox.com/community/samples/</string>
+    <string name="full_name">Full name</string>
+    <string name="phone">Phone</string>
+    <string name="website">Website</string>
+    <string name="login">Login</string>
+    <string name="procede">Procede</string>
+    <string name="registration">Registration</string>
+    <string name="slogan">QuickBlox: brings superpowers to your apps!</string>
+    <string name="password">Password</string>
+    <string name="retype_pass">Retype pass</string>
+    <string name="email">E-mail</string>
+    <string name="back">Back</string>
+    <string name="next">Next</string>
+    <string name="answer">ANSWER</string>
+    <string name="findLocation">Find Location</string>
+    <string name="defaultAdress">Kharkov, Serpova St, 4</string>
+    <string name="alert_login_blank">Login can\'t be blank</string>
+    <string name="alert_password_blank">Password can\'t be blank</string>
+    <string name="alert_fullname_blank">Fullname can\'t be blank</string>
+    <string name="alert_email_blank">Email can\'t be blank</string>
+    <string name="alert_login_short">Login is too short (minimum is 3 characters)</string>
+    <string name="alert_pass_short">Password is too short (minimum is 3 characters)</string>
+    <string name="alert_fullname_short">Fullname is too short (minimum is 3 characters)</string>
+    <string name="alert_email_short">Email is too short (minimum is 3 characters)</string>
+    <string name="alert_successful_edit_profile">Your account details were changed successfully</string>
+    <string name="ok">OK</string>
+
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="dark_gray">#808080</color>
+    <color name="red">#FF0000</color>
+    <color name="blue">#4A708B</color>
+
+    <string name="alert_password_repeat">Both passwords must be the same</string>
+    <string name="map_api_key">0k6UGhTMJCIdgKMs_VJH87JntYyoq3HOmHmr-hw</string>
+    <string name="map_api_key_ubuntu">0mv9IyEyYVzRfHbsWHTeG9N0SpwWaMS5yvaAqsQ</string>
+    <string name="avatar_summary">Add/change photo/avatar - take a new picture or choose one from gallery</string>
+    <string name="avatar_title">Avatar</string>
+    <string name="display_on_off_summary">Enable/disable a show of the offline users</string>
+    <string name="display_on_off_title">Show of the offline-users</string>
+    <string name="share_summary">Enable/disable a sending your coordinates to a server</string>
+    <string name="share_title">Share your location</string>
+    <string name="logout_summary">Sign in to another account</string>
+    <string name="logout_title">Logout</string>
+    <string name="edit_custom_info_summary">Change details - edit name, bio etc.</string>
+    <string name="edit_custom_info_title">Custom information</string>
+    <string name="adjust_settings_title">Adjust settings</string>
+    <string name="adjust_settings_summary">Whether to display offline users and whether to share user’s own location</string>
+    <string name="dialog_title_list_preference">Choose a setting</string>
+
+    <!-- Setting's tab -->
+    <string name="photo">Photo</string>
+    <string name="from_gallery">Choose from gallery</string>
+    <string name="make_photo">Make a photo</string>
+    <string name="map_settings">Map settings</string>
+    <string name="offline_users">Display offline users</string>
+    <string name="share_location">Share your location</string>
+    <string name="edit_profile">Edit detailed profile</string>
+    <string name="save">Save</string>
+    <string name="logout">Logout</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- Quiz's result -->
+    <string name="correct_answers">Correct answers:</string>
+    <string name="earned_points">You have earned:</string>
+    <string name="total_points">Your total Fan Power is now:</string>
+    <string name="but_leaderboard">VIEW LEADERBOARD</string>
+
 </resources>

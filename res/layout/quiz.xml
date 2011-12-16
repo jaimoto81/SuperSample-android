@@ -1,27 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/quiz_layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:layout_gravity="center"
-    android:background="@color/blue"
-    android:orientation="vertical" >
+    android:background="@color/blue" >
 
     <Button
         android:id="@+id/butBackQuiz"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
-        android:layout_marginLeft="30dp"
+        android:layout_marginLeft="15dp"
         android:layout_marginTop="30dp"
         android:text="@string/back" />
 
     <ViewFlipper
         android:id="@+id/flipper"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp" >
+        android:layout_alignLeft="@+id/butBackQuiz"
+        android:layout_below="@+id/butBackQuiz"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="20dp"
+        android:layout_toRightOf="@+id/butBackQuiz" >
     </ViewFlipper>
 
-</LinearLayout>
+    <Button
+        android:id="@+id/butAns"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:layout_alignLeft="@+id/butBackQuiz"
+        android:layout_below="@+id/flipper"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/red_button"
+        android:textColor="@color/white"
+        android:textSize="18dp"
+        android:visibility="invisible" />
+
+</RelativeLayout>

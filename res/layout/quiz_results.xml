@@ -70,13 +70,4 @@
             android:textColor="@color/black" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/butLeaderboard"
-        android:layout_width="200dp"
-        android:layout_height="30dp"
-        android:layout_gravity="center"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/red_button"
-        android:text="@string/but_leaderboard" />
-
 </LinearLayout>

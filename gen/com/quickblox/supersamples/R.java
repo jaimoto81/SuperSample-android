@@ -46,10 +46,10 @@ public final class R {
     }
     public static final class id {
         public static final int avatar=0x7f08002e;
+        public static final int butAns=0x7f080020;
         public static final int butBack=0x7f08000c;
         public static final int butBackQuiz=0x7f08001e;
         public static final int butGoQuiz=0x7f080001;
-        public static final int butLeaderboard=0x7f080025;
         public static final int butLogin=0x7f080013;
         public static final int butNext=0x7f08000d;
         public static final int butRegistration=0x7f080014;
@@ -59,8 +59,8 @@ public final class R {
         public static final int chat_message=0x7f080004;
         public static final int chat_message_header=0x7f080003;
         public static final int chat_user_avatar=0x7f080002;
-        public static final int correct_ans=0x7f080022;
-        public static final int current_score=0x7f080023;
+        public static final int correct_ans=0x7f080023;
+        public static final int current_score=0x7f080024;
         public static final int edit_email=0x7f080027;
         public static final int edit_full_name=0x7f080026;
         public static final int edit_full_name_prf=0x7f080037;
@@ -91,7 +91,7 @@ public final class R {
         public static final int queryRegistration_progressBar=0x7f080029;
         public static final int quickblox=0x7f080010;
         public static final int quiz_layout=0x7f08001d;
-        public static final int quiz_results_layout=0x7f080020;
+        public static final int quiz_results_layout=0x7f080021;
         public static final int save=0x7f080035;
         public static final int saveProfile_progressBar=0x7f08003c;
         public static final int save_profile=0x7f08003a;
@@ -101,9 +101,9 @@ public final class R {
         public static final int tableLayout1=0x7f080009;
         public static final int textSlogan=0x7f080015;
         public static final int textTitle1=0x7f080011;
-        public static final int textView1=0x7f080021;
+        public static final int textView1=0x7f080022;
         public static final int text_photo=0x7f08002c;
-        public static final int total_points=0x7f080024;
+        public static final int total_points=0x7f080025;
         public static final int url_samples=0x7f080012;
         public static final int user_info=0x7f080017;
     }
@@ -170,7 +170,7 @@ public final class R {
         public static final int ok=0x7f06001d;
         public static final int password=0x7f06000c;
         public static final int phone=0x7f060006;
-        /**  Setting's tab  
+        /**  Setting's tab 
          */
         public static final int photo=0x7f06002e;
         public static final int procede=0x7f060009;

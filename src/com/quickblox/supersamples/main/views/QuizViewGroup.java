@@ -11,6 +11,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Gravity;
@@ -36,11 +37,11 @@ public class QuizViewGroup {
 	private RadioGroup radioGroup;
 	private RadioButton radioAnswer;
 	private Button butAnswer;
-	
+
 	private final static int BUT_ANS_ID = 1;
 	private static int ansUserID = -1;
 	private static int score = 0;
-	
+
 	private String rightAns = null;
 
 	public QuizViewGroup(Context context, Map<String, Object> question) {
@@ -49,15 +50,15 @@ public class QuizViewGroup {
 		quizView.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
 				LayoutParams.WRAP_CONTENT));
 		quizView.setOrientation(LinearLayout.VERTICAL);
-		//quizView.setBackgroundColor(Color.WHITE);
 		quizView.setBackgroundResource(R.drawable.map_popup_shape);
 		quizView.setGravity(Gravity.CENTER);
-		quizView.setPadding(30, 30, 200, 30);
 
 		textQuestion = new TextView(context);
 		quizView.addView(textQuestion);
 
 		radioGroup = new RadioGroup(context);
+		radioGroup.setPadding(10, 0, 0, 10);
+
 		quizView.addView(radioGroup);
 
 		setTextQuestion(question.get("question").toString());
@@ -65,7 +66,8 @@ public class QuizViewGroup {
 		// get a number (id) of a right answer
 		rightAns = question.get("right_answer").toString();
 
-		for (int i = 0; i < ((ArrayList<String>) question.get("answers")).size(); i++) {
+		for (int i = 0; i < ((ArrayList<String>) question.get("answers"))
+				.size(); i++) {
 			radioAnswer = new RadioButton(context);
 			radioAnswer.setId(i);
 			radioGroup.addView(radioAnswer);
@@ -79,10 +81,6 @@ public class QuizViewGroup {
 			});
 			setRadioAnswer(((ArrayList<String>) question.get("answers")).get(i));
 		}
-
-		butAnswer = new Button(context);
-		quizView.addView(butAnswer);
-		setButAnswer();
 	}
 
 	public View getQuizView() {
@@ -96,8 +94,10 @@ public class QuizViewGroup {
 	public void setTextQuestion(String text) {
 		textQuestion.setTextColor(Color.BLACK);
 		textQuestion.setText(text);
+		textQuestion.setTypeface(null, Typeface.BOLD);
+		textQuestion.setPadding(0, 10, 0, 10);
 		textQuestion.setGravity(Gravity.CENTER);
-		textQuestion.setTextSize(15);
+		textQuestion.setTextSize(18);
 	}
 
 	public RadioButton getRadioAnswer() {
@@ -107,7 +107,6 @@ public class QuizViewGroup {
 	public void setRadioAnswer(String answer) {
 		radioAnswer.setTextColor(Color.BLACK);
 		radioAnswer.setText(answer);
-		radioAnswer.setGravity(Gravity.CENTER);
 		radioAnswer.setTextSize(15);
 	}
 
@@ -115,8 +114,6 @@ public class QuizViewGroup {
 		butAnswer.setId(BUT_ANS_ID);
 		butAnswer.setText(R.string.answer);
 		butAnswer.setBackgroundResource(R.drawable.red_button);
-		butAnswer.setGravity(Gravity.CENTER);
-
 	}
 
 	public Button getButAnswer() {
@@ -133,20 +130,20 @@ public class QuizViewGroup {
 
 	// to increment a score, if a user answered right
 	public static void setCurrentScore(String rightAns) {
-		
+
 		Log.i("rightAns", String.valueOf(rightAns));
-		
+
 		if (Integer.valueOf(rightAns) == ansUserID)
 			++score;
-		
+
 		ansUserID = -1;
 	}
 
 	public static int getCurrentScore() {
 		return score;
 	}
-	
-	public static void resetCurrentScore(){
+
+	public static void resetCurrentScore() {
 		score = 0;
 	}
 }

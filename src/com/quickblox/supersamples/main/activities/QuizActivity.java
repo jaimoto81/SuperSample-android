@@ -51,8 +51,10 @@ public class QuizActivity extends Activity implements OnClickListener {
 	private static TextView correctAnswersText;
 	private static TextView currentScoreText;
 	private static TextView totalScoreText;
+	
+	private Button butAnswer;
+	private Button butBackQuiz;
 
-	//private static int sumScore = 0;
 	private static int nubmerOfObject = 0;
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -62,8 +64,12 @@ public class QuizActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.quiz);
 
-		final Button butBackQuiz = (Button) findViewById(R.id.butBackQuiz);
+		butAnswer = (Button) findViewById(R.id.butAns);
+		butBackQuiz = (Button) findViewById(R.id.butBackQuiz);
+		
+		butAnswer.setOnClickListener(this);
 		butBackQuiz.setOnClickListener(this);
+		butAnswer.setOnClickListener(this);
 
 		flipper = (ViewFlipper) findViewById(R.id.flipper);
 
@@ -138,9 +144,7 @@ public class QuizActivity extends Activity implements OnClickListener {
 		// init of the Quiz's views
 		for (int i = 0; i < questions.size(); i++) {
 			QuizViewGroup quizGroup = new QuizViewGroup(this, questions.get(i));
-			
-			// each button shows next the QuizViewGroup
-			quizGroup.getButAnswer().setOnClickListener(this);
+	
 			quizViewGroup.add(quizGroup);
 			flipper.addView(quizViewGroup.get(i).getQuizView());
 		}
@@ -155,9 +159,6 @@ public class QuizActivity extends Activity implements OnClickListener {
 		correctAnswersText = (TextView) layout2.findViewById(R.id.correct_ans);
 		currentScoreText = (TextView) layout2.findViewById(R.id.current_score);
 		totalScoreText = (TextView) layout2.findViewById(R.id.total_points);
-
-		final Button butLeaderBoard = (Button) layout2.findViewById(R.id.butLeaderboard);
-		butLeaderBoard.setOnClickListener(this);
 
 		flipper.addView(layout2);
 	}
@@ -206,12 +207,30 @@ public class QuizActivity extends Activity implements OnClickListener {
 		FlurryAgent.onEndSession(this);
 	}
 
+	public void nextFlip (Context cnt, ViewFlipper vf)
+	{
+		vf.setInAnimation(AnimationUtils.loadAnimation(cnt,
+				R.anim.go_next_in));
+		vf.setOutAnimation(AnimationUtils.loadAnimation(cnt,
+				R.anim.go_next_out));
+		vf.showNext();
+	}
+	
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		// IDs of the butAnswers
-		case 1: 		
-				
+
+		// to begin Quiz
+		case R.id.butGoQuiz:
+
+			
+			butAnswer.setVisibility(View.VISIBLE);
+			butAnswer.setText(R.string.answer);
+			//flipper.addView(butAnswer);
+			nextFlip(this, flipper);
+			
+			break;		
+		case R.id.butAns:			
 			// begin to count if user answered correctly
 			QuizViewGroup.setCurrentScore(quizViewGroup.get(nubmerOfObject)
 					.getRightAnswer());
@@ -234,30 +253,25 @@ public class QuizActivity extends Activity implements OnClickListener {
 				correctAnswersText.setText(String.valueOf(QuizViewGroup.getCurrentScore()));
 				currentScoreText.setText(String.valueOf(QuizViewGroup.getCurrentScore()));
 				totalScoreText.setText(String.valueOf(QuizActivity.getQuizPower(this, QuizViewGroup.getCurrentScore())));
+				
+				butAnswer.setText(R.string.but_leaderboard);
 			}
-	
-		// to begin Quiz
-		case R.id.butGoQuiz:
-
-			flipper.setInAnimation(AnimationUtils.loadAnimation(this,
-					R.anim.go_next_in));
-			flipper.setOutAnimation(AnimationUtils.loadAnimation(this,
-					R.anim.go_next_out));
-			flipper.showNext();
+			
+			nextFlip(this, flipper);
 			
 			break;
 			
-		// to return in begin
+		// to return in begin	
 		case R.id.butBackQuiz:
 			flipper.removeAllViews();
+			
+			butAnswer.setVisibility(View.INVISIBLE);
 
-			addFlipping();
 			QuizViewGroup.resetCurrentScore();
-
 			nubmerOfObject = 0;
+			
+			addFlipping();
 
-			break;
-		case R.id.butLeaderboard:
 			break;
 		}
 	}
