@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="hello">Hello World, MainActivity!</string>
+    <!-- Start Activity -->
     <string name="app_name">SuperSample</string>
     <string name="url_quickblox">http://quickblox.com/</string>
     <string name="title1">SuperSample</string>
@@ -21,6 +21,15 @@
     <string name="answer">ANSWER</string>
     <string name="findLocation">Find Location</string>
     <string name="defaultAdress">Kharkov, Serpova St, 4</string>
+    <string name="ok">OK</string>
+
+    <!-- Map pop-up -->
+    <string name="status">Status:</string>
+    <string name="rating">Rating: </string>
+    <string name="bio">Bio: </string>
+    <string name="text_bio">I am a man of many talents, some possessions, and some money.</string>
+
+    <!-- Alert dialogs -->
     <string name="alert_login_blank">Login can\'t be blank</string>
     <string name="alert_password_blank">Password can\'t be blank</string>
     <string name="alert_fullname_blank">Fullname can\'t be blank</string>
@@ -30,15 +39,15 @@
     <string name="alert_fullname_short">Fullname is too short (minimum is 3 characters)</string>
     <string name="alert_email_short">Email is too short (minimum is 3 characters)</string>
     <string name="alert_successful_edit_profile">Your account details were changed successfully</string>
-    <string name="ok">OK</string>
+    <string name="alert_password_repeat">Both passwords must be the same</string>
 
+    <!-- Colors -->
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="dark_gray">#808080</color>
     <color name="red">#FF0000</color>
     <color name="blue">#4A708B</color>
 
-    <string name="alert_password_repeat">Both passwords must be the same</string>
     <string name="map_api_key">0k6UGhTMJCIdgKMs_VJH87JntYyoq3HOmHmr-hw</string>
     <string name="map_api_key_ubuntu">0mv9IyEyYVzRfHbsWHTeG9N0SpwWaMS5yvaAqsQ</string>
     <string name="avatar_summary">Add/change photo/avatar - take a new picture or choose one from gallery</string>

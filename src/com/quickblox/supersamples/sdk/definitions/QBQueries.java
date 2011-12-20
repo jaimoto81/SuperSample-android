@@ -14,12 +14,16 @@ public class QBQueries {
 	//
 	                                      // "quickblox.com" - production server
 	public static final String SERVER_ZONE = "qbtest01.quickblox.com"; // test server
+	public static final String BLOBS_SERVER_ZONE = "s3.amazonaws.com"; // blobs-test server
 	
 	
 	// Services
 	//
 	public static final String USERS_SERVICE_HOST_NAME = String.format("users.%s", SERVER_ZONE);
 	public static final String GEOPOS_SERVICE_HOST_NAME = String.format("location.%s", SERVER_ZONE);
+	public static final String BLOBS_SERVICE_HOST_NAME = String.format("blobs2.%s", SERVER_ZONE);
+	
+	public static final String BLOBS_AMAZONAWS_SERVICE_HOST_NAME = String.format("blobs-test-oz.%s", BLOBS_SERVER_ZONE);
 	
 	
 	// Queries
@@ -71,6 +75,22 @@ public class QBQueries {
 	public static final String GET_GEODATA_WITH_STATUS_QUERY = String.format("http://%s/geodata/find.xml?app.id=%s&page_size=20&sort_by=created_at&status=1", GEOPOS_SERVICE_HOST_NAME, APPLICATION_ID);
 
 	
+	// BLOB service
+	//
+	// create blob
+	public static final String CREATE_BLOB_QUERY = String.format("http://%s/blobs.xml", BLOBS_SERVICE_HOST_NAME);
+	
+	// upload blob
+	//public static final String UPLOAD_BLOB_QUERY = String.format("http://%s/blobs.xml", BLOBS_AMAZONAWS_SERVICE_HOST_NAME);
+	
+	// complete blob
+	public static final String COMPLETE_BLOB_QUERY = String.format("http://%s/blobs/", BLOBS_SERVICE_HOST_NAME) + "%s/complete.xml";
+	
+	// get blob
+	public static final String GET_BLOB_QUERY = String.format("http://%s/blobs/", BLOBS_SERVICE_HOST_NAME) + "%s.xml";
+	
+	// download blob
+	public static final String DOWNLOAD_BLOB_QUERY = String.format("http://%s/blobs/uid.ext", BLOBS_SERVICE_HOST_NAME);
 	
 	
 	// Types of queries. They must match queries above 
@@ -92,5 +112,16 @@ public class QBQueries {
 		QBQueryTypeCreateGeodata,
 		QBQueryTypeGetAllLocations,
 		QBQueryTypeGetGeodataWithStatus,
+		
+		// BLOBS service
+		// upload of a blob
+		QBQueryTypeCreateBlob, // first step
+		QBQueryTypeUploadBlob, // second step
+		QBQueryTypeCompleteBlob, // third step
+		
+		// download of the blob
+		QBQueryTypeGetBlobByID, // first step
+		QBQueryTypeDownloadBlob, // second step
+	
 	}
 }

@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -53,14 +55,23 @@ public class MapPopUp {
     	}
     }
     
-    public void setData(String userID, String userStatus){
-    	TextView usernameTextView = (TextView) popupView.findViewById(R.id.mapPopup_user_name);
-    	usernameTextView.setText(userID);
+    public void setData(String userID, String userFullName, String userStatus){
+    	TextView userLoginTextView = (TextView) popupView.findViewById(R.id.mapPopup_login);
+    	TextView userFullNameTextView = (TextView) popupView.findViewById(R.id.mapPopup_fullname);
+    	TextView userStatusTextView = (TextView) popupView.findViewById(R.id.text_status);
+    	//TextView userBioTextView = (TextView) popupView.findViewById(R.id.text_bio);
     	
-    	TextView userStatusTextView = (TextView) popupView.findViewById(R.id.mapPopup_user_status);
+    	ProgressBar progressBar = (ProgressBar) popupView.findViewById(R.id.progressBar);
+    	
+    	
+    	userLoginTextView.setText(userID);
+    	
+    	userFullNameTextView.setText(userFullName);
+    	
     	if(userStatus == null){
     		userStatus = "<empty>";
     	}
     	userStatusTextView.setText(userStatus);
+    	
     }
 }

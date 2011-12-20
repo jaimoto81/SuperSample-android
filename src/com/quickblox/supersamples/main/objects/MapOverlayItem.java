@@ -6,7 +6,9 @@ import com.google.android.maps.OverlayItem;
 public class MapOverlayItem extends OverlayItem{
 
 	private String userName;
+	private String userFullName;
 	private String userStatus;
+
 	
 	public MapOverlayItem(GeoPoint point, String title, String snippet) {
 		super(point, title, snippet);
@@ -20,6 +22,14 @@ public class MapOverlayItem extends OverlayItem{
 		this.userName = userName;
 	}
 
+	public String getUserFullName() {
+		return userFullName;
+	}
+
+	public void setUserFullName(String userFullName) {
+		this.userFullName = userFullName;
+	}
+	
 	public String getUserStatus() {
 		return userStatus;
 	}
@@ -27,4 +37,6 @@ public class MapOverlayItem extends OverlayItem{
 	public void setUserStatus(String userStatus) {
 		this.userStatus = userStatus;
 	}
+	
+
 }

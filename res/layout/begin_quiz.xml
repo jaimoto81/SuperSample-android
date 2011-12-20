@@ -13,8 +13,8 @@
 
      <ImageButton
          android:id="@+id/butGoQuiz"
-         android:layout_width="195dp"
-         android:layout_height="154dp"
-         android:src="@drawable/btn_go" />
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:background="@drawable/btn_go" />
 
 </LinearLayout>

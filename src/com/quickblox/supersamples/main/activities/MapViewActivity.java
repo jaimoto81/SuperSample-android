@@ -433,7 +433,7 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 			MapOverlayItem item = (MapOverlayItem) getItem(i);
 
 			// set data
-			mapPopUp.setData(item.getUserName(), item.getUserStatus());
+			mapPopUp.setData(item.getUserName(), item.getUserFullName(), item.getUserStatus());
 			
 			// show popup
 			mapPopUp.show();
@@ -507,7 +507,8 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 	    	if(status == null){
 	    		status = "<empty>";
 	    	}
-	    	mapPopUp.setData(Store.getInstance().getCurrentUser().findChild("login").getText(), status);
+	    	mapPopUp.setData(Store.getInstance().getCurrentUser().findChild("login").getText(), 
+	    			Store.getInstance().getCurrentUser().findChild("full-name").getText(), status);
 			
 			// show popup
 			mapPopUp.show();
