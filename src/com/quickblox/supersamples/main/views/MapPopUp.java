@@ -63,6 +63,7 @@ public class MapPopUp {
     	
     	ProgressBar progressBar = (ProgressBar) popupView.findViewById(R.id.progressBar);
     	
+    	progressBar.setProgress(60);
     	
     	userLoginTextView.setText(userID);
     	
