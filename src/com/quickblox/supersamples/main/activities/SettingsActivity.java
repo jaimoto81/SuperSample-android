@@ -1,9 +1,12 @@
 package com.quickblox.supersamples.main.activities;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.net.URI;
@@ -14,11 +17,13 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.message.BasicNameValuePair;
 
@@ -47,6 +52,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
@@ -132,12 +138,14 @@ public class SettingsActivity extends Activity implements ActionResultDelegate {
 		case R.id.from_gallery:
 
 			Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+			intent.setType("image/*");
 			startActivityForResult(intent, GALLERY_REQUEST);
 
 			break;
 		case R.id.make_photo:
 
 			Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+			i.setType("image/*");
 			startActivityForResult(i, CAMERA_REQUEST);
 
 			break;
@@ -211,27 +219,9 @@ public class SettingsActivity extends Activity implements ActionResultDelegate {
 			Query.performQueryAsync(QueryMethod.Get,
 					QBQueries.LOGOUT_USER_QUERY, null, null, this,
 					QBQueries.QBQueryType.QBQueryTypeLogoutUser);
-			
-			Log.i("click on Logour",
-					"click");
 
 			break;
 		}
-	}
-
-	public boolean changeChecked(CheckBox checkbox) {
-		if (checkbox.isChecked())
-			return true;
-		else
-			return false;
-	}
-
-	public byte[] convertBitmapToByteArray(Bitmap image) {
-		ByteArrayOutputStream stream = new ByteArrayOutputStream();
-		image.compress(Bitmap.CompressFormat.JPEG, 0, stream);
-		byte[] byteArray = stream.toByteArray();
-		
-		return byteArray;
 	}
 	
 	@Override
@@ -293,14 +283,12 @@ public class SettingsActivity extends Activity implements ActionResultDelegate {
 			// Created
 			if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus201) {
 				
-				//upload blob on the server
-				
+				//upload blob on the server		
 				// save all a text from of the tag "params" to a bufParams
 				String bufParams = response.getBody().findChild("blob-object-access").findChild("params").getText();
 	
 				Log.i("bufParams",  bufParams.toString());
-				
-				
+							
 				// Create a pattern to match breaks
 		        Pattern p = Pattern.compile("[?&]+");
 		        // Split input with the pattern     
@@ -313,9 +301,11 @@ public class SettingsActivity extends Activity implements ActionResultDelegate {
 					// get a value
 					values.add(param.substring(++index));
 				}
-				
+					
 				// get path of the current image
-				File imageFile = new File(currImageURI.getPath());
+				String imagePath = getRealPathFromURI(currImageURI);
+				File imageFile = new File (imagePath);
+				Log.i("IMAGE_FILE", imageFile.toString());				
 				
 				// create entity
 				MultipartEntity multipartContent = new MultipartEntity();
@@ -327,16 +317,16 @@ public class SettingsActivity extends Activity implements ActionResultDelegate {
 					multipartContent.addPart("Content-Type", new StringBody(values.get(5)));
 					multipartContent.addPart("acl", new StringBody(values.get(6)));
 					multipartContent.addPart("success_action_status", new StringBody(values.get(7)));
-					multipartContent.addPart("imageFile", new FileBody(imageFile));
+					multipartContent.addPart("file", new FileBody(imageFile));
 				} catch (UnsupportedEncodingException e) {
 					e.printStackTrace();
 				}
 				
 				Query.performQueryAsync(QueryMethod.Post,
-						QBQueries.BLOBS_AMAZONAWS_SERVICE_HOST_NAME,
+						QBQueries.UPLOAD_BLOB_QUERY,
 						multipartContent, null, this,
 						QBQueries.QBQueryType.QBQueryTypeUploadBlob);
-				
+
 				Log.i("Query", "BLOBS_AMAZONAWS_SERVICE_HOST_NAME");
 				
 			// Validation error
@@ -351,7 +341,15 @@ public class SettingsActivity extends Activity implements ActionResultDelegate {
 			break;
 		
 		case QBQueryTypeUploadBlob:
-			if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus201) {
+			if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus200) {
+				Log.i("response_status", "201");
+			}
+			
+			else if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus202) {
+				Log.i("response_status", "202");
+			}
+			
+			else if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus201) {
 				
 				MultipartEntity multipartContent = new MultipartEntity();
 
@@ -368,14 +366,14 @@ public class SettingsActivity extends Activity implements ActionResultDelegate {
 				
 				Log.i("Query", "BLOBS_SERVICE_HOST_NAME");
 			}
-			// error
-			else{
+			
+			// access denied
+			else if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus403) {
 				
 				String error = response.getBody().getChildren().get(0)
 						.getText();
 				AlertManager.showServerError(this, error);
-			}
-				
+			}			
 			break;
 			
 		case QBQueryTypeCompleteBlob:
@@ -454,7 +452,6 @@ public class SettingsActivity extends Activity implements ActionResultDelegate {
 				
 				
 				
-				
 			// Validation error
 			} else if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus422) {
 				queryProgressBar.setVisibility(View.GONE);
@@ -473,7 +470,7 @@ public class SettingsActivity extends Activity implements ActionResultDelegate {
 			break;		
 		}
 	}
-
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		imageView = (ImageView) findViewById(R.id.avatar);
@@ -515,4 +512,36 @@ public class SettingsActivity extends Activity implements ActionResultDelegate {
 			break;
 		}
 	}
+	
+	public boolean changeChecked(CheckBox checkbox) {
+		if (checkbox.isChecked())
+			return true;
+		else
+			return false;
+	}
+
+	public byte[] convertBitmapToByteArray(Bitmap image) {
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		image.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+		byte[] byteArray = stream.toByteArray();
+		
+		return byteArray;
+	}
+		
+	// To convert the image URI to the direct file system path of the image file
+	public String getRealPathFromURI(Uri contentUri) {
+
+	        // can post image
+	        String [] proj={MediaStore.Images.Media.DATA};
+	        Cursor cursor = managedQuery( contentUri,
+	                        proj,  // Which columns to return
+	                        null,  // WHERE clause; which rows to return (all rows)
+	                        null,  // WHERE clause selection arguments (none)
+	                        null); // Order-by clause (ascending by name)
+	        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+	        cursor.moveToFirst();
+
+	        return cursor.getString(column_index);
+	}
+	
 }

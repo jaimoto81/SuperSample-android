@@ -82,7 +82,7 @@ public class QBQueries {
 	public static final String CREATE_BLOB_QUERY = String.format("http://%s/blobs.xml", BLOBS_SERVICE_HOST_NAME);
 	
 	// upload blob
-	//public static final String UPLOAD_BLOB_QUERY = String.format("http://%s/blobs.xml", BLOBS_AMAZONAWS_SERVICE_HOST_NAME);
+	public static final String UPLOAD_BLOB_QUERY = String.format("http://%s/", BLOBS_AMAZONAWS_SERVICE_HOST_NAME);
 	
 	// complete blob
 	public static final String COMPLETE_BLOB_QUERY = String.format("http://%s/blobs/", BLOBS_SERVICE_HOST_NAME) + "%s/complete.xml";
