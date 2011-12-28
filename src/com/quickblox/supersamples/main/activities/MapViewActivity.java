@@ -51,7 +51,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 public class MapViewActivity extends MapActivity implements ActionResultDelegate {
 
@@ -123,19 +122,16 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 					
 					// create entity for current user
 					List<NameValuePair> formparamsGeoUser = new ArrayList<NameValuePair>();
-					String currentUserId = Store.getInstance().getCurrentUser().findChild("id").getText();
-					formparamsGeoUser.add(new BasicNameValuePair(
-							"geo_data[user_id]", currentUserId));
-					if(Store.getInstance().getCurrentStatus() != null){
-						formparamsGeoUser.add(new BasicNameValuePair(
-								"geo_data[status]", Store.getInstance().getCurrentStatus()));
-					}
 					formparamsGeoUser.add(new BasicNameValuePair(
 							"geo_data[latitude]", lat));
 					formparamsGeoUser.add(new BasicNameValuePair(
 							"geo_data[longitude]", lng));
+					if(Store.getInstance().getCurrentStatus() != null){
+						formparamsGeoUser.add(new BasicNameValuePair(
+							"geo_data[status]", Store.getInstance().getCurrentStatus()));
+					}
 					formparamsGeoUser.add(new BasicNameValuePair(
-							"geo_data[app_id]", QBQueries.APPLICATION_ID));
+							"token", Store.getInstance().getAuthToken()));
 
 					UrlEncodedFormEntity postEntityGeoDataUser = null;
 					try {
@@ -194,13 +190,9 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 		shareLocationChecked = prefs.getBoolean(getString(R.string.share_location), true);
 		
 		// read a value which is established from CheckBoxPreference
-	    if (shareLocationChecked)
-	    {
+	    if (shareLocationChecked){
 	        initMyLocation();
-	        Log.i("SHARE_LOCATION", "ON");
 	    }
-	    else
-	    	Log.i("SHARE_LOCATION", "OFF");
 	}
 	
 	public void onStart()
@@ -234,7 +226,10 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 			public void run() {
 				// Show current location and change a zoom
 				mapController.setZoom(2);
-				mapController.animateTo(ownOverlay.getMyLocation());
+				
+				if(ownOverlay.getMyLocation() != null){
+					mapController.animateTo(ownOverlay.getMyLocation());
+				}
 			}
 		});
 		mapView.getOverlays().add(ownOverlay);
@@ -277,9 +272,11 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 				mapUpdateProgress.setVisibility(View.VISIBLE);
 			}
 		});
+		
+		String query = QBQueries.GET_ALL_LOCATIONS_QUERY + "&token=" + Store.getInstance().getAuthToken();
 
 		// make query
-		Query.performQueryAsync(QueryMethod.Get, QBQueries.GET_ALL_LOCATIONS_QUERY,
+		Query.performQueryAsync(QueryMethod.Get, query,
 				null, null, this, QBQueries.QBQueryType.QBQueryTypeGetAllLocations);
 	}
 		

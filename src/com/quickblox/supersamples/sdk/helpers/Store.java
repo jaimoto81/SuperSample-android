@@ -60,5 +60,7 @@ public class Store {
 	}
 	public void setAuthToken(String authToken) {
 		this.authToken = authToken;
+		
+		Log.i("setAuthToken", authToken);
 	}
 }

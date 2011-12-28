@@ -115,7 +115,6 @@ public class ChatActivity extends Activity implements ActionResultDelegate{
 				queryProgressBar.setVisibility(View.VISIBLE);
 				
 				// create entity for current user
-				String userId = Store.getInstance().getCurrentUser().findChild("id").getText();
 				String lat = "45.45", lng = "45.45";
 				if(Store.getInstance().getCurrentLocation() != null){
 					lat = Double.toString(Store.getInstance().getCurrentLocation().getLatitude());
@@ -124,15 +123,13 @@ public class ChatActivity extends Activity implements ActionResultDelegate{
 				
 				List<NameValuePair> formparamsGeoData = new ArrayList<NameValuePair>();
 				formparamsGeoData.add(new BasicNameValuePair(
-						"geo_data[user_id]", userId));
-				formparamsGeoData.add(new BasicNameValuePair(
 						"geo_data[status]", message));
 				formparamsGeoData.add(new BasicNameValuePair(
 						"geo_data[latitude]", lat));
 				formparamsGeoData.add(new BasicNameValuePair(
 						"geo_data[longitude]", lng));
-				formparamsGeoData.add(new BasicNameValuePair(
-						"geo_data[app_id]", QBQueries.APPLICATION_ID));
+				formparamsGeoData.add(new BasicNameValuePair("token", 
+						Store.getInstance().getAuthToken()));
 
 				UrlEncodedFormEntity postEntityGeoData = null;
 				try {
@@ -160,7 +157,9 @@ public class ChatActivity extends Activity implements ActionResultDelegate{
 		
 		isChatUpdating = true;
 		
-		Query.performQueryAsync(QueryMethod.Get, QBQueries.GET_GEODATA_WITH_STATUS_QUERY,
+		String query = QBQueries.GET_GEODATA_WITH_STATUS_QUERY + "&token=" + Store.getInstance().getAuthToken();
+		
+		Query.performQueryAsync(QueryMethod.Get, query,
 				null, null, this, QBQueries.QBQueryType.QBQueryTypeGetGeodataWithStatus);
 	}
 	

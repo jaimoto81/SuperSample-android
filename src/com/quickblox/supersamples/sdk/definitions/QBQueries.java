@@ -4,16 +4,15 @@ public class QBQueries {
 
 	// Applications settings
 	//
-	public static final String APPLICATION_ID = "9";
-	public static final String OWNER_ID = "210";
-	public static final String AUTH_KEY = "r8z8xMnexVYCAss";
-	public static final String AUTH_SECRET = "UtcvFsw9FX2uJ9B";
+	public static final String APPLICATION_ID = "99";
+	public static final String OWNER_ID = "4343";
+	public static final String AUTH_KEY = "63ebrp5VZt7qTOv";
+	public static final String AUTH_SECRET = "YavMAxm5T59-BRw";
 
 	
 	// Server
 	//
-	                                      // "quickblox.com" - production server
-	public static final String SERVER_ZONE = "qbtest01.quickblox.com"; // test server
+	public static final String SERVER_ZONE = "quickblox.com"; 
 	public static final String BLOBS_SERVER_ZONE = "s3.amazonaws.com"; // blobs-test server
 	
 	
@@ -21,6 +20,7 @@ public class QBQueries {
 	//
 	public static final String USERS_SERVICE_HOST_NAME = String.format("users.%s", SERVER_ZONE);
 	public static final String GEOPOS_SERVICE_HOST_NAME = String.format("location.%s", SERVER_ZONE);
+	public static final String ADMIN_SERVICE_HOST_NAME = String.format("admin.%s", SERVER_ZONE);
 	public static final String BLOBS_SERVICE_HOST_NAME = String.format("blobs2.%s", SERVER_ZONE);
 	
 	public static final String BLOBS_AMAZONAWS_SERVICE_HOST_NAME = String.format("blobs-test-oz.%s", BLOBS_SERVER_ZONE);
@@ -31,8 +31,7 @@ public class QBQueries {
 	
 	// AUTH
 	//
-	public static final String GET_AUTH_TOKEN_FORMAT = String.format("http://admin.quickblox.com/token?app_id=%s&auth_key=%s", 
-			APPLICATION_ID, AUTH_KEY) + "&timestamp=%s&nonce=%s&signature=%s";
+	public static final String GET_AUTH_TOKEN_QUERY = String.format("https://%s/auth", ADMIN_SERVICE_HOST_NAME);
 	
 	// USERS service
 	//
@@ -68,11 +67,12 @@ public class QBQueries {
 	public static final String CREATE_GEODATA_QUERY = String.format("http://%s/geodata", GEOPOS_SERVICE_HOST_NAME);
 	
 	// get all the location's with last_only
-	public static final String GET_ALL_LOCATIONS_QUERY = String.format("http://%s/geodata/find.xml?app.id=%s&last_only=1", 
-			GEOPOS_SERVICE_HOST_NAME, APPLICATION_ID);
+	public static final String GET_ALL_LOCATIONS_QUERY = String.format("http://%s/geodata/find.xml?last_only=1", 
+			GEOPOS_SERVICE_HOST_NAME);
 		
 	// get all geodata with 'status' != null
-	public static final String GET_GEODATA_WITH_STATUS_QUERY = String.format("http://%s/geodata/find.xml?app.id=%s&page_size=20&sort_by=created_at&status=1", GEOPOS_SERVICE_HOST_NAME, APPLICATION_ID);
+	public static final String GET_GEODATA_WITH_STATUS_QUERY = String.format("http://%s/geodata/find.xml?page_size=20&sort_by=created_at&status=1", 
+			GEOPOS_SERVICE_HOST_NAME);
 
 	
 	// BLOB service

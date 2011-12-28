@@ -81,5 +81,6 @@
     <string name="earned_points">You have earned:</string>
     <string name="total_points">Your total Fan Power is now:</string>
     <string name="but_leaderboard">VIEW LEADERBOARD</string>
+    <string name="empty_status">&lt;empty&gt;</string>
 
 </resources>

@@ -19,6 +19,7 @@ import com.quickblox.supersamples.sdk.definitions.QueryMethod;
 import com.quickblox.supersamples.sdk.definitions.ResponseHttpStatus;
 import com.quickblox.supersamples.sdk.definitions.QBQueries.QBQueryType;
 import com.quickblox.supersamples.sdk.helpers.Query;
+import com.quickblox.supersamples.sdk.helpers.Store;
 import com.quickblox.supersamples.sdk.objects.RestResponse;
 
 import android.app.Activity;
@@ -93,6 +94,7 @@ public class RegistrationActivity extends Activity implements ActionResultDelega
 				formparamsUser.add(new BasicNameValuePair("user[login]", editLogin.getText().toString()));
 				formparamsUser.add(new BasicNameValuePair("user[password]", editPassword.getText().toString()));
 				formparamsUser.add(new BasicNameValuePair("user[owner_id]", QBQueries.OWNER_ID));
+				formparamsUser.add(new BasicNameValuePair("token", Store.getInstance().getAuthToken()));
 
 				UrlEncodedFormEntity postEntityUser = null;
 				try {
@@ -184,7 +186,7 @@ public class RegistrationActivity extends Activity implements ActionResultDelega
 				// OK
 				if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus201) {
 					
-					Toast.makeText(this, "On your email was send letter for the confirmation of the registration!",
+					Toast.makeText(this, "Registration successful. Please now sign in!",
 							Toast.LENGTH_LONG).show();
 						
 					backToPreviousActivity();

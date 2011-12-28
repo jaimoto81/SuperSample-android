@@ -80,6 +80,7 @@ public class LoginActivity extends Activity implements ActionResultDelegate{
 				formparams.add(new BasicNameValuePair("owner_id", QBQueries.OWNER_ID));
 				formparams.add(new BasicNameValuePair("login", editLogin.getText().toString()));
 				formparams.add(new BasicNameValuePair("password", editPassword.getText().toString()));
+				formparams.add(new BasicNameValuePair("token", Store.getInstance().getAuthToken()));
 				UrlEncodedFormEntity postEntity = null;
 				try {
 					postEntity = new UrlEncodedFormEntity(formparams, "UTF-8");
@@ -147,6 +148,8 @@ public class LoginActivity extends Activity implements ActionResultDelegate{
 
 		switch(queryType){
 			case QBQueryTypeLoginUser:
+				queryProgressBar.setVisibility(View.GONE);
+				
 				if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus202) {
 
 					// store current user
@@ -159,16 +162,14 @@ public class LoginActivity extends Activity implements ActionResultDelegate{
 					finish();
 
 				} else if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus401) {
-					queryProgressBar.setVisibility(View.GONE);
-
 					AlertManager.showServerError(this, "Unauthorized. Please check you login and password");
 
 					//validation error
 				} else if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus422) {
-					queryProgressBar.setVisibility(View.GONE);
-
 					String error = response.getBody().getChildren().get(0).getText();
 					AlertManager.showServerError(this, error);
+				}else{
+					AlertManager.showServerError(this, "Oops!. Something went wrong");
 				}
 			break;
 		}

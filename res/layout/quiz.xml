@@ -13,7 +13,8 @@
         android:layout_gravity="left"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="30dp"
-        android:text="@string/back" />
+        android:text="@string/back" 
+        android:visibility="invisible" />
 
     <ViewFlipper
         android:id="@+id/flipper"

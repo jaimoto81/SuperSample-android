@@ -9,6 +9,4 @@ public enum ResponseHttpStatus {
 	ResponseHttpStatus401, // authentication error
 	ResponseHttpStatus403, // access denied
 	ResponseHttpStatus404, // not found
-	
-	
 }

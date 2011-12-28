@@ -12,7 +12,7 @@
         	android:id="@+id/mapview"
         	android:layout_width="fill_parent"
         	android:layout_height="fill_parent"
-        	android:apiKey="@string/map_api_key_ubuntu"
+        	android:apiKey="@string/map_api_key"
         	android:clickable="true" />
 
 	</RelativeLayout>

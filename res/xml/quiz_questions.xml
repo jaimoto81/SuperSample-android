@@ -1,20 +1,27 @@
 <quiz>
- 	<question 
- 	    text="Whats your name?" 
- 	    right_answer="1">
- 	    
- 	    <answer n="0">Garry</answer>
- 	    <answer n="1">Bob</answer>
-	    <answer n="2">Jim</answer>
+ 	<question text="The biggest desert in the world is the" right_answer="0">
+ 	    <answer n="0">Sahara desert</answer>
+ 	    <answer n="1">White Desert </answer>
+	    <answer n="2">Algerian Desert</answer>
  	</question>
-	
-	<question 
-	    text="How old are you?" 
-	    right_answer="2">
-	    
-		<answer n="0">22</answer>
-	    <answer n="1">33</answer>
-	    <answer n="2">44</answer>
-	</question>
-	
+	<question text="The largest coffee growing country in the world is" right_answer="2">
+ 	    <answer n="0">France</answer>
+ 	    <answer n="1">Canada</answer>
+	    <answer n="2">Brazil</answer>
+ 	</question>
+	<question text="The longest highway in the world has a length of" right_answer="2">
+ 	    <answer n="0">About 6000 km</answer>
+ 	    <answer n="1">About 4000 km</answer>
+	    <answer n="2">About 8000 km</answer>
+ 	</question>
+	<question text="The longest river in the world is the" right_answer="1">
+ 	    <answer n="0">Volga</answer>
+ 	    <answer n="1">Nile</answer>
+	    <answer n="2">Thames</answer>
+ 	</question>
+	<question text="The largest Island in the Mediterranean sea is" right_answer="0">
+ 	    <answer n="0">Sicily</answer>
+ 	    <answer n="1">New Guinea</answer>
+	    <answer n="2">Madagascar</answer>
+ 	</question>
 </quiz>
