@@ -21,6 +21,9 @@ import android.preference.PreferenceManager;
 <<<<<<< HEAD
 =======
 import android.util.Log;
+<<<<<<< HEAD
+>>>>>>> 4b08afedbf4324586ff76ed2eb0875a24a3c0e42
+=======
 >>>>>>> 4b08afedbf4324586ff76ed2eb0875a24a3c0e42
 import android.view.LayoutInflater;
 import android.view.View;

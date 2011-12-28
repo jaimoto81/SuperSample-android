@@ -25,6 +25,9 @@ public class QBQueries {
 =======
 	                                      // "quickblox.com" - production server
 	public static final String SERVER_ZONE = "quickblox.com"; // "qbtest01.quickblox.com" - test server
+<<<<<<< HEAD
+>>>>>>> 4b08afedbf4324586ff76ed2eb0875a24a3c0e42
+=======
 >>>>>>> 4b08afedbf4324586ff76ed2eb0875a24a3c0e42
 	public static final String BLOBS_SERVER_ZONE = "s3.amazonaws.com"; // blobs-test server
 	

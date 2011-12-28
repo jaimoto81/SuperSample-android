@@ -9,7 +9,10 @@ public enum ResponseHttpStatus {
 	ResponseHttpStatus403, // access denied
 	ResponseHttpStatus404, // not found
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 4b08afedbf4324586ff76ed2eb0875a24a3c0e42
 	ResponseHttpStatus422, // validation error
 	
 	
