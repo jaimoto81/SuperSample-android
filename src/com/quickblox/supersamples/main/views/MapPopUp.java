@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.widget.ImageButton;
-//import android.widget.ProgressBar;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -60,8 +60,7 @@ public class MapPopUp {
     	TextView userStatusTextView = (TextView) popupView.findViewById(R.id.text_status);
     	//TextView userBioTextView = (TextView) popupView.findViewById(R.id.text_bio);
     	
-    	//ProgressBar progressBar = (ProgressBar) popupView.findViewById(R.id.progressBar);
-    	
+    	ProgressBar progressBar = (ProgressBar) popupView.findViewById(R.id.progressBar);
     	progressBar.setProgress(60);
     	
     	userLoginTextView.setText(userID);

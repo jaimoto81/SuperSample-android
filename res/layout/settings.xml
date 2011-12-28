@@ -144,7 +144,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:onClick="onClickButtons"
-            android:text="@string/save" />
+            android:text="@string/save" android:layout_marginTop="7dp"/>
 
         <Button
             android:id="@+id/logout"
@@ -153,7 +153,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:onClick="onClickButtons"
-            android:text="@string/logout" />
+            android:text="@string/logout" android:layout_marginTop="7dp"/>
 
         <ProgressBar
             android:id="@+id/saveProfile_progressBar"

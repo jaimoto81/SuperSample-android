@@ -4,31 +4,15 @@ public class QBQueries {
 
 	// Applications settings
 	//
-<<<<<<< HEAD
 	public static final String APPLICATION_ID = "99";
 	public static final String OWNER_ID = "4343";
 	public static final String AUTH_KEY = "63ebrp5VZt7qTOv";
 	public static final String AUTH_SECRET = "YavMAxm5T59-BRw";
-=======
-	public static final String APPLICATION_ID = "9";
-									// production - 831, test server - 210 
-	public static final String OWNER_ID = "831";
-	public static final String AUTH_KEY = "r8z8xMnexVYCAss";
-	public static final String AUTH_SECRET = "UtcvFsw9FX2uJ9B";
->>>>>>> 4b08afedbf4324586ff76ed2eb0875a24a3c0e42
 
 	
 	// Server
 	//
-<<<<<<< HEAD
 	public static final String SERVER_ZONE = "quickblox.com"; 
-=======
-	                                      // "quickblox.com" - production server
-	public static final String SERVER_ZONE = "quickblox.com"; // "qbtest01.quickblox.com" - test server
-<<<<<<< HEAD
->>>>>>> 4b08afedbf4324586ff76ed2eb0875a24a3c0e42
-=======
->>>>>>> 4b08afedbf4324586ff76ed2eb0875a24a3c0e42
 	public static final String BLOBS_SERVER_ZONE = "s3.amazonaws.com"; // blobs-test server
 	
 	

@@ -110,14 +110,14 @@ public class SettingsActivity extends Activity implements ActionResultDelegate {
 		String currentUserFullName = Store.getInstance().getCurrentUser()
 				.findChild("full-name").getText();
 		
-		String externalUserID = Store.getInstance().getCurrentUser().findChild("external-user-id").getText().toString();
+		String externalUserID = Store.getInstance().getCurrentUser().findChild("external-user-id").getText();
 	
 		// set the user's values by default
 		editFullNameProfile.setText(currentUserFullName);
 		
 		// get the blob's xml-file
-		Query.performQueryAsync(QueryMethod.Get, String.format(QBQueries.GET_BLOB_XML_FORMAT, externalUserID), null, null, this,
-				QBQueries.QBQueryType.QBQueryTypeGetBlobXML);
+		//Query.performQueryAsync(QueryMethod.Get, String.format(QBQueries.GET_BLOB_XML_FORMAT, externalUserID), null, null, this,
+		//		QBQueries.QBQueryType.QBQueryTypeGetBlobXML);
 		
 	}
 
