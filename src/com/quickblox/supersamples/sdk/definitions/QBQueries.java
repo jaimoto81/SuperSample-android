@@ -4,15 +4,28 @@ public class QBQueries {
 
 	// Applications settings
 	//
+<<<<<<< HEAD
 	public static final String APPLICATION_ID = "99";
 	public static final String OWNER_ID = "4343";
 	public static final String AUTH_KEY = "63ebrp5VZt7qTOv";
 	public static final String AUTH_SECRET = "YavMAxm5T59-BRw";
+=======
+	public static final String APPLICATION_ID = "9";
+									// production - 831, test server - 210 
+	public static final String OWNER_ID = "831";
+	public static final String AUTH_KEY = "r8z8xMnexVYCAss";
+	public static final String AUTH_SECRET = "UtcvFsw9FX2uJ9B";
+>>>>>>> 4b08afedbf4324586ff76ed2eb0875a24a3c0e42
 
 	
 	// Server
 	//
+<<<<<<< HEAD
 	public static final String SERVER_ZONE = "quickblox.com"; 
+=======
+	                                      // "quickblox.com" - production server
+	public static final String SERVER_ZONE = "quickblox.com"; // "qbtest01.quickblox.com" - test server
+>>>>>>> 4b08afedbf4324586ff76ed2eb0875a24a3c0e42
 	public static final String BLOBS_SERVER_ZONE = "s3.amazonaws.com"; // blobs-test server
 	
 	
@@ -81,16 +94,19 @@ public class QBQueries {
 	public static final String CREATE_BLOB_QUERY = String.format("http://%s/blobs.xml", BLOBS_SERVICE_HOST_NAME);
 	
 	// upload blob
-	//public static final String UPLOAD_BLOB_QUERY = String.format("http://%s/blobs.xml", BLOBS_AMAZONAWS_SERVICE_HOST_NAME);
+	public static final String UPLOAD_BLOB_QUERY = String.format("http://%s/", BLOBS_AMAZONAWS_SERVICE_HOST_NAME);
 	
 	// complete blob
 	public static final String COMPLETE_BLOB_QUERY = String.format("http://%s/blobs/", BLOBS_SERVICE_HOST_NAME) + "%s/complete.xml";
 	
-	// get blob
-	public static final String GET_BLOB_QUERY = String.format("http://%s/blobs/", BLOBS_SERVICE_HOST_NAME) + "%s.xml";
+	// get an info of the blob' file (xml)
+	public static final String GET_BLOB_XML_FORMAT = String.format("http://%s/blobs/", BLOBS_SERVICE_HOST_NAME) + "%s.xml";
+	
+	// get the blob' object 
+	//public static final String GET_BLOB_QUERY = String.format("http://%s/blobs/", BLOBS_SERVICE_HOST_NAME) + "%s/getblobobjectbyid.xml";
 	
 	// download blob
-	public static final String DOWNLOAD_BLOB_QUERY = String.format("http://%s/blobs/uid.ext", BLOBS_SERVICE_HOST_NAME);
+	public static final String DOWNLOAD_BLOB_BY_UID_QUERY = String.format("http://%s/blobs/uid.ext", BLOBS_SERVICE_HOST_NAME);
 	
 	
 	// Types of queries. They must match queries above 
@@ -115,13 +131,14 @@ public class QBQueries {
 		
 		// BLOBS service
 		// upload of a blob
-		QBQueryTypeCreateBlob, // first step
-		QBQueryTypeUploadBlob, // second step
-		QBQueryTypeCompleteBlob, // third step
+		QBQueryTypeCreateBlob, 
+		QBQueryTypeUploadBlob, 
+		QBQueryTypeCompleteBlob, 
 		
 		// download of the blob
-		QBQueryTypeGetBlobByID, // first step
-		QBQueryTypeDownloadBlob, // second step
+		QBQueryTypeGetBlobXML,
+		//QBQueryTypeGetBlobByID, 
+		QBQueryTypeDownloadBlob, 
 	
 	}
 }

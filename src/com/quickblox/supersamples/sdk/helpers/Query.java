@@ -99,10 +99,10 @@ public class Query {
 		try {
 			response = httpclient.execute(httpQuery);
 		} catch (ClientProtocolException e) {
-			Log.e("makeQuery, ClientProtocolException:", e.toString());
+			Log.e("makeQuery, ClientProtocolException:", e.getMessage().toString());
 			return null;
 		} catch (IOException e) {
-			Log.e("makeQuery, IOException:", e.toString());
+			Log.e("makeQuery, IOException:", e.getMessage().toString());
 			return null;
 		}
 		
@@ -121,17 +121,20 @@ public class Query {
 				case 202:
 					status = ResponseHttpStatus.ResponseHttpStatus202;
 				break;
-				case 422:
-					status = ResponseHttpStatus.ResponseHttpStatus422;
-				break;
-				case 404:
-					status = ResponseHttpStatus.ResponseHttpStatus404;
+				case 302:
+					status = ResponseHttpStatus.ResponseHttpStatus302;	
 				break;
 				case 401:
 					status = ResponseHttpStatus.ResponseHttpStatus401;
 				break;
 				case 403:
 					status = ResponseHttpStatus.ResponseHttpStatus403;
+					break;
+				case 404:
+					status = ResponseHttpStatus.ResponseHttpStatus404;
+					break;
+				case 422:
+					status = ResponseHttpStatus.ResponseHttpStatus422;
 					break;
 			}
 			restResponse.setResponseStatus(status);
