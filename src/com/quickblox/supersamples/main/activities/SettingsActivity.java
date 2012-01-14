@@ -57,6 +57,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
@@ -95,13 +96,18 @@ public class SettingsActivity extends Activity implements ActionResultDelegate {
 	private int sizeBitmap;
 	private byte[] byteBitmap;
 	
-	private static final int GALLERY_REQUEST = 0;
-	private static final int CAMERA_REQUEST = 1;
+	private static final int GALLERY_REQUEST = 100;
+	private static final int CAMERA_REQUEST = 101;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+
 		super.onCreate(savedInstanceState);
 
+		
+		/* Temporary unavailable.
+		 * See in feature versions.
+		
 		setContentView(R.layout.settings);
 		queryProgressBar = (ProgressBar) findViewById(R.id.saveProfile_progressBar);
 		editFullNameProfile = (EditText) findViewById(R.id.edit_fullname_prf);
@@ -115,10 +121,13 @@ public class SettingsActivity extends Activity implements ActionResultDelegate {
 		// set the user's values by default
 		editFullNameProfile.setText(currentUserFullName);
 		
-		// get the blob's xml-file
-		//Query.performQueryAsync(QueryMethod.Get, String.format(QBQueries.GET_BLOB_XML_FORMAT, externalUserID), null, null, this,
-		//		QBQueries.QBQueryType.QBQueryTypeGetBlobXML);
+		if(externalUserID != null){
+			// get the blob's xml-file
+			Query.performQueryAsync(QueryMethod.Get, String.format(QBQueries.GET_BLOB_INFO_FORMAT, externalUserID), null, null, this,
+					QBQueries.QBQueryType.QBQueryTypeGetBlobInfo);
+		}
 		
+		*/
 	}
 
 	public void onStart() {
@@ -136,16 +145,13 @@ public class SettingsActivity extends Activity implements ActionResultDelegate {
 		switch (v.getId()) {
 
 		case R.id.from_gallery:
-
 			Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 			intent.setType("image/*");
 			startActivityForResult(intent, GALLERY_REQUEST);
 
 			break;
 		case R.id.make_photo:
-
 			Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-			i.setType("image/*");
 			startActivityForResult(i, CAMERA_REQUEST);
 
 			break;
@@ -238,7 +244,6 @@ public class SettingsActivity extends Activity implements ActionResultDelegate {
 
 		case QBQueryTypeLogoutUser:
 			if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus200) {
-
 				// store current user
 				Store.getInstance().setCurrentUser(null);
 
@@ -246,11 +251,8 @@ public class SettingsActivity extends Activity implements ActionResultDelegate {
 				intent.setClass(this, LoginActivity.class);
 				startActivity(intent);
 				finish();
-				Log.i("completedWithResult",
-						"The session is removed successfully");
-			} else {
-				Log.e("completedWithResult", "The session is NOT removed");
-			}
+			} 
+			
 			break;
 
 		case QBQueryTypeEditUser:
@@ -417,7 +419,7 @@ public class SettingsActivity extends Activity implements ActionResultDelegate {
 			
 			break;
 		
-		case QBQueryTypeGetBlobXML:
+		case QBQueryTypeGetBlobInfo:
 			// Ok
 			if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus200) {
 				
@@ -487,7 +489,6 @@ public class SettingsActivity extends Activity implements ActionResultDelegate {
 					
 					byteBitmap = convertBitmapToByteArray(thumbnail);
 					sizeBitmap = byteBitmap.length;
-					
 				}
 			} catch (NullPointerException e) {
 				e.printStackTrace();
@@ -503,11 +504,10 @@ public class SettingsActivity extends Activity implements ActionResultDelegate {
 		case CAMERA_REQUEST:
 			if (data != null) {
 				Bitmap photo = (Bitmap) data.getExtras().get("data");
-				imageView.setImageBitmap(photo.createScaledBitmap(photo, 80,
-						80, false));		
+				imageView.setImageBitmap(Bitmap.createScaledBitmap(photo, 80, 80, false));		
 				
-				byteBitmap = convertBitmapToByteArray(thumbnail);
-				sizeBitmap = byteBitmap.length;
+				//byteBitmap = convertBitmapToByteArray(thumbnail);
+				//sizeBitmap = byteBitmap.length;
 			}
 			break;
 		}

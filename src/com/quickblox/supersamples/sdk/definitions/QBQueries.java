@@ -87,7 +87,7 @@ public class QBQueries {
 	public static final String COMPLETE_BLOB_QUERY = String.format("http://%s/blobs/", BLOBS_SERVICE_HOST_NAME) + "%s/complete.xml";
 	
 	// get an info of the blob' file (xml)
-	public static final String GET_BLOB_XML_FORMAT = String.format("http://%s/blobs/", BLOBS_SERVICE_HOST_NAME) + "%s.xml";
+	public static final String GET_BLOB_INFO_FORMAT = String.format("http://%s/blobs/", BLOBS_SERVICE_HOST_NAME) + "%s.xml";
 	
 	// get the blob' object 
 	//public static final String GET_BLOB_QUERY = String.format("http://%s/blobs/", BLOBS_SERVICE_HOST_NAME) + "%s/getblobobjectbyid.xml";
@@ -123,8 +123,7 @@ public class QBQueries {
 		QBQueryTypeCompleteBlob, 
 		
 		// download of the blob
-		QBQueryTypeGetBlobXML,
-		//QBQueryTypeGetBlobByID, 
+		QBQueryTypeGetBlobInfo,
 		QBQueryTypeDownloadBlob, 
 	
 	}

@@ -69,6 +69,12 @@ public class StartActivity extends Activity implements ActionResultDelegate{
 
 	@Override
 	public void completedWithResult(QBQueryType queryType, RestResponse response) {
+		// no internet connection
+		if(response == null){
+			AlertManager.showServerError(this, "Please check your internet connection");
+			return;
+		}
+				
 		switch (queryType){
 		case QBQueryTypeGetAuthToken:
 			if(response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus201){
