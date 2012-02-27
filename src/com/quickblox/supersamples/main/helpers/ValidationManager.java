@@ -37,20 +37,15 @@ public class ValidationManager {
 	}
 
 	public static int checkInputParameters(EditText login, EditText pass, EditText pass2,
-			EditText fullname, EditText email) {
+			EditText fullname) {
 
 		String fieldLogin = login.getText().toString();
 		String fieldPass = pass.getText().toString();
 		String fieldPass2 = pass2.getText().toString();
 		String fieldFullname = fullname.getText().toString();
-		String fieldEmail = email.getText().toString();
 
 		if (fieldFullname.length() == 0) {
 			return ALERT_FULLNAME;
-		}
-
-		if (fieldEmail.length() == 0) {
-			return ALERT_EMAIL;
 		}
 
 		if (fieldLogin.length() == 0) {

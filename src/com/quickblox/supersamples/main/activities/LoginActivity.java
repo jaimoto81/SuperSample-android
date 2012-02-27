@@ -32,6 +32,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 public class LoginActivity extends Activity implements ActionResultDelegate{
 
@@ -94,10 +95,6 @@ public class LoginActivity extends Activity implements ActionResultDelegate{
 
 				break;
 			case R.id.butBack:
-
-				Intent intent = new Intent();
-				intent.setClass(this, StartActivity.class);
-				startActivity(intent);
 				finish();
 
 				break;
@@ -155,10 +152,9 @@ public class LoginActivity extends Activity implements ActionResultDelegate{
 					// store current user
 					Store.getInstance().setCurrentUser(response.getBody());
 
-					// show main activity
-				    Intent intent = new Intent();
-					intent.setClass(this, TabsActivity.class);
-					startActivity(intent);
+					Toast.makeText(this, "Login was successful!",
+							Toast.LENGTH_LONG).show();
+						
 					finish();
 
 				} else if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus401) {

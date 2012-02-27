@@ -35,21 +35,6 @@
             <TextView
                 android:gravity="right"
                 android:paddingRight="10dip"
-                android:text="@string/email"
-                android:textColor="@color/black"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/edit_email"
-                android:layout_width="fill_parent"
-                android:inputType="text" />
-        </TableRow>
-
-        <TableRow android:paddingBottom="5dp" >
-
-            <TextView
-                android:gravity="right"
-                android:paddingRight="10dip"
                 android:text="@string/login"
                 android:textColor="@color/black"
                 android:textStyle="bold" />

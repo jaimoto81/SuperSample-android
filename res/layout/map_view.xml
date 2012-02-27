@@ -4,23 +4,23 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
-	<RelativeLayout
+    <RelativeLayout
     	android:layout_width="fill_parent"
     	android:layout_height="fill_parent" >
     
-    	<com.google.android.maps.MapView
+        <com.google.android.maps.MapView
         	android:id="@+id/mapview"
         	android:layout_width="fill_parent"
         	android:layout_height="fill_parent"
         	android:apiKey="@string/map_api_key"
         	android:clickable="true" />
 
-	</RelativeLayout>
-	<RelativeLayout
+    </RelativeLayout>
+    <RelativeLayout
     	android:layout_width="fill_parent"
     	android:layout_height="fill_parent" >
 
-		<ProgressBar
+        <ProgressBar
 		    android:id="@+id/mapUpdate_progressBar"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"

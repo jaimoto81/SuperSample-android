@@ -38,7 +38,6 @@ public class RegistrationActivity extends Activity implements ActionResultDelega
 
 	private EditText editFullName;
 	private EditText editLogin;
-	private EditText editEmail;
 	private EditText editPassword;
 	private EditText editRetypePass;
 	private ProgressBar queryProgressBar;
@@ -50,7 +49,6 @@ public class RegistrationActivity extends Activity implements ActionResultDelega
 		
 		editFullName = (EditText) findViewById(R.id.edit_full_name);
 		editLogin = (EditText) findViewById(R.id.edit_login);
-		editEmail = (EditText) findViewById(R.id.edit_email);
 		editPassword = (EditText) findViewById(R.id.edit_password);
 		editRetypePass = (EditText) findViewById(R.id.edit_retype_pass);
 		queryProgressBar = (ProgressBar)findViewById(R.id.queryRegistration_progressBar);
@@ -77,7 +75,7 @@ public class RegistrationActivity extends Activity implements ActionResultDelega
 				
 				// validate fields
 				int validationResult = ValidationManager.checkInputParameters(editLogin, editPassword, 
-						editRetypePass, editFullName, editEmail);
+						editRetypePass, editFullName);
 				if(validationResult != ValidationManager.ALERT_OK){
 					showDialog(validationResult);
 					return;
@@ -90,7 +88,7 @@ public class RegistrationActivity extends Activity implements ActionResultDelega
 				// create entity
 				List<NameValuePair> formparamsUser = new ArrayList<NameValuePair>();
 				formparamsUser.add(new BasicNameValuePair("user[full_name]", editFullName.getText().toString()));
-				formparamsUser.add(new BasicNameValuePair("user[email]", editEmail.getText().toString()));
+
 				formparamsUser.add(new BasicNameValuePair("user[login]", editLogin.getText().toString()));
 				formparamsUser.add(new BasicNameValuePair("user[password]", editPassword.getText().toString()));
 				formparamsUser.add(new BasicNameValuePair("user[owner_id]", QBQueries.OWNER_ID));
@@ -111,17 +109,9 @@ public class RegistrationActivity extends Activity implements ActionResultDelega
 
 			// exit to the Main Activity
 			case R.id.butBack:
-				backToPreviousActivity();
+				finish();
 				break;
 		}
-	}
-	
-	// back to previous activity
-	private void backToPreviousActivity(){
-		Intent intent = new Intent();
-		intent.setClass(this, StartActivity.class);
-		startActivity(intent);
-		finish();
 	}
 
 	// show dialog, if the fields is invalid 
@@ -134,10 +124,6 @@ public class RegistrationActivity extends Activity implements ActionResultDelega
 		switch (id) {
 		case ValidationManager.ALERT_FULLNAME:
 			alertMessage = R.string.alert_fullname_blank;
-			break;
-
-		case ValidationManager.ALERT_EMAIL:
-			alertMessage = R.string.alert_email_blank;
 			break;
 
 		case ValidationManager.ALERT_LOGIN:
@@ -189,7 +175,7 @@ public class RegistrationActivity extends Activity implements ActionResultDelega
 					Toast.makeText(this, "Registration successful. Please now sign in!",
 							Toast.LENGTH_LONG).show();
 						
-					backToPreviousActivity();
+					finish();
 
 				// Validation error
 				} else if (response.getResponseStatus() == ResponseHttpStatus.ResponseHttpStatus422) {

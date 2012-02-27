@@ -74,6 +74,8 @@
     <string name="edit_profile">Edit detailed profile</string>
     <string name="save">Save</string>
     <string name="logout">Logout</string>
+    <string name="signin">Sign In</string>
+    <string name="signup">Sign Up</string>
     <string name="cancel">Cancel</string>
 
     <!-- Quiz's result -->
