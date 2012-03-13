@@ -22,7 +22,7 @@ public class StartActivity extends Activity implements ActionResultDelegate {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-
+        
         // auth app
         Query.authorizeApp(this);
     }

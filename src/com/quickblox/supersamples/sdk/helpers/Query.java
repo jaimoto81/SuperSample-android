@@ -1,38 +1,28 @@
 package com.quickblox.supersamples.sdk.helpers;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.SignatureException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.ParseException;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
-
+import android.os.Handler;
+import android.util.Log;
 import com.quickblox.supersamples.sdk.definitions.ActionResultDelegate;
 import com.quickblox.supersamples.sdk.definitions.QBQueries;
 import com.quickblox.supersamples.sdk.definitions.QueryMethod;
 import com.quickblox.supersamples.sdk.definitions.ResponseHttpStatus;
 import com.quickblox.supersamples.sdk.objects.RestResponse;
 import com.quickblox.supersamples.sdk.objects.XMLNode;
+import org.apache.http.*;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.*;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 
-import android.os.Handler;
-import android.util.Log;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.SignatureException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class Query {
 	
@@ -198,7 +188,7 @@ public class Query {
 		// make query
 		long timestamp = System.currentTimeMillis()/1000;
 		int nonce = new Random().nextInt();
-		String signatureParams = String.format("app_id=%s&auth_key=%s&nonce=%s&timestamp=%s", 
+		String signatureParams = String.format("application_id=%s&auth_key=%s&nonce=%s&timestamp=%s",
 				QBQueries.APPLICATION_ID, QBQueries.AUTH_KEY, nonce, timestamp);
 		String signature = null;
 				
@@ -210,7 +200,7 @@ public class Query {
 		
 		// create entity
 		List<NameValuePair> formparams = new ArrayList<NameValuePair>();
-		formparams.add(new BasicNameValuePair("app_id", QBQueries.APPLICATION_ID));
+		formparams.add(new BasicNameValuePair("application_id", QBQueries.APPLICATION_ID));
 		formparams.add(new BasicNameValuePair("timestamp", String.valueOf(timestamp)));
 		formparams.add(new BasicNameValuePair("nonce", String.valueOf(nonce)));
 		formparams.add(new BasicNameValuePair("auth_key", QBQueries.AUTH_KEY));

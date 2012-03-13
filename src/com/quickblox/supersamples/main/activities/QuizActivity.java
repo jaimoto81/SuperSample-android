@@ -1,17 +1,5 @@
 package com.quickblox.supersamples.main.activities;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.xmlpull.v1.XmlPullParser;
-
-import com.flurry.android.FlurryAgent;
-import com.quickblox.supersamples.main.definitions.Consts;
-import com.quickblox.supersamples.main.views.QuizViewGroup;
-import com.quickblox.supersamples.sdk.helpers.Store;
-
-import com.quickblox.supersamples.R;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -23,11 +11,17 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ViewFlipper;
+import android.widget.*;
+import com.flurry.android.FlurryAgent;
+import com.quickblox.supersamples.R;
+import com.quickblox.supersamples.main.definitions.Consts;
+import com.quickblox.supersamples.main.views.QuizViewGroup;
+import com.quickblox.supersamples.sdk.helpers.Store;
+import org.xmlpull.v1.XmlPullParser;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class QuizActivity extends Activity implements OnClickListener {
 
@@ -171,6 +165,11 @@ public class QuizActivity extends Activity implements OnClickListener {
 
 		// start Quiz
 		case R.id.butGoQuiz:
+            if(Store.getInstance().getCurrentUser() == null){
+                Toast.makeText(this, "You must login first. Go to Settings tab.",
+                        Toast.LENGTH_LONG).show();
+                return;
+            }
 
 			nextFlip(this, flipper);
 			
