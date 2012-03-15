@@ -1,1 +1,5 @@
-QB SuperSample Android
+This is a complex sample of an Android application using QuickBlox. The application uses the QuickBlox modules Location, Chat and Users. Using this application, the user can see other users on the map. Users can use general Chat to communicate with each other.
+
+Sample description - http://quickblox.com/samples/supersample-android/
+
+Wiki docs — http://wiki.quickblox.com/SuperSample-android
