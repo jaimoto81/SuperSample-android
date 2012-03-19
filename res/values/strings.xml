@@ -85,4 +85,8 @@
     <string name="but_leaderboard">VIEW LEADERBOARD</string>
     <string name="empty_status">&lt;empty&gt;</string>
 
+    <!-- Facebook -->
+    <string name="facebook_app_id">294038277334911</string>
+
+
 </resources>

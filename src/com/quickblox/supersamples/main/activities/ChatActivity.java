@@ -1,17 +1,12 @@
 package com.quickblox.supersamples.main.activities;
 
-import java.io.UnsupportedEncodingException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.message.BasicNameValuePair;
-
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 import com.flurry.android.FlurryAgent;
 import com.quickblox.supersamples.R;
 import com.quickblox.supersamples.main.definitions.Consts;
@@ -20,21 +15,20 @@ import com.quickblox.supersamples.main.helpers.ChatArrayAdapter;
 import com.quickblox.supersamples.main.objects.ChatItem;
 import com.quickblox.supersamples.sdk.definitions.ActionResultDelegate;
 import com.quickblox.supersamples.sdk.definitions.QBQueries;
+import com.quickblox.supersamples.sdk.definitions.QBQueries.QBQueryType;
 import com.quickblox.supersamples.sdk.definitions.QueryMethod;
 import com.quickblox.supersamples.sdk.definitions.ResponseHttpStatus;
-import com.quickblox.supersamples.sdk.definitions.QBQueries.QBQueryType;
 import com.quickblox.supersamples.sdk.helpers.Query;
 import com.quickblox.supersamples.sdk.helpers.Store;
 import com.quickblox.supersamples.sdk.objects.RestResponse;
 import com.quickblox.supersamples.sdk.objects.XMLNode;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.message.BasicNameValuePair;
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.Toast;
+import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class ChatActivity extends Activity implements ActionResultDelegate {
 
@@ -202,7 +196,11 @@ public class ChatActivity extends Activity implements ActionResultDelegate {
                         item.setDate(child.findChild("created-at").getText().replace("T", " ").replace("Z", " "));
                         item.setMessage(message);
                         item.setID(ID);
-                        item.setUserName(child.findChild("user").findChild("login").getText());
+                        String name = child.findChild("user").findChild("full-name").getText();
+                        if(name.length() == 0){
+                             name = child.findChild("user").findChild("login").getText();
+                        }
+                        item.setUserName(name);
 
                         // add to list view adapter
                         ChatActivity.this.runOnUiThread(new Runnable() {
@@ -251,7 +249,11 @@ public class ChatActivity extends Activity implements ActionResultDelegate {
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                         item.setDate(sdf.format(cal.getTime()));
                         item.setMessage(messageTextEdit.getText().toString());
-                        item.setUserName(Store.getInstance().getCurrentUser().findChild("login").getText());
+                        String name = Store.getInstance().getCurrentUser().findChild("full-name").getText();
+                        if(name.length() == 0){
+                            name = Store.getInstance().getCurrentUser().findChild("login").getText();
+                        }
+                        item.setUserName(name);
                         item.setID(response.getBody().findChild("id").getText());
                         listAdapter.insert(item, 0);
 

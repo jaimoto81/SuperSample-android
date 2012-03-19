@@ -1,44 +1,7 @@
 package com.quickblox.supersamples.main.activities;
 
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.message.BasicNameValuePair;
-
-import com.flurry.android.FlurryAgent;
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.ItemizedOverlay;
-import com.google.android.maps.MapActivity;
-import com.google.android.maps.MapController;
-import com.google.android.maps.MapView;
-import com.google.android.maps.MyLocationOverlay;
-import com.quickblox.supersamples.R;
-import com.quickblox.supersamples.main.definitions.Consts;
-import com.quickblox.supersamples.main.helpers.AlertManager;
-import com.quickblox.supersamples.main.objects.MapOverlayItem;
-import com.quickblox.supersamples.main.views.MapPopUp;
-import com.quickblox.supersamples.sdk.definitions.ActionResultDelegate;
-import com.quickblox.supersamples.sdk.definitions.QBQueries;
-import com.quickblox.supersamples.sdk.definitions.QueryMethod;
-import com.quickblox.supersamples.sdk.definitions.QBQueries.QBQueryType;
-import com.quickblox.supersamples.sdk.definitions.ResponseHttpStatus;
-import com.quickblox.supersamples.sdk.helpers.Query;
-import com.quickblox.supersamples.sdk.helpers.Store;
-import com.quickblox.supersamples.sdk.objects.RestResponse;
-import com.quickblox.supersamples.sdk.objects.XMLNode;
-
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.graphics.Point;
-import android.graphics.Rect;
+import android.graphics.*;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Location;
@@ -49,6 +12,31 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import com.flurry.android.FlurryAgent;
+import com.google.android.maps.*;
+import com.quickblox.supersamples.R;
+import com.quickblox.supersamples.main.definitions.Consts;
+import com.quickblox.supersamples.main.helpers.AlertManager;
+import com.quickblox.supersamples.main.objects.MapOverlayItem;
+import com.quickblox.supersamples.main.views.MapPopUp;
+import com.quickblox.supersamples.sdk.definitions.ActionResultDelegate;
+import com.quickblox.supersamples.sdk.definitions.QBQueries;
+import com.quickblox.supersamples.sdk.definitions.QBQueries.QBQueryType;
+import com.quickblox.supersamples.sdk.definitions.QueryMethod;
+import com.quickblox.supersamples.sdk.definitions.ResponseHttpStatus;
+import com.quickblox.supersamples.sdk.helpers.Query;
+import com.quickblox.supersamples.sdk.helpers.Store;
+import com.quickblox.supersamples.sdk.objects.RestResponse;
+import com.quickblox.supersamples.sdk.objects.XMLNode;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.message.BasicNameValuePair;
+
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MapViewActivity extends MapActivity implements ActionResultDelegate {
 
@@ -338,7 +326,11 @@ public class MapViewActivity extends MapActivity implements ActionResultDelegate
 
                                 final MapOverlayItem overlayItem = new MapOverlayItem(new GeoPoint(lat, lng), "", "");
                                 overlayItem.setUserStatus(child.findChild("status").getText());
-                                overlayItem.setUserName(child.findChild("user").findChild("login").getText());
+                                String name = child.findChild("user").findChild("full-name").getText();
+                                if(name.length() == 0){
+                                    name = child.findChild("user").findChild("login").getText();
+                                }
+                                overlayItem.setUserName(name);
                                 locationsList.add(overlayItem);
                             }
 
