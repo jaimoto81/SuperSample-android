@@ -162,14 +162,17 @@ public class LoginActivity extends Activity implements ActionResultDelegate {
 
                     @Override
                     public void onFacebookError(FacebookError error) {
+                        queryProgressBar.setVisibility(View.INVISIBLE);
                     }
 
                     @Override
                     public void onError(DialogError e) {
+                        queryProgressBar.setVisibility(View.INVISIBLE);
                     }
 
                     @Override
                     public void onCancel() {
+                        queryProgressBar.setVisibility(View.INVISIBLE);
                     }
                 });
 
