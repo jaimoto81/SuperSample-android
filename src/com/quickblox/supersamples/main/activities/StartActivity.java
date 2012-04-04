@@ -22,8 +22,8 @@ public class StartActivity extends Activity implements ActionResultDelegate {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        
-        // auth app
+
+        // QuickBlox application autorization
         Query.authorizeApp(this);
     }
 
@@ -41,6 +41,7 @@ public class StartActivity extends Activity implements ActionResultDelegate {
         FlurryAgent.onEndSession(this);
     }
 
+    // QuickBlox queries callback
     @Override
     public void completedWithResult(QBQueryType queryType, RestResponse response) {
         // no internet connection
