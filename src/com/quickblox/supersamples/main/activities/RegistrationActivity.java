@@ -91,7 +91,6 @@ public class RegistrationActivity extends Activity implements ActionResultDelega
 
 				formparamsUser.add(new BasicNameValuePair("user[login]", editLogin.getText().toString()));
 				formparamsUser.add(new BasicNameValuePair("user[password]", editPassword.getText().toString()));
-				formparamsUser.add(new BasicNameValuePair("user[owner_id]", QBQueries.OWNER_ID));
 				formparamsUser.add(new BasicNameValuePair("token", Store.getInstance().getAuthToken()));
 
 				UrlEncodedFormEntity postEntityUser = null;

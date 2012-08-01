@@ -5,7 +5,6 @@ public class QBQueries {
 	// Applications settings
 	//
 	public static final String APPLICATION_ID = "99";
-	public static final String OWNER_ID = "4343";
 	public static final String AUTH_KEY = "63ebrp5VZt7qTOv";
 	public static final String AUTH_SECRET = "YavMAxm5T59-BRw";
 
@@ -16,13 +15,9 @@ public class QBQueries {
 
 	// AUTH service
 	//
-	public static final String GET_AUTH_TOKEN_QUERY = String.format("https://%s/auth", SERVER_ZONE);
+	public static final String GET_AUTH_TOKEN_QUERY = String.format("https://%s/session", SERVER_ZONE);
 	
-	// USERS service
-	//
-	// get all users
-	public static final String GET_ALL_USERS_QUERY = String.format("http://%s/owners/%s/users.xml",
-            SERVER_ZONE, OWNER_ID);
+	
 	
 	// get user by external user id
 	public static final String GET_USER_BY_EXTERNAL_ID_QUERY_FORMAT = String.format("http://%s/users/external/", SERVER_ZONE) + "%s.xml";
@@ -37,7 +32,7 @@ public class QBQueries {
 	public static final String REMOVE_USER_QUERY_FORMAT = String.format("http://%s/users/", SERVER_ZONE) + "%s";
 	
 	// authenticate user
-	public static final String LOGIN_USER_QUERY = String.format("http://%s/users/authenticate", SERVER_ZONE);
+	public static final String LOGIN_USER_QUERY = String.format("http://%s/login", SERVER_ZONE);
 	
 	// identify user
 	public static final String INDENTIFY_USER_QUERY = String.format("http://%s/users/identify", SERVER_ZONE);
@@ -65,7 +60,6 @@ public class QBQueries {
 		QBQueryTypeGetAuthToken,
 		
 		// USERS service
-		QBQueryTypeGetAllUsers,
 		QBQueryTypeGetUserByExternalID,
 		QBQueryTypeCreateUser,
 		QBQueryTypeEditUser,

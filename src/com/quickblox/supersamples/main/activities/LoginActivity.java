@@ -184,7 +184,6 @@ public class LoginActivity extends Activity implements ActionResultDelegate {
     private void login(String login, String password) {
         // create entity
         List<NameValuePair> formparams = new ArrayList<NameValuePair>();
-        formparams.add(new BasicNameValuePair("owner_id", QBQueries.OWNER_ID));
         formparams.add(new BasicNameValuePair("login", login));
         formparams.add(new BasicNameValuePair("password", password));
         formparams.add(new BasicNameValuePair("token", Store.getInstance().getAuthToken()));
@@ -286,7 +285,6 @@ public class LoginActivity extends Activity implements ActionResultDelegate {
                         formparamsUser.add(new BasicNameValuePair("user[login]", login));
                         formparamsUser.add(new BasicNameValuePair("user[password]", password));
                         formparamsUser.add(new BasicNameValuePair("user[facebook_id]", id));
-                        formparamsUser.add(new BasicNameValuePair("user[owner_id]", QBQueries.OWNER_ID));
                         formparamsUser.add(new BasicNameValuePair("token", Store.getInstance().getAuthToken()));
 
                         UrlEncodedFormEntity postEntityUser = null;
